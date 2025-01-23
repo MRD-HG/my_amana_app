@@ -40,6 +40,7 @@ class _SimulateurState extends State<Simulateur> {
               const Padding(
                 padding: EdgeInsets.only(top: 40),
                 child: Text(
+
                   'Simulateur',
                   textAlign: TextAlign.center,
                   style: TextStyle(
