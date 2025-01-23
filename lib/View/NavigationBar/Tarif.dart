@@ -68,50 +68,42 @@ class _MapAppState extends State<MapAppt> {
           children: [
             Row(
               children: [
-                Padding(
-                    padding:
-                        const EdgeInsets.only(left: 18, right: 5, top: 5, bottom: 5),
-                    child: Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: _envoiNatio,
-                          style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 216, 203, 183),
-                              textStyle: const TextStyle(fontSize: 15),
-                              padding: const EdgeInsets.all(18)),
-                          child: const Text('ENVOI NATIONAL'),
-                        )
-                      ],
-                    )),
-                Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: _envioInterna,
-                          style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 216, 203, 183),
-                              textStyle: const TextStyle(fontSize: 15),
-                              padding: const EdgeInsets.all(18)),
-                          child: const Text('ENVOI INTERNA'),
-                        )
-                      ],
-                    )),
-                Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: _ecomerse,
-                          style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 216, 203, 183),
-                              textStyle: const TextStyle(fontSize: 16),
-                              padding: const EdgeInsets.only(
-                                  left: 28, right: 28, top: 18, bottom: 18)),
-                          child: const Text('ECOMERCE'),
-                        )
-                      ],
-                    )),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _envoiNatio,
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color.fromARGB(255, 216, 203, 183),
+                      textStyle: const TextStyle(fontSize: 15),
+                      padding: const EdgeInsets.all(18),
+                    ),
+                    child: const Text('ENVOI NATIONAL'),
+                  ),
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _envioInterna,
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color.fromARGB(255, 216, 203, 183),
+                      textStyle: const TextStyle(fontSize: 15),
+                      padding: const EdgeInsets.all(18),
+                    ),
+                    child: const Text('ENVOI INTERNA'),
+                  ),
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _ecomerse,
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color.fromARGB(255, 216, 203, 183),
+                      textStyle: const TextStyle(fontSize: 16),
+                      padding: const EdgeInsets.all(18),
+                    ),
+                    child: const Text('ECOMERCE'),
+                  ),
+                ),
               ],
             ),
             Visibility(
