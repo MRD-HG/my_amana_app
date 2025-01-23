@@ -1,0 +1,112 @@
+{
+    "List":[
+        {
+            "Agent":"El AZIZI Mohamed",
+            "Tel":"0646180011",
+            "Email":"M.ELAZIZI@poste.ma",
+            "Region":"Rabat"
+
+        },
+        {
+            "Agent":"El MAI Intissar",
+            "Tel":"0600098963",
+            "Email":"I.ELMAI@poste.ma",
+            "Region":"Rabat"
+
+        },
+        {
+            "Agent":"SEHLI Nabil",
+            "Tel":"0646120355",
+            "Email":"N.SEHLI@poste.ma",
+            "Region":"Rabat"
+
+        },
+        {
+            "Agent":"BOUHLAL Faiza",
+            "Tel":"0646180011",
+            "Email":"F.BOUHLAL@poste.ma",
+            "Region":"Casablanca"
+
+        }, {
+            "Agent":"BOUZID Yousra",
+            "Tel":" 0695143274",
+            "Email":"Y.BOUZID@poste.ma",
+            "Region":"Casablanca"
+
+        }, {
+            "Agent":"ELHADDADI Hajar",
+            "Tel":"0658204539",
+            "Email":"H.ELHADDADI@poste.ma",
+            "Region":"Casablanca"
+
+        }, {
+            "Agent":"FASSIH Meryem",
+            "Tel":"0646180246",
+            "Email":"M.FASSIH@poste.ma",
+            "Region":"Casablanca"
+
+        },
+        {
+            "Agent":"LAKHLILI Mounim",
+            "Tel":"0663019593",
+            "Email":"LAKHLILI@poste.ma",
+            "Region":"Casablanca"
+
+        },
+        {
+            "Agent":"REBBAH Samah",
+            "Tel":"0646180315",
+            "Email":"S.REBBAH@poste.ma",
+            "Region":"Casablanca"
+
+        },
+        {
+            "Agent":"RHMIROU Sara",
+            "Tel":"0600098962",
+            "Email":"S.RHMIROU@poste.ma",
+            "Region":"Casablanca"
+
+        },
+        {
+            "Agent":"GHAME Brahim",
+            "Tel":"0646180237",
+            "Email":"B.GHAME@poste.ma",
+            "Region":"Tanger"
+
+        },{
+            "Agent":"OUAI Fierdaouss",
+            "Tel":"0690899297",
+            "Email":"F.OUAI@poste.ma",
+            "Region":"Tanger"
+
+        },{
+            "Agent":"KHARROUBI Nourreddine",
+            "Tel":"0646180029",
+            "Email":"N.KHARROUBI@poste.ma",
+            "Region":"Fés-Meknés"
+
+        },
+        {
+            "Agent":"OUERDI Hassan",
+            "Tel":"0646180314",
+            "Email":"H.OUERDI@poste.ma",
+            "Region":"Oujda"
+
+        },
+        {
+            "Agent":"SOUAF Bouchra",
+            "Tel":"0646122440",
+            "Email":"B.SOUAF@poste.ma",
+            "Region":"Agadir"
+
+        },
+        {
+            "Agent":"ELAADNANI Abdelghani",
+            "Tel":"0646122427",
+            "Email":"A.ELAADNANI@poste.ma",
+            "Region":"Marrakech"
+
+        }
+    ]
+
+}
