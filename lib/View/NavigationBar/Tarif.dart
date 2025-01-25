@@ -101,6 +101,7 @@ class _MapAppState extends State<MapAppt> {
                       textStyle: const TextStyle(fontSize: 16),
                       padding: const EdgeInsets.all(18),
                     ),
+
                     child: const Text('ECOMERCE'),
                   ),
                 ),
