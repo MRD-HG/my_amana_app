@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_amana_app/View/Menu/MenuSide.dart';
 import 'package:my_amana_app/View/NavigationBar/Tarif.dart';
 
-void main() {
-  runApp(const MaterialApp(
-    home: DefinitionPage(),
-  ));
-}
 class DefinitionPage extends StatefulWidget {
   const DefinitionPage({super.key});
 

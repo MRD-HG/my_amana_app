@@ -4,15 +4,7 @@ import 'package:my_amana_app/View/Menu/MenuSide.dart';
 
 import '../Facteure/LogFact.dart';
 import '../PageMenu.dart';
-import 'package:firebase_core/firebase_core.dart';
 
-// ...
-
-Future main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(const Simulateur());
-}
 
 class Simulateur extends StatefulWidget {
   const Simulateur({super.key});
@@ -65,7 +57,7 @@ class _SimulateurState extends State<Simulateur> {
               ElevatedButton(
                   onPressed: () {
                     Route route = MaterialPageRoute(
-                        builder: ((context) => const MyApp()));
+                        builder: ((context) => const AppShell()));
 
                     Navigator.pushReplacement(context, route);
                   },

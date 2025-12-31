@@ -17,25 +17,18 @@ import '../SideBar/feedback.dart';
 import '../SideBar/guide.dart';
 import '../resultat.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class AppShell extends StatefulWidget {
+  const AppShell({super.key});
   
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<AppShell> createState() => _AppShellState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false
-      ,      home: SideMenu(),
-    );
+    return const SideMenu();
   }
 }
   
@@ -403,7 +396,7 @@ PreferredSizeWidget appB(BuildContext context) {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const MyApp()),
+            MaterialPageRoute(builder: (context) => const AppShell()),
           );
         },
         child: Image.asset(

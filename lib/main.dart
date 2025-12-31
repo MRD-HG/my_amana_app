@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'View/pagesSplish/simulator.dart';
 
 const int  counter = 0 ;
 
-void main() => runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const MyApp());
+}
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 

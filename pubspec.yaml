@@ -50,7 +50,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   google_maps_flutter: ^2.10.0
   youtube_player_flutter: ^9.1.1
-  simple_barcode_scanner: ^0.2.6
+  simple_barcode_scanner: ^0.3.0
 
 
 

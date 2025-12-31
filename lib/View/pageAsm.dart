@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-void main() {
-  runApp(const MapApp());
-}
+
 
 class MapApp extends StatefulWidget {
   const MapApp({super.key});
@@ -35,9 +33,7 @@ class _MapAppState extends State<MapApp> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {},
@@ -220,7 +216,6 @@ class _MapAppState extends State<MapApp> {
           ),
           color: Colors.blue,
         ),
-      ),
     );
   }
 }

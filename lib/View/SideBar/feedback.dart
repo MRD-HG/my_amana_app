@@ -3,10 +3,6 @@ import "../Menu/MenuSide.dart";
 
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const FeedB());
-}
-
 class FeedB extends StatelessWidget {
   const FeedB({super.key});
 
@@ -14,17 +10,7 @@ class FeedB extends StatelessWidget {
   @override
   
   Widget build(BuildContext context) {
-    return MaterialApp(
-      
-      debugShowCheckedModeBanner: false,
-      home: const CheckboxPage(),
-      routes: {
-        '/page1': (context) => const Page1(),
-        '/page2': (context) => const Page2(),
-        '/page3': (context) => const Page3(),
-        '/page4': (context) => const Page4(),
-      },
-    );
+    return const CheckboxPage();
   }
 }
 

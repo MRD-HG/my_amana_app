@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MapApp());
-}
-
 class MapApp extends StatefulWidget {
   const MapApp({super.key});
 
@@ -14,24 +10,22 @@ class MapApp extends StatefulWidget {
 class _MapAppState extends State<MapApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.menu,
-                  color: Colors.orange,
-                ),
-              ),
-              backgroundColor: Colors.white,
-            ),
-            body: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Card(
-                  child: ListView(
-                children: [
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.menu,
+            color: Colors.orange,
+          ),
+        ),
+        backgroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Card(
+          child: ListView(
+            children: [
                   const Padding(
                       padding: EdgeInsets.all(10),
                       child: Column(
@@ -392,9 +386,11 @@ class _MapAppState extends State<MapApp> {
                       ],
                     ),
                   ),
-                ],
-              )),
-            )));
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -408,24 +404,22 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.menu,
-                  color: Colors.orange,
-                ),
-              ),
-              backgroundColor: Colors.white,
-            ),
-            body: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Card(
-                  child: ListView(
-                children: [
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.menu,
+            color: Colors.orange,
+          ),
+        ),
+        backgroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Card(
+          child: ListView(
+            children: [
                   const Padding(
                       padding: EdgeInsets.all(10),
                       child: Column(
@@ -710,8 +704,10 @@ class _FeedState extends State<Feed> {
                       ],
                     ),
                   ),
-                ],
-              )),
-            )));
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

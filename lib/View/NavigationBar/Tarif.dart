@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../Menu/MenuSide.dart';
 
-void main() {
-  runApp(const MapAppt());
-}
-
 class MapAppt extends StatefulWidget {
   const MapAppt({super.key});
 
@@ -58,12 +54,10 @@ class _MapAppState extends State<MapAppt> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-            key: _scaffoldKey,
+    return Scaffold(
+        key: _scaffoldKey,
         appBar: appB(context),
-        drawer:darweF(context),
+        drawer: darweF(context),
         body: Column(
           children: [
             Row(
@@ -538,9 +532,7 @@ class _MapAppState extends State<MapAppt> {
             )
           ],
         ),
-        bottomNavigationBar:const NavBottom(),
-
-      ),
-    );
+        bottomNavigationBar: const NavBottom(),
+      );
   }
 }

@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const Amanamesager());
-}
-
 class Amanamesager extends StatefulWidget {
   const Amanamesager({super.key});
 
@@ -125,13 +121,8 @@ class _Amanamesager extends State<Amanamesager> {
   final List<Poop> _poop = getPoop();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-       
-        body:
-        
-          Container(
+    return Scaffold(
+      body: Container(
             color: const Color.fromARGB(255, 238, 232, 232),
             child: ListView(
               
@@ -304,7 +295,6 @@ class _Amanamesager extends State<Amanamesager> {
             ],
                   ),
           ),
-      ),
     );
   }
 }

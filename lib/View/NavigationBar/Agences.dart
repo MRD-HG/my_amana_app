@@ -3,19 +3,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../Menu/MenuSide.dart';
 
-void main() {
-  runApp(const AgencLoc());
-}
-
 class AgencLoc extends StatelessWidget {
   const AgencLoc({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MapPage(),
-    );
+    return const MapPage();
   }
 }
 
