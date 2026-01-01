@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../Menu/MenuSide.dart';
-
 class Contact extends StatefulWidget {
   const Contact({super.key});
 
@@ -53,20 +51,15 @@ class _ContactState extends State<Contact> {
   bool _switchValue = true;
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: appB(context),
-      drawer: darweF(context),
-      bottomNavigationBar: const NavBottom(),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-            child: Container(
-              color: const Color.fromARGB(255, 237, 236, 236),
-              padding: const EdgeInsets.all(5),
-              child: Column(
-                children: [
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+          child: Container(
+            color: const Color.fromARGB(255, 237, 236, 236),
+            padding: const EdgeInsets.all(5),
+            child: Column(
+              children: [
                     Padding(
                       padding: const EdgeInsets.all(5),
                       child: TextField(
@@ -280,12 +273,11 @@ class _ContactState extends State<Contact> {
                             )
                           ],
                         )),
-                ],
-              ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

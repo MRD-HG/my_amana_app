@@ -18,64 +18,57 @@ import '../SideBar/guide.dart';
 import '../resultat.dart';
 
 class AppShell extends StatefulWidget {
-  const AppShell({super.key});
-  
+  const AppShell({super.key, this.initialIndex = 0});
+
+  final int initialIndex;
+
   @override
   State<AppShell> createState() => _AppShellState();
 }
 
 class _AppShellState extends State<AppShell> {
+  late int _selectedIndex;
+
+  final List<Widget> _tabs = const [
+    Accueila(),
+    AgencLoc(),
+    MapAppt(),
+    Contact(),
+  ];
 
   @override
-  Widget build(BuildContext context) {
-    return const SideMenu();
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
   }
-}
-  
 
-class SideMenu extends StatefulWidget {
-  const SideMenu({super.key});
-
-  @override
-  State<SideMenu> createState() => _SideMenuState();
-}
-
-class _SideMenuState extends State<SideMenu> {
-  bool show =false;
-
-   void _envoiNatio() {
+  void _onTabSelected(int index) {
+    if (index == _selectedIndex) {
+      return;
+    }
     setState(() {
-      if (show == !true) {
-        show =!show;
-       
-      }
-      else{
-        show =!show;
-
-
-      }
+      _selectedIndex = index;
     });
-   
-    
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appB(context),
-          drawer: darweF(context),
-          body:const MenuAmana(),
-      
-               
-                
-                
-          
-        
-      );
-    
+      appBar: appB(context, onHomeTap: () => _onTabSelected(0)),
+      drawer: darweF(context, onSelectTab: _onTabSelected),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _tabs,
+      ),
+      bottomNavigationBar: NavBottom(
+        currentIndex: _selectedIndex,
+        onTap: _onTabSelected,
+      ),
+    );
   }
 }
-Widget darweF(BuildContext context){
+
+Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
   return Drawer(
             
             child: Container(
@@ -101,8 +94,18 @@ Widget darweF(BuildContext context){
                   leading:const Icon(Icons.home),
                   title: const Text('Accueil', style: TextStyle(color: Colors.white)),
                   onTap: () {
-                    Route  route =  MaterialPageRoute(builder:  ((context) =>const Accueila()),);
-                      Navigator.pushReplacement(context, route);// Handle Home menu item tap
+                    if (onSelectTab != null) {
+                      onSelectTab(0);
+                      Navigator.pop(context);
+                      return;
+                    }
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AppShell(initialIndex: 0),
+                      ),
+                      (route) => false,
+                    );
                   },
                 ),
                 ListTile(
@@ -110,9 +113,11 @@ Widget darweF(BuildContext context){
 
                   title: const Text('Produit', style: TextStyle(color: Colors.white)),
                   onTap: () {
-                      Route  route =  MaterialPageRoute(builder:  ((context) => const Produit()),);
-                      Navigator.pushReplacement(context, route);
-
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Produit()),
+                      );
                   },
                 ),
                 ListTile(
@@ -120,9 +125,18 @@ Widget darweF(BuildContext context){
 
                   title: const Text('Agences', style: TextStyle(color: Colors.white)),
                   onTap: () {
-                    Route  route =  MaterialPageRoute(builder:  ((context) =>  const AgencLoc()),);
-                      Navigator.pushReplacement(context, route);
-                    // Handle Settings menu item tap
+                    if (onSelectTab != null) {
+                      onSelectTab(1);
+                      Navigator.pop(context);
+                      return;
+                    }
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AppShell(initialIndex: 1),
+                      ),
+                      (route) => false,
+                    );
                   },
                 ),
                 ListTile(
@@ -131,8 +145,11 @@ Widget darweF(BuildContext context){
                   title: const Text('Médiathéque', style: TextStyle(color: Colors.white)),
                   onTap: () {
                     // Handle Settings menu item tap
-                    Route  route =  MaterialPageRoute(builder:  ((context) =>const VideoMed()));
-                      Navigator.pushReplacement(context, route);
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const VideoMed()),
+                    );
                   },
                 ),
                  ListTile(
@@ -140,8 +157,13 @@ Widget darweF(BuildContext context){
 
                   title: const Text('Suivi Clientéle', style: TextStyle(color: Colors.white)),
                   onTap: () {
-                      Route  route =  MaterialPageRoute(builder:  ((context) =>   const DefinitionPage()));
-                      Navigator.pushReplacement(context, route);
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DefinitionPage(),
+                        ),
+                      );
 
                     // Handle Settings menu item tap
                   },
@@ -152,8 +174,11 @@ Widget darweF(BuildContext context){
                   title: const Text('Numéros Utiles', style: TextStyle(color: Colors.white)),
                   onTap: () {
                     // Handle Settings menu item tap
-                     Route  route =  MaterialPageRoute(builder:  ((context) => const NumeroTlf()  ));
-                    Navigator.pushReplacement(context, route);
+                     Navigator.pop(context);
+                     Navigator.push(
+                       context,
+                       MaterialPageRoute(builder: (context) => const NumeroTlf()),
+                     );
                   },
                 ),
                  ListTile(
@@ -171,8 +196,11 @@ Widget darweF(BuildContext context){
                   title: const Text('FAQ', style: TextStyle(color: Colors.white)),
                   onTap: () {
                     // Handle Settings menu item tap
-                    Route  route =  MaterialPageRoute(builder:  ((context) =>const FaQ()));
-                      Navigator.pushReplacement(context, route);
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const FaQ()),
+                    );
                   },
                 ),
                  ListTile(
@@ -180,8 +208,11 @@ Widget darweF(BuildContext context){
 
                   title: const Text('Feedbackcs', style: TextStyle(color: Colors.white)),
                   onTap: () {
-                    Route  route =  MaterialPageRoute(builder:  ((context) => const FeedB()));
-                      Navigator.pushReplacement(context, route);
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const FeedB()),
+                    );
                     // Handle Settings menu item tap
                   },
                 ),
@@ -190,8 +221,11 @@ Widget darweF(BuildContext context){
 
                   title: const Text('Guide De Bonnes Pratique', style: TextStyle(color: Colors.white)),
                   onTap: () {
-                       Route  route =  MaterialPageRoute(builder:  ((context) =>const GuideBonn()));
-                      Navigator.pushReplacement(context, route);
+                       Navigator.pop(context);
+                       Navigator.push(
+                         context,
+                         MaterialPageRoute(builder: (context) => const GuideBonn()),
+                       );
                     // Handle Settings menu item tap
                   },
                 ),
@@ -208,6 +242,8 @@ class MenuAmana extends StatefulWidget {
 }
 
 class _MenuAmanaState extends State<MenuAmana> {
+   final TextEditingController _trackingController = TextEditingController();
+
    final List<String> scrollImage = [
       'assets/images/scroller1.jpg',
       'assets/images/scroller2.jpg',
@@ -218,147 +254,133 @@ class _MenuAmanaState extends State<MenuAmana> {
     ];
 
   @override
-  Widget build(BuildContext context) {
-    return  Scaffold(
-      body: Center(
-        child:  Container(
-          child: Column(
-            crossAxisAlignment : CrossAxisAlignment.center,
-            
-            children: [
-               Padding(
-            padding: const EdgeInsets.all(11.0),
-            child: SizedBox(
-              width: 350,
-              child: TextFormField(
+  void dispose() {
+    _trackingController.dispose();
+    super.dispose();
+  }
 
-                onChanged: (value) {
-                  // Print the value of the TextFormField
-                },
-                decoration: InputDecoration(
-                  
-                  border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(2)),
-                    borderSide: BorderSide(width: 3,color:Colors.black )),
-
-                  labelText: "SCANNER OU SAISIR LE CODE DE SUIVI",
-                  labelStyle: TextStyle(color: Colors.grey[600],fontSize: 15),
-                  suffixIcon: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize:MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.search),
-                        onPressed: () {
-                          Route  route =  MaterialPageRoute(builder:  ((context) => const Resultat()),);
-                                    Navigator.pushReplacement(context, route);
-
-                        },
-                      ),
-                       IconButton(
-                        icon: const Icon(Icons.qr_code_scanner),
-                        onPressed: () {},
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            
-          
-                  
-                  
-                  
-                  /* validator: (String? value) {
-                    if(value!.isEmpty){
-                      return "Saisir votre Code De Suivi";
-                    }
-                  }, */
-                  
-
-                ),
-              ),
-             CarouselSlider.builder(
-                itemCount: scrollImage.length , 
-                itemBuilder: (context,index,realindex){
-                  final scroll=scrollImage[index];
-                  return buildImage(scroll,index);
-                },
-                 options: CarouselOptions(
-                  height: 300,
-                  enableInfiniteScroll: false,
-                    enlargeCenterPage: true,
-                    
-
-                 ) 
-                 )
- 
-            ],
-          
-          ),
-        ) 
-        ,
+  void _submitTracking() {
+    final trackingId = _trackingController.text.trim();
+    if (trackingId.isEmpty || trackingId.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Veuillez saisir un numero de suivi valide.'),
+        ),
+      );
+      return;
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Resultat(trackingId: trackingId),
       ),
-    
-      bottomNavigationBar: const NavBottom(),
-    
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child:  Container(
+        child: Column(
+          crossAxisAlignment : CrossAxisAlignment.center,
+          
+          children: [
+             Padding(
+          padding: const EdgeInsets.all(11.0),
+          child: SizedBox(
+            width: 350,
+            child: TextFormField(
+              controller: _trackingController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                
+                border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(2)),
+                  borderSide: BorderSide(width: 3,color:Colors.black )),
+
+                labelText: "SCANNER OU SAISIR LE CODE DE SUIVI",
+                labelStyle: TextStyle(color: Colors.grey[600],fontSize: 15),
+                suffixIcon: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize:MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: _submitTracking,
+                    ),
+                     IconButton(
+                      icon: const Icon(Icons.qr_code_scanner),
+                      onPressed: () {},
+                    )
+                  ],
+                ),
+              ),
+            ),
+          
+        
+                
+                
+                
+                /* validator: (String? value) {
+                  if(value!.isEmpty){
+                    return "Saisir votre Code De Suivi";
+                  }
+                }, */
+                
+
+              ),
+            ),
+           CarouselSlider.builder(
+              itemCount: scrollImage.length , 
+              itemBuilder: (context,index,realindex){
+                final scroll=scrollImage[index];
+                return buildImage(scroll,index);
+              },
+               options: CarouselOptions(
+                height: 300,
+                enableInfiniteScroll: false,
+                  enlargeCenterPage: true,
+                  
+
+               ) 
+               )
+
+          ],
+        
+        ),
+      ) 
+      ,
     );
     
   }
 }
-class NavBottom extends StatefulWidget {
-  const NavBottom({super.key});
+class NavBottom extends StatelessWidget {
+  const NavBottom({super.key, this.currentIndex = 0, this.onTap});
 
-  @override
-  State<NavBottom> createState() => _NavBottomState();
-}
+  final int currentIndex;
+  final ValueChanged<int>? onTap;
 
-class _NavBottomState extends State<NavBottom> {
-  final TextStyle textSty = const TextStyle(
+  static const TextStyle _textStyle = TextStyle(
     color: Colors.white54,
     fontSize: 8,
   );
 
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    // Navigate to the selected screen
-    switch (index) {
-      case 0:
-      
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) =>const Accueila()),
-        );
-        break;
-      case 1:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const AgencLoc()),
-        );
-        break;
-      case 2:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) =>const MapAppt()),
-        );
-        break;
-      case 3:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Contact()),
-        );
-        break;
+  void _handleTap(BuildContext context, int index) {
+    if (onTap != null) {
+      onTap!(index);
+      return;
     }
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => AppShell(initialIndex: index)),
+      (route) => false,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      selectedLabelStyle: textSty,
+      selectedLabelStyle: _textStyle,
       items: [
         BottomNavigationBarItem(
           icon:Padding(padding:const EdgeInsets.only(bottom: 4) ,child: Icon(Boxicons.bxs_navigation, color: Colors.orange[700])),
@@ -377,16 +399,16 @@ class _NavBottomState extends State<NavBottom> {
           label: 'Contact',
         ),
       ],
-      currentIndex: _selectedIndex,
+      currentIndex: currentIndex,
       selectedItemColor: Colors.amber[100],
-      onTap: _onItemTapped,
+      onTap: (index) => _handleTap(context, index),
     );
   }
 }
 
 
 Widget buildImage(String scroll , int index )=>Container(child :Image.asset(scroll,fit: BoxFit.cover,));
-PreferredSizeWidget appB(BuildContext context) {
+PreferredSizeWidget appB(BuildContext context, {VoidCallback? onHomeTap}) {
   return AppBar(
     iconTheme: const IconThemeData(color: Colors.orange), // Sets the color of the leading icon
     backgroundColor: Colors.white, // Sets the background color of the AppBar
@@ -394,9 +416,14 @@ PreferredSizeWidget appB(BuildContext context) {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          Navigator.pushReplacement(
+          if (onHomeTap != null) {
+            onHomeTap();
+            return;
+          }
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const AppShell()),
+            (route) => false,
           );
         },
         child: Image.asset(

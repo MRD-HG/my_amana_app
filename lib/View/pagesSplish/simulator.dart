@@ -24,7 +24,7 @@ class _SimulateurState extends State<Simulateur> {
               const Padding(
                 padding: EdgeInsets.only(top: 80),
                 child: Image(
-                  image: AssetImage('images/Calulator.jpg'),
+                  image: AssetImage('assets/images/Calulator.jpg'),
                   width: 150,
                   height: 150,
                 ),

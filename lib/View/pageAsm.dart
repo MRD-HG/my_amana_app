@@ -52,7 +52,7 @@ class _MapAppState extends State<MapApp> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'images/a.jpg',
+                'assets/images/logoProAmana.png',
                 width: 80,
                 height: 80,
               ),
@@ -189,7 +189,7 @@ class _MapAppState extends State<MapApp> {
                       alignment: Alignment.centerLeft,
                       child: Expanded(
                         child:CircleAvatar( radius: 20,
-                        backgroundImage:  AssetImage('images/a.jpg'),
+                      backgroundImage:  AssetImage('assets/images/logoProAmana.png'),
                         ) 
                         
                       ),

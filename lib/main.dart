@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import 'package:my_amana_app/core/firebase/firebase_bootstrap.dart';
 
 import 'View/pagesSplish/simulator.dart';
 
@@ -8,6 +9,7 @@ const int  counter = 0 ;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await FirebaseBootstrap.initialize();
   runApp(const MyApp());
 }
 
@@ -51,6 +53,9 @@ class _mainAppState extends State<mainApp> {
  Route  route =  MaterialPageRoute(builder:  ((context) => const Choisir() ));
   void navigateToMain() {
     Future.delayed(const Duration(seconds: 5), () {
+      if (!mounted) {
+        return;
+      }
       Navigator.pushReplacement(context, route);
     });
   }

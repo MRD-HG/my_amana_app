@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../Menu/MenuSide.dart';
-
 class AgencLoc extends StatelessWidget {
   const AgencLoc({super.key});
 
@@ -29,17 +27,12 @@ class _MapPageState extends State<MapPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-       appBar: appB(context),
-      drawer: darweF(context),
-       body: GoogleMap(
-        onMapCreated: _onMapCreated,
-        initialCameraPosition: CameraPosition(
-          target: initialPosition,
-          zoom: 12.0,
-        ),
+    return GoogleMap(
+      onMapCreated: _onMapCreated,
+      initialCameraPosition: CameraPosition(
+        target: initialPosition,
+        zoom: 12.0,
       ),
-       bottomNavigationBar:const NavBottom(),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 
 import 'package:my_amana_app/View/Facteure/facteur.dart';
+import 'package:my_amana_app/core/firebase/firebase_bootstrap.dart';
 
 
 class Home extends StatefulWidget {
@@ -17,8 +18,15 @@ class _HomeState extends State<Home> {
   
   @override
   Widget build(BuildContext context) {
-    return   Scaffold(
-     body: StreamBuilder<User?>(
+    if (!FirebaseBootstrap.enabled) {
+      return const Scaffold(
+        body: Center(
+          child: Text('Firebase non configure.'),
+        ),
+      );
+    }
+    return Scaffold(
+      body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -54,6 +62,9 @@ class _LoginFactState extends State<LoginFact> {
  
  //pour login
   static Future<User?> login({required String email ,required String password ,required BuildContext context}) async{
+    if (!FirebaseBootstrap.enabled) {
+      return null;
+    }
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user ;
     try{
@@ -62,7 +73,7 @@ class _LoginFactState extends State<LoginFact> {
 
     } on FirebaseException catch(e){
       if(e.code=="user-not-found"){
-        print('Aucun Utilisateur Avec Ce Email');
+        debugPrint('Aucun Utilisateur Avec Ce Email');
       }
     }
       
@@ -72,6 +83,13 @@ class _LoginFactState extends State<LoginFact> {
   
   @override
   Widget build(BuildContext context) {
+    if (!FirebaseBootstrap.enabled) {
+      return const Scaffold(
+        body: Center(
+          child: Text('Firebase non configure.'),
+        ),
+      );
+    }
     TextEditingController emailController=TextEditingController();
     TextEditingController passwordController=TextEditingController();
 
@@ -80,7 +98,7 @@ class _LoginFactState extends State<LoginFact> {
           backgroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
-          title: Image.asset('images/iconAmana.jpg',)),
+          title: Image.asset('assets/images/iconAmana.jpg',)),
       body: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
@@ -122,7 +140,10 @@ class _LoginFactState extends State<LoginFact> {
                 onPressed: () 
                   async{
                         User? user = await login(email: emailController.text, password: passwordController.text, context: context);
-                        print(user);
+                        debugPrint('$user');
+                        if (!context.mounted) {
+                          return;
+                        }
                         if(user != null){
                             Route route = MaterialPageRoute(
                         builder: ((context) => const Facteur()));

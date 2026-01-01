@@ -29,7 +29,7 @@ class _DefinitionPageState extends State<DefinitionPage> {
               
             children: [
               
-               Image.asset("images/AmanaDelivery.jpg",height: 100,width: 100  ),
+               Image.asset("assets/images/AmanaDelivery.jpg",height: 100,width: 100  ),
                 Text(textAlign:TextAlign.center, 
 
                 'AMANA',

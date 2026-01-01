@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 
 import "../resultat.dart";
-import "MenuSide.dart";
 class Accueila extends StatefulWidget {
   const Accueila({super.key});
 
@@ -10,30 +9,45 @@ class Accueila extends StatefulWidget {
 }
 
 class _AccueilaState extends State<Accueila> {
+  final TextEditingController _trackingController = TextEditingController();
+
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+  void dispose() {
+    _trackingController.dispose();
+    super.dispose();
   }
 
-  
+  void _submitTracking() {
+    final trackingId = _trackingController.text.trim();
+    if (trackingId.isEmpty || trackingId.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Veuillez saisir un numéro de suivi valide.'),
+        ),
+      );
+      return;
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Resultat(trackingId: trackingId),
+      ),
+    );
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appB(context),
-      drawer: darweF(context),
-      body: Container(
-        child: Column(
-          children: [
-            Container(
-              height: (MediaQuery.of(context).size.height) * 0.3,
-              width: (MediaQuery.of(context).size.width) * 1,
-              color: Colors.orange,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            height: (MediaQuery.of(context).size.height) * 0.3,
+            width: (MediaQuery.of(context).size.width) * 1,
+            color: Colors.orange,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
                    const  Row(
                       children: [
                         Padding(
@@ -66,6 +80,8 @@ class _AccueilaState extends State<Accueila> {
                     Padding(
                       padding: const EdgeInsets.only(top:20),
                       child: TextFormField(
+                        controller: _trackingController,
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           fillColor: Colors.white,
                           hoverColor: Colors.white,
@@ -81,12 +97,7 @@ class _AccueilaState extends State<Accueila> {
                               IconButton(
                                 icon: const Icon(Icons.search),
                                 onPressed: () {
-                                    Route  route =  MaterialPageRoute(builder:  ((context) => const Resultat()),);
-                                    Navigator.pushReplacement(context, route);
-
-                                  
-
-
+                                  _submitTracking();
                                 },
                               ),
                               IconButton(
@@ -133,10 +144,9 @@ class _AccueilaState extends State<Accueila> {
                     ),
                   )),
             )
-          ],
-        ),
+        ],
       ),
-      bottomNavigationBar: const NavBottom(),
     );
   }
+}
 

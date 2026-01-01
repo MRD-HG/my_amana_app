@@ -1,0 +1,31 @@
+import 'package:flutter/material.dart';
+
+class ActionButton extends StatelessWidget {
+  const ActionButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 216, 203, 183),
+        textStyle: const TextStyle(fontSize: 18),
+        padding: const EdgeInsets.only(
+          left: 150,
+          right: 150,
+          top: 15,
+          bottom: 15,
+        ),
+      ),
+      child: Text(label),
+    );
+  }
+}

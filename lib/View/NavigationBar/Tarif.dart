@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../Menu/MenuSide.dart';
+import 'package:my_amana_app/features/tarif/tarif_service.dart';
+import 'package:my_amana_app/core/widgets/action_button.dart';
 
 class MapAppt extends StatefulWidget {
   const MapAppt({super.key});
@@ -14,6 +14,20 @@ class _MapAppState extends State<MapAppt> {
   bool envioInterna = false;
   bool ecomerse = false;
   Alignment gh = Alignment.bottomCenter;
+  final TarifService _tarifService = TarifService();
+  final TextEditingController _nationalWeightController =
+      TextEditingController();
+  final TextEditingController _internationalWeightController =
+      TextEditingController();
+  final TextEditingController _ecommerceWeightController =
+      TextEditingController();
+  final TextEditingController _lengthController = TextEditingController();
+  final TextEditingController _widthController = TextEditingController();
+  final TextEditingController _heightController = TextEditingController();
+
+  double? _nationalResult;
+  double? _internationalResult;
+  double? _ecommerceResult;
 
   void _envoiNatio() {
     setState(() {
@@ -50,16 +64,85 @@ class _MapAppState extends State<MapAppt> {
   bool isPanelOpen = false;
   int selectedIdx = -1;
   int selectedOption = 1;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void dispose() {
+    _nationalWeightController.dispose();
+    _internationalWeightController.dispose();
+    _ecommerceWeightController.dispose();
+    _lengthController.dispose();
+    _widthController.dispose();
+    _heightController.dispose();
+    super.dispose();
+  }
+
+  double? _parsePositiveDouble(String value) {
+    final parsed = double.tryParse(value.trim());
+    if (parsed == null || parsed <= 0) {
+      return null;
+    }
+    return parsed;
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  void _calculateNational() {
+    final weight = _parsePositiveDouble(_nationalWeightController.text);
+    if (weight == null) {
+      _showError('Saisissez un poids valide.');
+      return;
+    }
+    setState(() {
+      _nationalResult = _tarifService.calculate(
+        type: TarifType.national,
+        weightKg: weight,
+      );
+    });
+  }
+
+  void _calculateInternational() {
+    final weight = _parsePositiveDouble(_internationalWeightController.text);
+    if (weight == null) {
+      _showError('Saisissez un poids valide.');
+      return;
+    }
+    final length = _parsePositiveDouble(_lengthController.text);
+    final width = _parsePositiveDouble(_widthController.text);
+    final height = _parsePositiveDouble(_heightController.text);
+
+    setState(() {
+      _internationalResult = _tarifService.calculate(
+        type: TarifType.international,
+        weightKg: weight,
+        lengthCm: length,
+        widthCm: width,
+        heightCm: height,
+      );
+    });
+  }
+
+  void _calculateEcommerce() {
+    final weight = _parsePositiveDouble(_ecommerceWeightController.text);
+    if (weight == null) {
+      _showError('Saisissez un poids valide.');
+      return;
+    }
+    setState(() {
+      _ecommerceResult = _tarifService.calculate(
+        type: TarifType.ecommerce,
+        weightKg: weight,
+      );
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return Scaffold(
-        key: _scaffoldKey,
-        appBar: appB(context),
-        drawer: darweF(context),
-        body: Column(
-          children: [
+    return SingleChildScrollView(
+      child: Column(
+        children: [
             Row(
               children: [
                 Expanded(
@@ -114,6 +197,8 @@ class _MapAppState extends State<MapAppt> {
                         Padding(
                           padding: const EdgeInsets.all(5),
                           child: TextField(
+                            controller: _nationalWeightController,
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               hintTextDirection: TextDirection.ltr,
                               hintText: 'Poids',
@@ -176,20 +261,20 @@ class _MapAppState extends State<MapAppt> {
                                 const EdgeInsets.only(left: 50, top: 5, bottom: 5),
                             child: Row(
                               children: [
-                                ElevatedButton(
-                                  onPressed: _ecomerse,
-                                  style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 216, 203, 183),
-                                      textStyle: const TextStyle(fontSize: 18),
-                                      padding: const EdgeInsets.only(
-                                          left: 150,
-                                          right: 150,
-                                          top: 15,
-                                          bottom: 15)),
-                                  child: const Text('Calculer'),
+                                ActionButton(
+                                  label: 'Calculer',
+                                  onPressed: _calculateNational,
                                 )
                               ],
                             )),
+                        if (_nationalResult != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              'Tarif estime: ${_nationalResult!.toStringAsFixed(2)} DH',
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -207,6 +292,8 @@ class _MapAppState extends State<MapAppt> {
                         Padding(
                           padding: const EdgeInsets.all(5),
                           child: TextField(
+                            controller: _internationalWeightController,
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               hintTextDirection: TextDirection.ltr,
                               hintText: 'Poids',
@@ -303,6 +390,8 @@ class _MapAppState extends State<MapAppt> {
                               width: 150,
                               height: 50,
                               child: TextField(
+                                controller: _lengthController,
+                                keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                   hintTextDirection: TextDirection.ltr,
                                   hintText: 'Longeur  ',
@@ -321,6 +410,8 @@ class _MapAppState extends State<MapAppt> {
                               width: 150,
                               height: 50,
                               child: TextField(
+                                controller: _widthController,
+                                keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                   hintTextDirection: TextDirection.ltr,
                                   hintText: 'Largeur',
@@ -339,6 +430,8 @@ class _MapAppState extends State<MapAppt> {
                               width: 150,
                               height: 50,
                               child: TextField(
+                                controller: _heightController,
+                                keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                   hintTextDirection: TextDirection.ltr,
                                   hintText: 'Hauteur',
@@ -359,20 +452,20 @@ class _MapAppState extends State<MapAppt> {
                                 const EdgeInsets.only(left: 50, top: 5, bottom: 5),
                             child: Row(
                               children: [
-                                ElevatedButton(
-                                  onPressed: _ecomerse,
-                                  style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 216, 203, 183),
-                                      textStyle: const TextStyle(fontSize: 18),
-                                      padding: const EdgeInsets.only(
-                                          left: 150,
-                                          right: 150,
-                                          top: 15,
-                                          bottom: 15)),
-                                  child: const Text('Calculer'),
+                                ActionButton(
+                                  label: 'Calculer',
+                                  onPressed: _calculateInternational,
                                 )
                               ],
                             )),
+                        if (_internationalResult != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              'Tarif estime: ${_internationalResult!.toStringAsFixed(2)} DH',
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -494,6 +587,8 @@ class _MapAppState extends State<MapAppt> {
                          child:  Padding(
                           padding: const EdgeInsets.all(5),
                           child: TextField(
+                            controller: _ecommerceWeightController,
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               hintTextDirection: TextDirection.ltr,
                               hintText: 'Poids',
@@ -508,31 +603,32 @@ class _MapAppState extends State<MapAppt> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 50, top: 5, bottom: 5),
-                        child: Row(
-                          children: [
-                            ElevatedButton(
-                              onPressed: _ecomerse,
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 216, 203, 183),
-                                textStyle: const TextStyle(fontSize: 18),
-                                padding: const EdgeInsets.only(
-                                    left: 150, right: 150, top: 15, bottom: 15),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 50, top: 5, bottom: 5),
+                          child: Row(
+                            children: [
+                              ActionButton(
+                                label: 'Calculer',
+                                onPressed: _calculateEcommerce,
                               ),
-                              child: const Text('Calculer'),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
+                      if (_ecommerceResult != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            'Tarif estime: ${_ecommerceResult!.toStringAsFixed(2)} DH',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
                     ],
                   ),
                 ),
               ),
             )
-          ],
-        ),
-        bottomNavigationBar: const NavBottom(),
-      );
+        ],
+      ),
+    );
   }
 }

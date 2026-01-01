@@ -26,7 +26,7 @@ class _GeolocalistionState extends State<Geolocalistion> {
               
              const Padding(padding: EdgeInsets.only(top:130),
               child: 
-              Image(image: AssetImage('images/geoloca.png'),width: 150,height: 150,),
+              Image(image: AssetImage('assets/images/geoloca.png'),width: 150,height: 150,),
               
       
               ),
