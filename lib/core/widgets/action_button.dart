@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_amana_app/core/theme/app_theme.dart';
 
 class ActionButton extends StatelessWidget {
   const ActionButton({
@@ -16,7 +17,7 @@ class ActionButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,
-        backgroundColor: const Color.fromARGB(255, 216, 203, 183),
+        backgroundColor: AppColors.primary,
         textStyle: const TextStyle(fontSize: 18),
         padding: const EdgeInsets.only(
           left: 150,

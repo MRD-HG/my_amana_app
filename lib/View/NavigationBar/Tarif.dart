@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_amana_app/core/theme/app_theme.dart';
 import 'package:my_amana_app/features/tarif/tarif_service.dart';
 import 'package:my_amana_app/core/widgets/action_button.dart';
 
@@ -6,14 +7,14 @@ class MapAppt extends StatefulWidget {
   const MapAppt({super.key});
 
   @override
-  _MapAppState createState() => _MapAppState();
+  State<MapAppt> createState() => _MapAppState();
 }
 
 class _MapAppState extends State<MapAppt> {
   bool envoiNatio = true;
   bool envioInterna = false;
   bool ecomerse = false;
-  Alignment gh = Alignment.bottomCenter;
+
   final TarifService _tarifService = TarifService();
   final TextEditingController _nationalWeightController =
       TextEditingController();
@@ -29,41 +30,15 @@ class _MapAppState extends State<MapAppt> {
   double? _internationalResult;
   double? _ecommerceResult;
 
-  void _envoiNatio() {
-    setState(() {
-      if (envoiNatio == !true) {
-        envoiNatio = !envoiNatio;
-        envioInterna = false;
-        ecomerse = false;
-      }
-    });
-  }
-
-  void _envioInterna() {
-    setState(() {
-      if (envioInterna == !true) {
-        envioInterna = !envioInterna;
-        envoiNatio = false;
-
-        ecomerse = false;
-      }
-    });
-  }
-
-  void _ecomerse() {
-    setState(() {
-      if (ecomerse == !true) {
-        ecomerse = !ecomerse;
-        envoiNatio = false;
-
-        envioInterna = false;
-      }
-    });
-  }
-
-  bool isPanelOpen = false;
-  int selectedIdx = -1;
   int selectedOption = 1;
+
+  void _selectCategory(int index) {
+    setState(() {
+      envoiNatio = index == 0;
+      envioInterna = index == 1;
+      ecomerse = index == 2;
+    });
+  }
 
   @override
   void dispose() {
@@ -138,495 +113,376 @@ class _MapAppState extends State<MapAppt> {
       );
     });
   }
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: AppGradients.hero,
+        borderRadius: BorderRadius.circular(22),
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            'Calculer un tarif',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 6),
+          Text(
+            'Estimez vos envois nationaux, internationaux ou e-commerce.',
+            style: TextStyle(color: Colors.white70, fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryButton({
+    required String label,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          decoration: BoxDecoration(
+            color: selected
+                ? AppColors.primary
+                : AppColors.primary.withOpacity(0.12),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: selected
+                ? [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(0.28),
+                      blurRadius: 14,
+                      offset: const Offset(0, 6),
+                    ),
+                  ]
+                : [],
+          ),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: selected ? Colors.white : AppColors.text,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryRow() {
+    return Row(
+      children: [
+        _buildCategoryButton(
+          label: 'ENVOI\nNATIONAL',
+          selected: envoiNatio,
+          onTap: () => _selectCategory(0),
+        ),
+        const SizedBox(width: 8),
+        _buildCategoryButton(
+          label: 'ENVOI\nINTERNA',
+          selected: envioInterna,
+          onTap: () => _selectCategory(1),
+        ),
+        const SizedBox(width: 8),
+        _buildCategoryButton(
+          label: 'E-COMMERCE',
+          selected: ecomerse,
+          onTap: () => _selectCategory(2),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSectionTitle(String title, String subtitle) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: AppColors.text,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          subtitle,
+          style: const TextStyle(
+            fontSize: 12,
+            color: AppColors.mutedText,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildResultBanner(double value) {
+    return Container(
+      margin: const EdgeInsets.only(top: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: AppColors.primary.withOpacity(0.2),
+        ),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.check_circle, color: AppColors.primary),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              'Tarif estime: ${value.toStringAsFixed(2)} DH',
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                color: AppColors.text,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPackagingRow() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.mutedText.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          const Expanded(
+            child: Text(
+              "Type d'emballage",
+              style: TextStyle(fontSize: 12),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: AppColors.accent,
+              textStyle: const TextStyle(fontSize: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: const Text('Sans emballage'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNationalSection() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSectionTitle(
+              'Envoi national',
+              'Estimez un envoi partout au Maroc.',
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _nationalWeightController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                hintText: 'Poids (kg)',
+                prefixIcon: Icon(Icons.scale_outlined),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _buildPackagingRow(),
+            const SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ActionButton(
+                label: 'Calculer',
+                onPressed: _calculateNational,
+              ),
+            ),
+            if (_nationalResult != null) _buildResultBanner(_nationalResult!),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInternationalSection() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSectionTitle(
+              'Envoi international',
+              'Indiquez le poids et les dimensions.',
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _internationalWeightController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                hintText: 'Poids (kg)',
+                prefixIcon: Icon(Icons.scale_outlined),
+              ),
+            ),
+            const SizedBox(height: 12),
+            const TextField(
+              decoration: InputDecoration(
+                hintText: 'Pays de destination',
+                prefixIcon: Icon(Icons.public),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _buildPackagingRow(),
+            const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton(
-                    onPressed: _envoiNatio,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: const Color.fromARGB(255, 216, 203, 183),
-                      textStyle: const TextStyle(fontSize: 15),
-                      padding: const EdgeInsets.all(18),
-                    ),
-                    child: const Text('ENVOI NATIONAL'),
+                  child: TextField(
+                    controller: _lengthController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(hintText: 'Longueur'),
                   ),
                 ),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: ElevatedButton(
-                    onPressed: _envioInterna,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: const Color.fromARGB(255, 216, 203, 183),
-                      textStyle: const TextStyle(fontSize: 15),
-                      padding: const EdgeInsets.all(18),
-                    ),
-                    child: const Text('ENVOI INTERNA'),
+                  child: TextField(
+                    controller: _widthController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(hintText: 'Largeur'),
                   ),
                 ),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: ElevatedButton(
-                    onPressed: _ecomerse,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: const Color.fromARGB(255, 216, 203, 183),
-                      textStyle: const TextStyle(fontSize: 16),
-                      padding: const EdgeInsets.all(18),
-                    ),
-
-                    child: const Text('ECOMERCE'),
+                  child: TextField(
+                    controller: _heightController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(hintText: 'Hauteur'),
                   ),
                 ),
               ],
             ),
-            Visibility(
-                visible: envoiNatio,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                  child: Container(
-                    color: const Color.fromARGB(255, 237, 236, 236),
-                    padding: const EdgeInsets.all(5),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: TextField(
-                            controller: _nationalWeightController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              hintTextDirection: TextDirection.ltr,
-                              hintText: 'Poids',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(
-                                  color: Color.fromARGB(255, 243, 114, 33),
-                                  width: 2,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                                left: 10, right: 0, top: 10, bottom: 10),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 123, 123, 123),
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(6.0),
-                            ),
-                            child: Row(
-                              children: [
-                                const Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text("Type d'enballage"),
-                                ),
-                                const SizedBox(
-                                  width: 185,
-                                ),
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: ElevatedButton(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      foregroundColor: const Color.fromARGB(255, 0, 0, 0), backgroundColor: const Color.fromARGB(255, 240, 133, 26),
-                                      textStyle: const TextStyle(
-                                        fontSize: 18,
-                                      ),
-                                      padding: const EdgeInsets.all(12),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            5), // Set the border radius of the button
-                                      ),
-                                    ),
-                                    child: const Text('Sans emballage'),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                            padding:
-                                const EdgeInsets.only(left: 50, top: 5, bottom: 5),
-                            child: Row(
-                              children: [
-                                ActionButton(
-                                  label: 'Calculer',
-                                  onPressed: _calculateNational,
-                                )
-                              ],
-                            )),
-                        if (_nationalResult != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: Text(
-                              'Tarif estime: ${_nationalResult!.toStringAsFixed(2)} DH',
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                )),
-            Visibility(
-                visible: envioInterna,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                  child: Container(
-                    color: const Color.fromARGB(255, 237, 236, 236),
-                    padding: const EdgeInsets.all(5),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: TextField(
-                            controller: _internationalWeightController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              hintTextDirection: TextDirection.ltr,
-                              hintText: 'Poids',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(
-                                  color: Color.fromARGB(255, 243, 114, 33),
-                                  width: 2,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Padding(
-                            padding:
-                                const EdgeInsets.only(left: 8, top: 5, bottom: 5),
-                            child: Row(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey,
-                                      width: 1.5,
-                                    ),
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
-                                  child: ElevatedButton(
-                                    onPressed: _ecomerse,
-                                    style: ElevatedButton.styleFrom(
-                                        foregroundColor: const Color.fromARGB(255, 111, 108, 108), backgroundColor: const Color.fromARGB(255, 237, 236, 236),
-                                        textStyle: const TextStyle(fontSize: 15),
-                                        padding: const EdgeInsets.only(
-                                            left: 0,
-                                            right: 382,
-                                            top: 25,
-                                            bottom: 25)),
-                                    child: const Text(
-                                      ' Nom pays',
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            )),
-                        const SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                                left: 10, right: 0, top: 10, bottom: 10),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 123, 123, 123),
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(6.0),
-                            ),
-                            child: Row(
-                              children: [
-                                const Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text("Type d'enballage"),
-                                ),
-                                const SizedBox(
-                                  width: 185,
-                                ),
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: ElevatedButton(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      foregroundColor: const Color.fromARGB(255, 0, 0, 0), backgroundColor: const Color.fromARGB(255, 240, 133, 26),
-                                      textStyle: const TextStyle(
-                                        fontSize: 18,
-                                      ),
-                                      padding: const EdgeInsets.all(12),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            5), // Set the border radius of the button
-                                      ),
-                                    ),
-                                    child: const Text('Sans emballage'),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.only(left: 20, right: 5),
-                              width: 150,
-                              height: 50,
-                              child: TextField(
-                                controller: _lengthController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  hintTextDirection: TextDirection.ltr,
-                                  hintText: 'Longeur  ',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 243, 114, 33),
-                                      width: 2,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.only(left: 10, right: 5),
-                              width: 150,
-                              height: 50,
-                              child: TextField(
-                                controller: _widthController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  hintTextDirection: TextDirection.ltr,
-                                  hintText: 'Largeur',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 243, 114, 33),
-                                      width: 2,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.only(left: 10, right: 5),
-                              width: 150,
-                              height: 50,
-                              child: TextField(
-                                controller: _heightController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  hintTextDirection: TextDirection.ltr,
-                                  hintText: 'Hauteur',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 243, 114, 33),
-                                      width: 2,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                            padding:
-                                const EdgeInsets.only(left: 50, top: 5, bottom: 5),
-                            child: Row(
-                              children: [
-                                ActionButton(
-                                  label: 'Calculer',
-                                  onPressed: _calculateInternational,
-                                )
-                              ],
-                            )),
-                        if (_internationalResult != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: Text(
-                              'Tarif estime: ${_internationalResult!.toStringAsFixed(2)} DH',
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                )),
-           
-                   Visibility(
-              visible: ecomerse,
-              child: Padding(
-                padding:
-                    const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                child: Container(
-                  color: const Color.fromARGB(255, 237, 236, 236),
-                  padding: const EdgeInsets.all(5),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: Container(
-                          padding: const EdgeInsets.only(
-                              left: 10, right: 0, top: 10, bottom: 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: const Color.fromARGB(255, 123, 123, 123),
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(6.0),
-                          ),
-                          child: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 50),
-                                          child: Row(
-                                            children: [
-                                              const SizedBox(width: 20),
-                                              Radio(
-                                                  value: 'INTRAVILE',
-                                                  groupValue: selectedOption,
-                                                  onChanged: (val) {
-                                                    setState(() {});
-                                                  }),
-                                              const Text('INTRAVILE'),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 50, right: 10),
-                                          child: Row(
-                                            children: [
-                                              const SizedBox(width: 20),
-                                              Radio(
-                                                  value: 'DOMICILE',
-                                                  groupValue: selectedOption,
-                                                  onChanged: (val) {
-                                                    setState(() {
-                                                    });
-                                                  }),
-                                              const Text('DOMICILE'),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 50),
-                                          child: Row(
-                                            children: [
-                                              const SizedBox(width: 20),
-                                              Radio(
-                                                  value: 'INTERVIL',
-                                                  groupValue: selectedOption,
-                                                  onChanged: (val) {
-                                                    setState(() {});
-                                                  }),
-                                              const Text('INTERVIL'),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 53),
-                                          child: Row(
-                                            children: [
-                                              const SizedBox(width: 20),
-                                              Radio(
-                                                  value: 'EN AGENCE',
-                                                  groupValue: selectedOption,
-                                                  onChanged: (val) {
-                                                    setState(() {
-                                                    });
-                                                  }),
-                                              const Text('EN AGENCE'),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(padding:  const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
-                         child:  Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: TextField(
-                            controller: _ecommerceWeightController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              hintTextDirection: TextDirection.ltr,
-                              hintText: 'Poids',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(
-                                  color: Color.fromARGB(255, 243, 114, 33),
-                                  width: 2,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 50, top: 5, bottom: 5),
-                          child: Row(
-                            children: [
-                              ActionButton(
-                                label: 'Calculer',
-                                onPressed: _calculateEcommerce,
-                              ),
-                            ],
-                          ),
-                        ),
-                      if (_ecommerceResult != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Text(
-                            'Tarif estime: ${_ecommerceResult!.toStringAsFixed(2)} DH',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
+            const SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ActionButton(
+                label: 'Calculer',
+                onPressed: _calculateInternational,
               ),
-            )
+            ),
+            if (_internationalResult != null)
+              _buildResultBanner(_internationalResult!),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChoiceChip(String label, int value) {
+    final bool selected = selectedOption == value;
+    return ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) {
+        setState(() {
+          selectedOption = value;
+        });
+      },
+      selectedColor: AppColors.primary.withOpacity(0.2),
+      backgroundColor: AppColors.surface,
+      labelStyle: TextStyle(
+        color: selected ? AppColors.primary : AppColors.text,
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    );
+  }
+
+  Widget _buildEcommerceSection() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSectionTitle(
+              'E-commerce',
+              'Choisissez le mode de livraison et le poids.',
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                _buildChoiceChip('INTRAVILLE', 0),
+                _buildChoiceChip('DOMICILE', 1),
+                _buildChoiceChip('INTERVILLE', 2),
+                _buildChoiceChip('EN AGENCE', 3),
+              ],
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _ecommerceWeightController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                hintText: 'Poids (kg)',
+                prefixIcon: Icon(Icons.scale_outlined),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ActionButton(
+                label: 'Calculer',
+                onPressed: _calculateEcommerce,
+              ),
+            ),
+            if (_ecommerceResult != null) _buildResultBanner(_ecommerceResult!),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeader(),
+          const SizedBox(height: 16),
+          _buildCategoryRow(),
+          const SizedBox(height: 16),
+          if (envoiNatio) _buildNationalSection(),
+          if (envioInterna) _buildInternationalSection(),
+          if (ecomerse) _buildEcommerceSection(),
         ],
       ),
     );

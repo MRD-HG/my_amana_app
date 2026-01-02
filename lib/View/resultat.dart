@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'Menu/MenuSide.dart';
+import 'package:my_amana_app/core/theme/app_theme.dart';
 import 'package:my_amana_app/features/tracking/tracking_models.dart';
 import 'package:my_amana_app/features/tracking/tracking_repository.dart';
 
@@ -27,17 +28,22 @@ class _ResultatState extends State<Resultat> {
     return info.events.any((event) => event.stage == stage);
   }
 
-  Widget _stageIcon(IconData icon, bool active) {
+  Widget _stageIcon(
+    IconData icon,
+    bool active,
+    Color activeColor,
+    Color inactiveColor,
+  ) {
     return Container(
       width: 50,
       height: 50,
-      decoration: const BoxDecoration(
-        color: Colors.grey,
+      decoration: BoxDecoration(
+        color: active ? activeColor : inactiveColor,
         shape: BoxShape.circle,
       ),
       child: Icon(
         icon,
-        color: active ? Colors.white : Colors.black26,
+        color: active ? Colors.white : Colors.black54,
       ),
     );
   }
@@ -76,140 +82,152 @@ class _ResultatState extends State<Resultat> {
 
   Widget _buildSuccess(TrackingInfo info) {
     final latest = info.latestEvent;
+    final activeColor = AppColors.primary;
+    final inactiveColor = Colors.grey.shade300;
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          Card(
-            elevation: 10,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0, top: 10),
-                  child: Text(
-                    info.id,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Row(
+          Container(
+            decoration: BoxDecoration(
+              gradient: AppGradients.hero,
+              borderRadius: BorderRadius.circular(22),
+            ),
+            child: Card(
+              margin: EdgeInsets.zero,
+              elevation: 0,
+              color: Colors.transparent,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          '${latest.description} - ${latest.location}',
-                          style: const TextStyle(fontSize: 9),
-                        ),
+                    Text(
+                      info.id,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 16,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 12.0),
-                      child: Text(
-                        '${info.weightKg.toStringAsFixed(1)} KG',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                    const SizedBox(height: 6),
+                    Text(
+                      '${latest.description} - ${latest.location}',
+                      style: const TextStyle(fontSize: 12, color: Colors.white70),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Text(
+                          '${info.weightKg.toStringAsFixed(1)} KG',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          info.service,
+                          style: const TextStyle(color: Colors.white70),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const Text(
+                          'Paiement a la livraison',
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
+                        ),
+                        const Spacer(),
+                        Text(
+                          '${info.codAmount.toStringAsFixed(0)} DH',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      formatTrackingTimestamp(latest.timestamp),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.white70,
                       ),
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10.0),
-                      child: Text(
-                        'Paiement a la livraison',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 12.0),
-                      child: Text(
-                        '${info.codAmount.toStringAsFixed(0)} DH',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    info.service,
-                    style: const TextStyle(color: Colors.grey, fontSize: 10),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    formatTrackingTimestamp(latest.timestamp),
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: _stageIcon(
-                        Icons.storefront,
-                        _hasStage(info, TrackingStage.accepted),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: _stageIcon(
-                        Icons.place,
-                        _hasStage(info, TrackingStage.inTransit),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: _stageIcon(
-                        Icons.local_shipping,
-                        _hasStage(info, TrackingStage.outForDelivery),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: _stageIcon(
-                        Icons.check_circle,
-                        _hasStage(info, TrackingStage.delivered),
-                      ),
-                    ),
-                  ],
-                )
-              ],
+              ),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _stageIcon(
+                Icons.storefront,
+                _hasStage(info, TrackingStage.accepted),
+                activeColor,
+                inactiveColor,
+              ),
+              _stageIcon(
+                Icons.place,
+                _hasStage(info, TrackingStage.inTransit),
+                activeColor,
+                inactiveColor,
+              ),
+              _stageIcon(
+                Icons.local_shipping,
+                _hasStage(info, TrackingStage.outForDelivery),
+                activeColor,
+                inactiveColor,
+              ),
+              _stageIcon(
+                Icons.check_circle,
+                _hasStage(info, TrackingStage.delivered),
+                activeColor,
+                inactiveColor,
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
           const Align(
             alignment: Alignment.centerLeft,
             child: Text(
               "Information sur l'expedition",
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(
+                color: AppColors.mutedText,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
+          const SizedBox(height: 12),
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: info.events.length,
-            separatorBuilder: (context, index) => const Divider(height: 1),
+            separatorBuilder: (context, index) => const SizedBox(height: 10),
             itemBuilder: (context, index) {
               final event = info.events[index];
-              return ListTile(
-                title: Text(event.description),
-                subtitle: Text(event.location),
-                trailing: Text(
-                  formatTrackingTimestamp(event.timestamp),
-                  style: const TextStyle(fontSize: 10),
+              return Card(
+                child: ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.local_shipping, color: AppColors.primary),
+                  ),
+                  title: Text(event.description),
+                  subtitle: Text(event.location),
+                  trailing: Text(
+                    formatTrackingTimestamp(event.timestamp),
+                    style: const TextStyle(fontSize: 10),
+                  ),
                 ),
               );
             },

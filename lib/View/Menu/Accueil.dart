@@ -1,6 +1,9 @@
 import "package:flutter/material.dart";
+import "package:my_amana_app/core/theme/app_theme.dart";
+import "package:my_amana_app/core/widgets/tracking_search_card.dart";
 
 import "../resultat.dart";
+
 class Accueila extends StatefulWidget {
   const Accueila({super.key});
 
@@ -22,7 +25,7 @@ class _AccueilaState extends State<Accueila> {
     if (trackingId.isEmpty || trackingId.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Veuillez saisir un numéro de suivi valide.'),
+          content: Text('Veuillez saisir un numero de suivi valide.'),
         ),
       );
       return;
@@ -38,115 +41,63 @@ class _AccueilaState extends State<Accueila> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: (MediaQuery.of(context).size.height) * 0.3,
-            width: (MediaQuery.of(context).size.width) * 1,
-            color: Colors.orange,
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                   const  Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 40),
-                          child: Icon(
-                            Icons.map,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10.0, top: 40),
-                          child: Text("Suivi",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                              )),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 250, top: 40),
-                          child:  Text(
-                            "+Historique",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top:20),
-                      child: TextFormField(
-                        controller: _trackingController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          hoverColor: Colors.white,
-                          filled: true,
-                          border: InputBorder.none,
-                          labelStyle:
-                              const TextStyle(color: Colors.grey, fontSize: 15),
-                          labelText: "SCANNER OU SAISIR VOTRE CODE",
-                          suffixIcon: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.search),
-                                onPressed: () {
-                                  _submitTracking();
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.qr_code_scanner),
-                                onPressed: (){},
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+          TrackingSearchCard(
+            controller: _trackingController,
+            onSearch: _submitTracking,
+            onScan: () {},
+            trailing: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Text(
+                '+ Historique',
+                style: TextStyle(color: Colors.white, fontSize: 12),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom:40.0),
-              child: Card(
-
-                  elevation: 60,
-                  child: Container(
-                    color: Colors.white,
-                    height: (MediaQuery.of(context).size.height) * 0.08,
-                    width: (MediaQuery.of(context).size.width) * 0.85,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25),
-                          child: Text(
-                            "Numéro de Suivi",
-                            style: TextStyle(color: Colors.orange[800]),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 150),
-                          child: Text(
-                            "Action",
-                            style: TextStyle(
-                              color: Colors.orange[800],
-                            ),
-                          ),
-                        ),
-                      ],
+            hintText: 'Scanner ou saisir votre code',
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'Historique recent',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.text,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  )),
-            )
+                    child: const Icon(Icons.history, color: AppColors.primary),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Text(
+                      'Aucun historique pour le moment.',
+                      style: TextStyle(color: AppColors.mutedText),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 }
-

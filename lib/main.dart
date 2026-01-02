@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:my_amana_app/core/firebase/firebase_bootstrap.dart';
+import 'package:my_amana_app/core/theme/app_theme.dart';
 
 import 'View/pagesSplish/simulator.dart';
 
@@ -23,10 +24,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: AppTheme.light(),
       home: Scaffold(
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.transparent,
         body:mainApp()
        
         
@@ -62,46 +64,37 @@ class _mainAppState extends State<mainApp> {
 
   @override
   Widget build(BuildContext context){
-    return const Scaffold(
-      backgroundColor: Colors.orange,
-    /*   decoration: const BoxDecoration(
-        shape:BoxShape.circle,
-        
-        color: Colors.amber,
-      
-        
-      ), */
-      
-      body: SizedBox(
-        
-          child: Column( 
-            mainAxisAlignment: MainAxisAlignment.center,
-             children: [
-                  
-                Image(image: AssetImage("assets/images/logoProAmana.png")
-                ,width: 250,height:500,),
-                SpinKitDoubleBounce(
-                        color: Colors.white,
-                        size: 50.0,
-
-                  ),
-                        
-                    ],
-                  ),
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFFFF7A3D),
+            Color(0xFFF26430),
+            Color(0xFFE05225),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
       ),
-      
-       
-
-        
-    
-      
-       
-       
-              
-              
-        
-     
-      
+      child: const SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image(
+                image: AssetImage("assets/images/logoProAmana.png"),
+                width: 220,
+                height: 220,
+              ),
+              SizedBox(height: 16),
+              SpinKitDoubleBounce(
+                color: Colors.white,
+                size: 50.0,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
     
   }
