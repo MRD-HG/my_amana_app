@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:my_amana_app/View/Menu/Accueil.dart';
 import 'package:my_amana_app/View/SideBar/Mediathique.dart';
 import 'package:my_amana_app/View/SideBar/produit.dart';
+import 'package:my_amana_app/View/SideBar/ProduitPro.dart';
 import 'package:my_amana_app/View/NavigationBar/Agences.dart';
 import 'package:my_amana_app/View/NavigationBar/Contact.dart';
 import 'package:my_amana_app/View/NavigationBar/Tarif.dart';
@@ -12,6 +13,8 @@ import 'package:my_amana_app/View/SideBar/AmnMaNatio.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 import 'package:my_amana_app/core/widgets/tracking_search_card.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+import 'feedback_page.dart';
 
 import '../SideBar/FAQ.dart';
 import '../SideBar/NumeUtil.dart';
@@ -73,14 +76,18 @@ Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
   return Drawer(
             child: Container(
               color: AppColors.primaryDark,
-              child: ListView(
-                children: [
+              child: ListTileTheme(
+                iconColor: Colors.white70,
+                textColor: Colors.white,
+                child: ListView(
+                  children: [
                   DrawerHeader(
                     decoration: const BoxDecoration(
                       gradient: AppGradients.hero,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
                           padding: const EdgeInsets.all(8),
@@ -90,23 +97,25 @@ Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
                           ),
                           child: const Image(
                             image: AssetImage("assets/images/logoProAmana.png"),
-                            height: 60,
-                            width: 60,
+                            height: 52,
+                            width: 52,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 8),
                         const Text(
                           'My Amana',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 18,
+                            fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 2),
                         const Text(
                           'Barid Al Maghrib',
-                          style: TextStyle(color: Colors.white70, fontSize: 12),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(color: Colors.white70, fontSize: 11),
                         ),
                       ],
                     ),
@@ -133,7 +142,7 @@ Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
                 ListTile(
                   leading:const Icon(Icons.shopping_cart),
 
-                  title: const Text('Produit', style: TextStyle(color: Colors.white)),
+                  title: const Text('Produit'),
                   onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -145,7 +154,7 @@ Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
                 ListTile(
                   leading:const Icon(Icons.place_rounded),
 
-                  title: const Text('Agences', style: TextStyle(color: Colors.white)),
+                  title: const Text('Agences'),
                   onTap: () {
                     if (onSelectTab != null) {
                       onSelectTab(1);
@@ -164,7 +173,7 @@ Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
                 ListTile(
                   leading:const Icon(Icons.slow_motion_video_outlined),
 
-                  title: const Text('MÃ©diathÃ©que', style: TextStyle(color: Colors.white)),
+                  title: const Text('Mediatheque'),
                   onTap: () {
                     // Handle Settings menu item tap
                     Navigator.pop(context);
@@ -177,7 +186,7 @@ Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
                  ListTile(
                   leading:const Icon(Icons.person_pin),
 
-                  title: const Text('Suivi ClientÃ©le', style: TextStyle(color: Colors.white)),
+                  title: const Text('Suivi clientele'),
                   onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -193,7 +202,7 @@ Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
                  ListTile(
                   leading:const Icon(Icons.call),
 
-                  title: const Text('NumÃ©ros Utiles', style: TextStyle(color: Colors.white)),
+                  title: const Text('Numeros utiles'),
                   onTap: () {
                     // Handle Settings menu item tap
                      Navigator.pop(context);
@@ -203,21 +212,21 @@ Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
                      );
                   },
                 ),
-                 ListTile(
+                ListTile(
                   leading:const Icon(Icons.shopping_cart),
-
-                  title: const Text('Produit ProhibÃ©s', style: TextStyle(color: Colors.white)),
+                  title: const Text('Produit prohibes'),
                   onTap: () {
-                    // Handle Settings menu item tap
-                    
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Guide()),
+                    );
                   },
                 ),
-                 ListTile(
+                ListTile(
                   leading:const Icon(Icons.question_mark_rounded),
-
-                  title: const Text('FAQ', style: TextStyle(color: Colors.white)),
+                  title: const Text('FAQ'),
                   onTap: () {
-                    // Handle Settings menu item tap
                     Navigator.pop(context);
                     Navigator.push(
                       context,
@@ -225,33 +234,30 @@ Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
                     );
                   },
                 ),
-                 ListTile(
+                ListTile(
                   leading:const Icon(Icons.messenger),
-
-                  title: const Text('Feedbackcs', style: TextStyle(color: Colors.white)),
+                  title: const Text('Feedback'),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const FeedB()),
                     );
-                    // Handle Settings menu item tap
                   },
                 ),
-                 ListTile(
+                ListTile(
                   leading:const Icon(Icons.gpp_maybe_sharp),
-
-                  title: const Text('Guide De Bonnes Pratique', style: TextStyle(color: Colors.white)),
+                  title: const Text('Guide de bonnes pratiques'),
                   onTap: () {
-                       Navigator.pop(context);
-                       Navigator.push(
-                         context,
-                         MaterialPageRoute(builder: (context) => const GuideBonn()),
-                       );
-                    // Handle Settings menu item tap
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const GuideBonn()),
+                    );
                   },
                 ),
-                ]
+                  ],
+                ),
               ),
             ) ,
           );
@@ -299,6 +305,24 @@ class _MenuAmanaState extends State<MenuAmana> {
     );
   }
 
+  Future<void> _scanTracking() async {
+    final scanned = await SimpleBarcodeScanner.scanBarcode(context);
+    if (!mounted) {
+      return;
+    }
+    final value = (scanned ?? '').trim();
+    if (value.isEmpty || value == '-1') {
+      return;
+    }
+    _trackingController.text = value;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Resultat(trackingId: value),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -309,7 +333,7 @@ class _MenuAmanaState extends State<MenuAmana> {
           TrackingSearchCard(
             controller: _trackingController,
             onSearch: _submitTracking,
-            onScan: () {},
+            onScan: _scanTracking,
             hintText: 'Scanner ou saisir votre code',
           ),
           const SizedBox(height: 20),
@@ -347,8 +371,8 @@ class NavBottom extends StatelessWidget {
   final ValueChanged<int>? onTap;
 
   static const TextStyle _textStyle = TextStyle(
-    color: Colors.white54,
-    fontSize: 8,
+    fontSize: 10,
+    fontWeight: FontWeight.w600,
   );
 
   void _handleTap(BuildContext context, int index) {
@@ -384,21 +408,22 @@ class NavBottom extends StatelessWidget {
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             selectedLabelStyle: _textStyle,
+            unselectedLabelStyle: _textStyle,
             items: [
               BottomNavigationBarItem(
-                icon:Padding(padding:const EdgeInsets.only(bottom: 4) ,child: Icon(Boxicons.bxs_navigation, color: Colors.orange[700])),
+                icon:Padding(padding:const EdgeInsets.only(bottom: 4) ,child: Icon(Boxicons.bxs_navigation)),
                 label: 'Suivi',
               ),
               BottomNavigationBarItem(
-                icon: Padding(padding:const EdgeInsets.only(bottom: 4),child:Icon(Boxicons.bx_current_location, color: Colors.orange[700])),
+                icon: Padding(padding:const EdgeInsets.only(bottom: 4),child:Icon(Boxicons.bx_current_location)),
                 label: 'Agences',
               ),
               BottomNavigationBarItem(
-                icon: Padding(padding: const EdgeInsets.only(bottom: 4),child: Icon(Boxicons.bx_calculator, color: Colors.orange[700])),
+                icon: Padding(padding: const EdgeInsets.only(bottom: 4),child: Icon(Boxicons.bx_calculator)),
                 label: 'Tarif',
               ),
               BottomNavigationBarItem(
-                icon:Padding(padding:const EdgeInsets.only(bottom: 4),child: Icon(Boxicons.bxs_contact, color: Colors.orange[700])),
+                icon:Padding(padding:const EdgeInsets.only(bottom: 4),child: Icon(Boxicons.bxs_contact)),
                 label: 'Contact',
               ),
             ],
@@ -495,390 +520,4 @@ PreferredSizeWidget appB(BuildContext context, {VoidCallback? onHomeTap}) {
     ),
     centerTitle: true, // Aligns the title to the center
   );
-}
-
-class FeedB extends StatelessWidget {
-  const FeedB({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const CheckboxPage();
-  }
-}
-
-class CheckboxPage extends StatefulWidget {
-  const CheckboxPage({super.key});
-
-  @override
-  State<CheckboxPage> createState() => _CheckboxPageState();
-}
-
-class _CheckboxPageState extends State<CheckboxPage> {
-  final List<bool> checkboxes = [false, false, false, false];
-
-  void navigateToCheckedPages() {
-    final List<String> checkedPages = [];
-
-    for (int i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i]) {
-        checkedPages.add('/page${i + 1}');
-      }
-    }
-
-    if (checkedPages.isNotEmpty) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MultiPageViewer(pages: checkedPages),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Selectionnez au moins un formulaire.')),
-      );
-    }
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: AppGradients.hero,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Feedback',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: 6),
-          Text(
-            'Choisissez les formulaires a remplir.',
-            style: TextStyle(color: Colors.white70, fontSize: 12),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCheckboxTile(String label, int index) {
-    return CheckboxListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(label, style: const TextStyle(fontSize: 12)),
-      value: checkboxes[index],
-      activeColor: AppColors.primary,
-      onChanged: (value) {
-        setState(() {
-          checkboxes[index] = value ?? false;
-        });
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appB(context),
-      drawer: darweF(context),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _buildHeader(),
-          const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Formulaires disponibles',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.text,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  _buildCheckboxTile(
-                    "Formulaire du Feedback sur l'Agence",
-                    0,
-                  ),
-                  _buildCheckboxTile(
-                    "Feedback sur l'expÇ¸rience de l'application mobile My Amana ",
-                    1,
-                  ),
-                  _buildCheckboxTile(
-                    "Feedback sur l'expÇ¸rience de l'application le call centre ",
-                    2,
-                  ),
-                  _buildCheckboxTile(
-                    "Feedback sur l'expÇ¸rience de livraison Çÿ domicile",
-                    3,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: navigateToCheckedPages,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-              ),
-              child: const Text('Continuer'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class MultiPageViewer extends StatefulWidget {
-  final List<String> pages;
-
-  const MultiPageViewer({super.key, required this.pages});
-
-  @override
-  State<MultiPageViewer> createState() => _MultiPageViewerState();
-}
-
-class _MultiPageViewerState extends State<MultiPageViewer> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController.addListener(() {
-      setState(() {
-        _currentPage = _pageController.page!.round();
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  void nextPage() {
-    if (_currentPage < widget.pages.length - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
-  void previousPage() {
-    if (_currentPage > 0) {
-      _pageController.previousPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Formulaires'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              children: widget.pages
-                  .map((page) => Navigator(
-                        onGenerateRoute: (settings) => MaterialPageRoute(
-                          builder: (context) => PageRouter(page: page),
-                        ),
-                      ))
-                  .toList(),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: previousPage,
-                  icon: const Icon(Icons.arrow_back),
-                ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    '${_currentPage + 1}/${widget.pages.length}',
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
-                IconButton(
-                  onPressed: nextPage,
-                  icon: const Icon(Icons.arrow_forward),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class PageRouter extends StatelessWidget {
-  final String page;
-
-  const PageRouter({super.key, required this.page});
-
-  @override
-  Widget build(BuildContext context) {
-    return Navigator(
-      initialRoute: page,
-      onGenerateRoute: (settings) {
-        WidgetBuilder builder;
-        switch (settings.name) {
-          case '/page1':
-            builder = (BuildContext context) => const FeedbackPage(
-                  title: 'Feedback Agence',
-                  subtitle: 'Parlez-nous de votre passage en agence.',
-                );
-            break;
-          case '/page2':
-            builder = (BuildContext context) => const FeedbackPage(
-                  title: 'Feedback Application',
-                  subtitle: 'Votre avis sur l experience My Amana.',
-                );
-            break;
-          case '/page3':
-            builder = (BuildContext context) => const FeedbackPage(
-                  title: 'Feedback Call Center',
-                  subtitle: 'Comment evalueriez-vous notre support ?',
-                );
-            break;
-          case '/page4':
-            builder = (BuildContext context) => const FeedbackPage(
-                  title: 'Feedback Livraison',
-                  subtitle: 'Partagez votre experience de livraison.',
-                );
-            break;
-          default:
-            throw Exception('Invalid route: ${settings.name}');
-        }
-        return MaterialPageRoute(builder: builder, settings: settings);
-      },
-    );
-  }
-}
-
-class FeedbackPage extends StatelessWidget {
-  const FeedbackPage({
-    super.key,
-    required this.title,
-    required this.subtitle,
-  });
-
-  final String title;
-  final String subtitle;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: AppGradients.hero,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                subtitle,
-                style: const TextStyle(color: Colors.white70, fontSize: 12),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Votre retour',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.text,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                const TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Nom et prenom',
-                    prefixIcon: Icon(Icons.person_outline),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                const TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Email',
-                    prefixIcon: Icon(Icons.mail_outline),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                const TextField(
-                  maxLines: 4,
-                  decoration: InputDecoration(
-                    hintText: 'Votre message',
-                    alignLabelWithHint: true,
-                    prefixIcon: Icon(Icons.message_outlined),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text('Envoyer'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }

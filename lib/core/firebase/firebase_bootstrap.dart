@@ -3,18 +3,23 @@ import 'package:flutter/foundation.dart';
 
 import '../../firebase_options.dart';
 
+enum AppMode { firebase, demo }
+
 class FirebaseBootstrap {
-  static bool enabled = false;
+  static AppMode mode = AppMode.demo;
+
+  static bool get enabled => mode == AppMode.firebase;
 
   static Future<void> initialize() async {
     try {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      enabled = true;
+      mode = AppMode.firebase;
+      debugPrint('App mode: Firebase');
     } catch (error) {
-      enabled = false;
-      debugPrint('Firebase disabled: $error');
+      mode = AppMode.demo;
+      debugPrint('App mode: Demo ($error)');
     }
   }
 }

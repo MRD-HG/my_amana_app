@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import 'package:my_amana_app/core/bootstrap/app_repositories.dart';
 import 'package:my_amana_app/core/firebase/firebase_bootstrap.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 
@@ -11,6 +12,7 @@ const int  counter = 0 ;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FirebaseBootstrap.initialize();
+  AppRepositories.configure();
   runApp(const MyApp());
 }
 

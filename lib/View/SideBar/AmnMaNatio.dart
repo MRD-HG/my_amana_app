@@ -1,533 +1,225 @@
 import 'package:flutter/material.dart';
 import 'package:my_amana_app/View/Menu/MenuSide.dart';
 import 'package:my_amana_app/View/NavigationBar/Tarif.dart';
+import 'package:my_amana_app/core/theme/app_theme.dart';
 
-class DefinitionPage extends StatefulWidget {
+class DefinitionPage extends StatelessWidget {
   const DefinitionPage({super.key});
 
   @override
-  State<DefinitionPage> createState() => _DefinitionPageState();
-}
-
-class _DefinitionPageState extends State<DefinitionPage> {
-  final bool _showIcon = false;
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appB(context),
-      drawer:darweF(context),
-      body:ListView(
-
-      children:[ Padding(
-    
-        padding:const EdgeInsets.all(1.0),
-        
-          child: Column(
-             mainAxisSize: MainAxisSize.min, 
-              crossAxisAlignment: CrossAxisAlignment.start, 
-              
-            children: [
-              
-               Image.asset("assets/images/AmanaDelivery.jpg",height: 100,width: 100  ),
-                Text(textAlign:TextAlign.center, 
-
-                'AMANA',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.orange[800]),
-              ),
-              const SizedBox(height:5),
-
-              const Text(
-                textAlign:TextAlign.center, 
-
-
-                'Aussitôt envoyé,aussitôt livré !',overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,color: Colors.black),
-              ),
-              const SizedBox(height: 15),
-              Text(textAlign: TextAlign.start,
-
-                'Amana Messagerie Nationale',overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold,color: Colors.red[800],),
-              ),
-              const SizedBox(height: 10),
-              
-              const Text(
-                    textAlign:TextAlign.left,
-                'Amana Messagerie Nationale vous permet de livrer vos colis et vos documents partout au Maroc et en seulement 24H dans 80% destinations.',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,color: Colors.black ,),
-              ),
-              const SizedBox(height: 2),
-
-
-              ElevatedButton( style: ElevatedButton.styleFrom(backgroundColor: Colors.red[800], fixedSize: const Size(300, 10)),onPressed: () {
-                Route route = MaterialPageRoute(builder: ((context)=> const MapAppt()));
-                Navigator.push(context, route);
-              }, child: const Text("CALCLULER UN TARIF"),),
-              const SizedBox(height: 20,),
-               Flexible(child: ExpansionTile(backgroundColor: Colors.red[500],
-                title: const Text("Caractéristiques"),
-             
-               onExpansionChanged: (bool expanded){},
-               children:  [
-                ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Le Contre remboursement : Votre destinataire ne peut récupérer l'envoi qu'une fois le paîment que vous avez"
-                  "préalablement convenu est réglé.",),
-                ),
-                ListTile(
-                  tileColor: Colors.red[800],
-                  title:const Text("La preuve de livrainson : Recevez une preuve de distribution signée par la destinataire"
-                  ),
-                ),
-                ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("La valeur déclarée : Assurez le remboursement des envois de valeurs en cas de perte "
-                  ,),
-                ),
-                 ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Envois fragile : Réservez un traitement spécial aux envois Amana dont le contenu est fragile ."
-                  ),
-                ),
-               
-
-               ],
-               
-               
-             
-             )
-             ,),
-             Flexible(child: ExpansionTile(backgroundColor: Colors.red[800],
-                title: const Text("Avantages"),
-             
-               onExpansionChanged: (bool expanded){},
-               children:  [
-                ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Livraison à domicile"
-                  ,overflow: TextOverflow.ellipsis,),
-                ),
-                ListTile(
-                  tileColor: Colors.red[800],
-                  title:const Text("Délai de garde de 15 jours de vos envois dans l'agences la plus proche de destinataire en cas d'absence."
-                  ,overflow: TextOverflow.ellipsis,),
-                ),
-                ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("ALert SMS pour l'expéditeur et le destinataire ;"
-                  ,overflow: TextOverflow.ellipsis,),
-                ),
-                 ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Gamme d'emballages compléte adaptée à la nature de vos colis"
-                  ,overflow: TextOverflow.ellipsis,),
-                ),
-                 ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Services de traçabilité."
-                  ,overflow: TextOverflow.ellipsis,),
-                ),
-               
-
-               ],
-               
-               
-             
-             )
-             ,)
-          
-            ]),
-      ),],
-      ),
-      bottomNavigationBar: const NavBottom(),
-      
-      );
-    
+    return const ServiceDetailsPage(
+      title: 'Amana messagerie nationale',
+      tagline: 'Aussitot envoye, aussitot livre !',
+      description:
+          'Livrez vos colis et documents partout au Maroc avec des delais express garantis.',
+      imagePath: 'assets/images/AmanaDelivery.jpg',
+      characteristics: [
+        'Contre remboursement disponible',
+        'Preuve de livraison signee',
+        'Valeur declaree pour vos envois',
+        'Traitement special pour les envois fragiles',
+      ],
+      advantages: [
+        'Livraison a domicile',
+        'Delai de garde de 15 jours en agence',
+        'Alertes SMS expeditateur et destinataire',
+        'Emballages adaptes a vos colis',
+        'Services de tracabilite',
+      ],
+    );
   }
 }
+
 class Ecommerce extends StatelessWidget {
   const Ecommerce({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appB(context),
-      drawer: darweF(context),
-      body:ListView(
-        children:[ Padding(
-    
-        padding:const EdgeInsets.all(1.0),
-        
-          child: Column(
-             mainAxisSize: MainAxisSize.min, 
-              crossAxisAlignment: CrossAxisAlignment.start, 
-              
-            children: [
-              
-               Image.asset("assets/images/AmanaDelivery.jpg"),
-                Text(textAlign:TextAlign.center, 
-
-                'AMANA',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.orange[800]),
-              ),
-              const SizedBox(height:5),
-
-              const Text(
-                textAlign:TextAlign.center, 
-
-
-                'Aussitôt envoyé,aussitôt livré !',overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,color: Colors.black),
-              ),
-              const SizedBox(height: 15),
-              Text(textAlign: TextAlign.start,
-
-                'E-commerce',overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold,color: Colors.red[800],),
-              ),
-              const SizedBox(height: 10),
-              
-              const Text(
-                    textAlign:TextAlign.left,overflow: TextOverflow.ellipsis,
-                "",
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,color: Colors.black ,),
-              ),
-              const SizedBox(height: 2),
-
-
-              ElevatedButton( style: ElevatedButton.styleFrom(backgroundColor: Colors.red[800], fixedSize: const Size(300, 10)),onPressed: () {
-                Route route = MaterialPageRoute(builder: ((context)=> const MapAppt()));
-                Navigator.push(context, route);
-              }, child: const Text("CALCLULER UN TARIF"),),
-              const SizedBox(height: 20,),
-               Flexible(child: ExpansionTile(backgroundColor: Colors.red[500],
-                title: const Text("Caractéristiques"),
-             
-               onExpansionChanged: (bool expanded){},
-               children:  [
-                ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Le Contre remboursement : Votre destinataire ne peut récupérer l'envoi qu'une fois le paîment que vous avez"
-                  "préalablement convenu est réglé.",overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 10)),
-                ),
-                ListTile(
-                  tileColor: Colors.red[800],
-                  title:const Text("La preuve de livrainson : Recevez une preuve de distribution signée par la destinataire"
-                  ,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 10)),
-                ),
-                ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("La valeur déclarée : Assurez le remboursement des envois de valeurs en cas de perte "
-                  ,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 10)),
-                ),
-                 ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Envois fragile : Réservez un traitement spécial aux envois Amana dont le contenu est fragile ."
-                  ,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 10)),
-                ),
-               
-
-               ],
-               
-               
-             
-             )
-             ,),
-             Flexible(child: ExpansionTile(backgroundColor: Colors.red[800],
-                title: const Text("Avantages"),
-             
-               onExpansionChanged: (bool expanded){},
-               controlAffinity: ListTileControlAffinity.leading,
-               children:  [
-                ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Livraison à domicile"
-                  ,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 10)),
-                ),
-                ListTile(
-                  tileColor: Colors.red[800],
-                  title:const Text("Délai de garde de 15 jours de vos envois dans l'agences la plus proche de destinataire en cas d'absence."
-                  ,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 10)),
-                ),
-                ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("ALert SMS pour l'expéditeur et le destinataire ;"
-                  ,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 10)),
-                ),
-                 ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Gamme d'emballages compléte adaptée à la nature de vos colis"
-                  ,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 10)),
-                ),
-                 ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Services de traçabilité."
-                  ,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 10)),
-                ),
-               
-
-               ],
-               
-               
-             
-             )
-             ,)
-          
-            ]),
-      ),],
-      )
-
+    return const ServiceDetailsPage(
+      title: 'E-commerce',
+      tagline: 'Livraison flexible pour vos clients',
+      description:
+          'Une offre dediee aux acteurs e-commerce avec options de livraison et encaissement.',
+      imagePath: 'assets/images/AmanaDelivery.jpg',
+      characteristics: [
+        'Deux tentatives de livraison',
+        'Alertes SMS et appels avant livraison',
+        'Encaissement a la livraison',
+      ],
+      advantages: [
+        'Couverture nationale et regionale',
+        'Suivi en temps reel des colis',
+        'Solutions adaptees aux pics d activite',
+      ],
     );
   }
 }
+
 class AmanaInter extends StatelessWidget {
   const AmanaInter({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar:appB(context),
-      drawer: darweF(context),
-      body:ListView(
-        children:[ Padding(
-    
-        padding:const EdgeInsets.all(1.0),
-        
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-              
-            children: [
-              
-               Image.asset("assets/images/AmanaDelivery.jpg"),
-                Text(textAlign:TextAlign.center, 
-
-                'AMANA',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.orange[800]),
-              ),
-              const SizedBox(height:5),
-
-              const Text(
-                textAlign:TextAlign.center, 
-
-
-                'Aussitôt envoyé,aussitôt livré !',overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,color: Colors.black),
-              ),
-              const SizedBox(height: 15),
-              Text(textAlign: TextAlign.start,
-
-                'Amana Internationale',overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold,color: Colors.red[800],),
-              ),
-              const SizedBox(height: 10),
-              
-              const Text(
-                    textAlign:TextAlign.left,overflow: TextOverflow.ellipsis,
-                "Amana Internationale vous permet de livrer vos colis à l'étranger dans un délai maîtrisé et garanti allant de 4 à 7"
-                "jours ouvrables selon le pays de destination.",
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,color: Colors.black ,),
-              ),
-              const SizedBox(height: 2),
-
-
-              ElevatedButton( style: ElevatedButton.styleFrom(backgroundColor: Colors.red[800], fixedSize: const Size(300, 10)),onPressed: () {
-                Route route = MaterialPageRoute(builder: ((context)=> const MapAppt()));
-                Navigator.push(context, route);
-              }, child: const Text("CALCLULER UN TARIF"),),
-              const SizedBox(height: 20,),
-               Flexible(child: ExpansionTile(backgroundColor: Colors.red[500],
-                title: const Text("Caractéristiques"),
-             
-               onExpansionChanged: (bool expanded){},
-               children:  [
-                ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Des délai maîtrisés entre 4 à 7 jours ouvrables selon le pays de destination ;"
-                  ,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 10)),
-                ),
-                ListTile(
-                  tileColor: Colors.red[800],
-                  title:const Text("Une capacité de poids allant jusqu'à 70 kg/colis quelle que soit la destination."
-                  ,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 10)),
-                ),
-                
-               
-
-               ],
-               
-               
-             
-             )
-             ,),
-             Flexible(child: ExpansionTile(backgroundColor: Colors.red[800],
-                title: const Text("Avantages"),
-             
-               onExpansionChanged: (bool expanded){},
-               controlAffinity: ListTileControlAffinity.leading,
-               children:  [
-                ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Le meilleur rapport qualité prix;"
-                  ,overflow: TextOverflow.ellipsis,),
-                ),
-                ListTile(
-                  tileColor: Colors.red[800],
-                  title:const Text("Une large couverture de distribution : 150 destination à travers le monde;"
-                  ,overflow: TextOverflow.ellipsis,),
-                ),
-                ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Suivi des envois."
-                  ,overflow: TextOverflow.ellipsis,),
-                ),
-                
-
-               ],
-               
-               
-             
-             )
-             ,)
-          
-            ]),
-      ),],
-      )
+    return const ServiceDetailsPage(
+      title: 'Amana internationale',
+      tagline: 'Livrez vos colis a l etranger',
+      description:
+          'Delais maitrises entre 4 et 7 jours selon la destination.',
+      imagePath: 'assets/images/AmanaDelivery.jpg',
+      characteristics: [
+        'Poids jusqu a 70 kg par colis',
+        'Large couverture internationale',
+      ],
+      advantages: [
+        'Meilleur rapport qualite/prix',
+        'Suivi des envois',
+      ],
     );
   }
 }
+
 class Postcolis extends StatelessWidget {
   const Postcolis({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar:appB(context),
-      drawer:darweF(context),
-      body:ListView(
-        children:[ Padding(
-    
-        padding:const EdgeInsets.all(1.0),
-        
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-              
-            children: [
-              
-               Image.asset("assets/images/AmanaDelivery.jpg"),
-                Text(textAlign:TextAlign.center, 
+    return const ServiceDetailsPage(
+      title: 'Postcolis',
+      tagline: 'Messagerie internationale economique',
+      description:
+          'Solution pour les colis jusqu a 30 kg avec tarifs competitifs.',
+      imagePath: 'assets/images/AmanaDelivery.jpg',
+      characteristics: [
+        'Couverture de plus de 200 destinations',
+        'Delais a partir de 7 jours',
+      ],
+      advantages: [
+        'Tarifs economiques',
+        'Formalites simples',
+        'Service de tracabilite',
+      ],
+    );
+  }
+}
 
-                'AMANA',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.orange[800]),
-              ),
-              const SizedBox(height:5),
+class ServiceDetailsPage extends StatelessWidget {
+  const ServiceDetailsPage({
+    super.key,
+    required this.title,
+    required this.tagline,
+    required this.description,
+    required this.imagePath,
+    required this.characteristics,
+    required this.advantages,
+  });
 
-              const Text(
-                textAlign:TextAlign.center, 
+  final String title;
+  final String tagline;
+  final String description;
+  final String imagePath;
+  final List<String> characteristics;
+  final List<String> advantages;
 
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: AppGradients.hero,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            tagline,
+            style: const TextStyle(color: Colors.white70, fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
 
-                'Aussitôt envoyé,aussitôt livré !',overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,color: Colors.black),
-              ),
-              const SizedBox(height: 15),
-              Text(textAlign: TextAlign.start,
+  Widget _buildInfoCard(String title, List<String> items) {
+    return Card(
+      child: ExpansionTile(
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              children: [
+                for (final item in items)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(Icons.check_circle_outline,
+                            color: AppColors.primary, size: 16),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(item, style: const TextStyle(fontSize: 12)),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-                'Postcolis',overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold,color: Colors.red[800],),
-              ),
-              const SizedBox(height: 10),
-              
-              const Text(
-                    textAlign:TextAlign.left,overflow: TextOverflow.ellipsis,
-                "Postcolis est une solution économique de messagerie internationale pour les expéditions de vos colis jusqu'à 30 Kg",
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,color: Colors.black ,),
-              ),
-              const SizedBox(height: 2),
-
-
-              ElevatedButton( style: ElevatedButton.styleFrom(backgroundColor: Colors.red[800], fixedSize: const Size(300, 10)),onPressed: () {
-                Route route = MaterialPageRoute(builder: ((context)=> const MapAppt()));
-                Navigator.push(context, route);
-              }, child: const Text("CALCLULER UN TARIF"),),
-              const SizedBox(height: 20,),
-               Flexible(child: ExpansionTile(backgroundColor: Colors.red[500],
-                title: const Text("Caractéristiques"),
-             
-               onExpansionChanged: (bool expanded){},
-               children:  [
-                ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Large couverture de distribution : plus  de 200 destination dans le monde;"
-                  ,overflow: TextOverflow.ellipsis,),
-                ),
-                ListTile(
-                  tileColor: Colors.red[800],
-                  title:const Text("Délai de livraison à partir de 07 jours selon la destination."
-                  ,overflow: TextOverflow.ellipsis,),
-                ),
-                
-               
-
-               ],
-               
-               
-             
-             )
-             ,),
-             Flexible(child: ExpansionTile(backgroundColor: Colors.red[800],
-                title: const Text("Avantages"),
-             
-               onExpansionChanged: (bool expanded){},
-               controlAffinity: ListTileControlAffinity.leading,
-               children:  [
-                ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Tarifs économiques;"
-                  ,overflow: TextOverflow.ellipsis,),
-                ),
-                ListTile(
-                  tileColor: Colors.red[800],
-                  title:const Text("Formalités de dépots simples;"
-                  ,overflow: TextOverflow.ellipsis,),
-                ),
-                ListTile(
-                  
-                  tileColor: Colors.red[800],
-                  title:const Text("Services de traçabilité"
-                  ,overflow: TextOverflow.ellipsis,),
-                ),
-                 
-               
-
-               ],
-               
-               
-             
-             )
-             ,)
-          
-            ]),
-      ),],
-      )
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: appB(context),
+      drawer: darweF(context),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _buildHeader(),
+          const SizedBox(height: 16),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(18),
+            child: Image.asset(imagePath, height: 190, fit: BoxFit.cover),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            description,
+            style: const TextStyle(fontSize: 12, color: AppColors.text),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MapAppt()),
+                );
+              },
+              child: const Text('Calculer un tarif'),
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (characteristics.isNotEmpty)
+            _buildInfoCard('Caracteristiques', characteristics),
+          if (advantages.isNotEmpty) _buildInfoCard('Avantages', advantages),
+        ],
+      ),
+      bottomNavigationBar: const NavBottom(),
     );
   }
 }

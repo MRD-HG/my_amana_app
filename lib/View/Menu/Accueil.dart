@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:my_amana_app/core/theme/app_theme.dart";
 import "package:my_amana_app/core/widgets/tracking_search_card.dart";
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 import "../resultat.dart";
 
@@ -38,6 +39,24 @@ class _AccueilaState extends State<Accueila> {
     );
   }
 
+  Future<void> _scanTracking() async {
+    final scanned = await SimpleBarcodeScanner.scanBarcode(context);
+    if (!mounted) {
+      return;
+    }
+    final value = (scanned ?? '').trim();
+    if (value.isEmpty || value == '-1') {
+      return;
+    }
+    _trackingController.text = value;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Resultat(trackingId: value),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -48,7 +67,7 @@ class _AccueilaState extends State<Accueila> {
           TrackingSearchCard(
             controller: _trackingController,
             onSearch: _submitTracking,
-            onScan: () {},
+            onScan: _scanTracking,
             trailing: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(

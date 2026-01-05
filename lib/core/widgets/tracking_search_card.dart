@@ -59,6 +59,7 @@ class TrackingSearchCard extends StatelessWidget {
           TextField(
             controller: controller,
             keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.search,
             style: const TextStyle(color: AppColors.text),
             decoration: InputDecoration(
               hintText: hintText,
@@ -77,6 +78,7 @@ class TrackingSearchCard extends StatelessWidget {
                 ],
               ),
             ),
+            onSubmitted: (_) => onSearch(),
           ),
         ],
       ),

@@ -1,80 +1,73 @@
 import 'package:flutter/material.dart';
-
 import 'package:my_amana_app/View/pagesSplish/simulator.dart';
+import 'package:my_amana_app/core/theme/app_theme.dart';
 
-
-class Geolocalistion extends StatefulWidget {
+class Geolocalistion extends StatelessWidget {
   const Geolocalistion({super.key});
 
   @override
-  State<Geolocalistion> createState() => _GeolocalistionState();
-}
-
-class _GeolocalistionState extends State<Geolocalistion> {
-  @override
   Widget build(BuildContext context) {
-   return   Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        
-        
-          
-          
-             child: Column(
-            
-            children:  [
-              
-             const Padding(padding: EdgeInsets.only(top:130),
-              child: 
-              Image(image: AssetImage('assets/images/geoloca.png'),width: 150,height: 150,),
-              
-      
-              ),
-            const  Padding(padding: EdgeInsets.only(top: 40),
-              child: Text('Géolocalistaion',textAlign: TextAlign.center, style: TextStyle(
-                color:Colors.orange,fontSize: 18,
-                fontFamily: AutofillHints.countryName,
-                fontWeight: FontWeight.bold ),),
-              ),
-              const   Padding(padding:EdgeInsets.only(top:30),
-                 child: Text('Trouver l\'agence Amana la plus proche de vous', textAlign: TextAlign.center, style: TextStyle(color:Color.fromARGB(255, 160, 152, 152),fontSize: 10),)
-                 ),
-                const SizedBox(height: 60),
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: Padding(padding:const EdgeInsets.only(top:50),
-                
-                    child: GestureDetector(
-                      onTap: () {
-                      Route  route =  MaterialPageRoute(builder:  ((context) =>  const Simulateur()),);
-
-                         Navigator.pushReplacement(context,route );
-                        },
-                        child:const Text(
-                          
-                          'PASSER CETTE ETAPE',textAlign: TextAlign.center, style: TextStyle(color:Colors.orange,fontSize: 12),
-                          
-                        ),
-                        
+    return Scaffold(
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: AppGradients.hero,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Geolocalisation',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
                   ),
-                  )
-                )
-                  
-                 
-            ],
-          
-        ),
-      
-
-          
-          
-      
-        
-       ),
-       
-      
-      
-
+                ),
+                SizedBox(height: 6),
+                Text(
+                  'Trouvez l agence Amana la plus proche.',
+                  style: TextStyle(color: Colors.white70, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 32),
+          Image.asset('assets/images/geoloca.png', width: 160, height: 160),
+          const SizedBox(height: 24),
+          const Text(
+            'Autorisez la localisation pour des suggestions precises.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 12, color: AppColors.mutedText),
+          ),
+          const SizedBox(height: 32),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Simulateur()),
+                );
+              },
+              child: const Text('Continuer'),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const Simulateur()),
+              );
+            },
+            child: const Text('Passer cette etape'),
+          ),
+        ],
+      ),
     );
   }
 }

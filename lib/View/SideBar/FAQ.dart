@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../Menu/MenuSide.dart';
+import 'package:my_amana_app/View/Menu/MenuSide.dart';
+import 'package:my_amana_app/core/theme/app_theme.dart';
 
 class FaQ extends StatefulWidget {
   const FaQ({super.key});
@@ -10,116 +10,90 @@ class FaQ extends StatefulWidget {
 }
 
 class _FaQState extends State<FaQ> {
+  final List<Map<String, String>> _items = const [
+    {
+      'question': "Comment puis-je m'assurer que mon colis a bien ete recu ?",
+      'answer':
+          "Suivez votre envoi sur le site bam-tracking.barid.ma ou activez la notification de livraison.",
+    },
+    {
+      'question': 'Comment beneficier du service de contre remboursement ?',
+      'answer': 'Ce service est disponible en agence. Demandez-le lors du depot.',
+    },
+    {
+      'question': 'Quels sont les delais de livraison ?',
+      'answer':
+          'Les delais varient selon la destination. Les envois nationaux sont souvent livres en 24/48h.',
+    },
+    {
+      'question': 'Comment contacter le support ?',
+      'answer': "Appelez le centre d'appel au 080 200 60 60.",
+    },
+  ];
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: AppGradients.hero,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'FAQ',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 6),
+          Text(
+            'Reponses rapides a vos questions.',
+            style: TextStyle(color: Colors.white70, fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: appB(context),
       drawer: darweF(context),
       body: ListView(
+        padding: const EdgeInsets.all(16),
         children: [
-         const Column(
-            children: [
-              Padding(
-                padding:  EdgeInsets.only(left: 10,top:40),
-                child: Column(
-                  children: [
-                    Card(
-                      shadowColor: Colors.black54,
-                      elevation: 50,
-                      child: Column(
-                        children: [
-                          ExpansionTile(
-                            title: Text("Comment puis-je m'assurer que mon colis a été bien reçu ?"),
-                            children: [
-                              Padding(
-                                padding:  EdgeInsets.all(3),
-                                child: Text(
-                                    "Vous pouvez vous assurer de la livraison de vos envois grâce au service SMS optionnel ''notification de livraison expéditeur'' ou bien suivre votre envoi grâce au site web: https://bam-tracking.barid.ma/ ou sur l'application My Amana"),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+          _buildHeader(),
+          const SizedBox(height: 16),
+          for (final item in _items)
+            Card(
+              child: ExpansionTile(
+                title: Text(item['question']!),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(
+                      item['answer']!,
+                      style: const TextStyle(fontSize: 12),
                     ),
-                    Card(
-                      shadowColor: Colors.black54,
-                      elevation: 50,
-                      child: Column(
-                        children: [
-                          ExpansionTile(
-                            backgroundColor: Colors.red,
-                            title: Text("Comment puis-je bénéficier du service de contre remboursement ?"),
-                            controlAffinity: ListTileControlAffinity.leading,
-                            children: [
-                              Text("database"),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          SizedBox( // Wrap the ListView with a Container and provide a fixed height
-            height: 100, // Adjust the height as per your requirement
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: InkWell(
-                    onTap: () {},
-                    child: ElevatedButton(style: ElevatedButton.styleFrom(fixedSize: Size((MediaQuery.of(context).size.width)*0.09, (MediaQuery.of(context).size.height)*0.02)),
-                      onPressed: () {},
-                      child: const Text("FAQ"),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: InkWell(
-                    onTap: () {},
-                    child: ElevatedButton(style: ElevatedButton.styleFrom(fixedSize: Size((MediaQuery.of(context).size.width)*0.09, (MediaQuery.of(context).size.height)*0.02)),
-                      onPressed: () {},
-                      child: const Text("Generales"),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: InkWell(
-                    onTap: () {},
-                    child: ElevatedButton(style: ElevatedButton.styleFrom(fixedSize: Size((MediaQuery.of(context).size.width)*0.09, (MediaQuery.of(context).size.height)*0.02)),
-                      onPressed: () {},
-                      child: const Text("AvantDepot"),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: InkWell(
-                    onTap: () {},
-                    child: ElevatedButton(style: ElevatedButton.styleFrom(fixedSize: Size((MediaQuery.of(context).size.width)*0.09, (MediaQuery.of(context).size.height)*0.02)),
-                      onPressed: () {},
-                      child: const Text("Generales"),
-                    ),
-                  ),
-                ),Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: InkWell(
-                    onTap: () {},
-                    child: ElevatedButton(style: ElevatedButton.styleFrom(fixedSize: Size((MediaQuery.of(context).size.width)*0.09, (MediaQuery.of(context).size.height)*0.02)),
-                      onPressed: () {},
-                      child: const Text("Generales"),
-                    ),
-                  ),
-                ),
-              ],
             ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: const [
+              Chip(label: Text('FAQ')),
+              Chip(label: Text('General')),
+              Chip(label: Text('Depot')),
+              Chip(label: Text('Livraison')),
+            ],
           ),
         ],
       ),

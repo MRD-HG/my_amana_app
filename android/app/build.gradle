@@ -5,6 +5,8 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def mapsApiKey = project.findProperty("MAPS_API_KEY") ?: ""
+
 android {
     namespace = "com.example.my_amana_app"
     compileSdk = 34
@@ -26,6 +28,7 @@ android {
         targetSdkVersion 34
         versionCode flutter.versionCode
         versionName flutter.versionName
+        manifestPlaceholders = [MAPS_API_KEY: mapsApiKey]
     }
 
     buildTypes {

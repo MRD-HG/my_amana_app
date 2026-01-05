@@ -3,6 +3,7 @@ import 'package:my_amana_app/View/Menu/MenuSide.dart';
 import 'package:my_amana_app/View/resultat.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 import 'package:my_amana_app/core/widgets/tracking_search_card.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 class PageSuiv extends StatefulWidget {
   const PageSuiv({super.key});
@@ -34,6 +35,24 @@ class _PageSuivState extends State<PageSuiv> {
       context,
       MaterialPageRoute(
         builder: (context) => Resultat(trackingId: trackingId),
+      ),
+    );
+  }
+
+  Future<void> _scanTracking() async {
+    final scanned = await SimpleBarcodeScanner.scanBarcode(context);
+    if (!mounted) {
+      return;
+    }
+    final value = (scanned ?? '').trim();
+    if (value.isEmpty || value == '-1') {
+      return;
+    }
+    _trackingController.text = value;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Resultat(trackingId: value),
       ),
     );
   }
@@ -74,7 +93,7 @@ class _PageSuivState extends State<PageSuiv> {
           TrackingSearchCard(
             controller: _trackingController,
             onSearch: _submitTracking,
-            onScan: () {},
+            onScan: _scanTracking,
             title: 'Suivi de colis',
             hintText: 'Numero de suivi',
           ),

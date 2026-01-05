@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
-
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../Menu/MenuSide.dart';
+import 'package:my_amana_app/View/Menu/MenuSide.dart';
+import 'package:my_amana_app/core/theme/app_theme.dart';
 
 class NumeroTlf extends StatefulWidget {
   const NumeroTlf({super.key});
@@ -14,308 +14,229 @@ class NumeroTlf extends StatefulWidget {
 }
 
 class _NumeroTlfState extends State<NumeroTlf> {
-  List<dynamic> agents = [];
-  String selectedRegion = 'Tout';
-  Future<void> fetchAgent() async {
-    final jsonData = await rootBundle.loadString('assets/phone.json');
-    final getdata = await json.decode(jsonData);
-    agents = getdata['List']
-        .where((agent) => agent['Region'] == selectedRegion)
-        .toList();
-  }
-
-  int selectedIdx = -1;
-  int selectedOption = 1;
-  final List<String> items = [
+  final List<String> _regions = const [
     'Tout',
     'Rabat',
     'Casablanca',
     'Tanger',
-    'Fés-Meknés',
+    'Fes-Meknes',
     'Oujda',
     'Agadir',
     'Marrakech',
   ];
-  String? selectedValue;
+
+  List<dynamic> _agents = [];
+  String _selectedRegion = 'Tout';
+
   @override
   void initState() {
     super.initState();
-    fetchAgent();
+    _loadAgents();
+  }
+
+  Future<void> _loadAgents() async {
+    final jsonData = await rootBundle.loadString('assets/phone.json');
+    final data = json.decode(jsonData) as Map<String, dynamic>;
+    final list = data['List'] as List<dynamic>;
+    setState(() {
+      if (_selectedRegion == 'Tout') {
+        _agents = list;
+      } else {
+        _agents = list
+            .where((agent) => agent['Region'] == _selectedRegion)
+            .toList();
+      }
+    });
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: AppGradients.hero,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Numeros utiles',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 6),
+          Text(
+            'Les contacts officiels pour vous aider rapidement.',
+            style: TextStyle(color: Colors.white70, fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactCard({
+    required String title,
+    required String phone,
+  }) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.call, color: AppColors.primary),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.text,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    phone,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAgentCard(Map<String, dynamic> agent) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.headset_mic, color: AppColors.primary),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    agent['Agent'] ?? 'Commercial',
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(agent['Tel'] ?? '-', style: const TextStyle(fontSize: 12)),
+                  const SizedBox(height: 4),
+                  Text(agent['Email'] ?? '-', style: const TextStyle(fontSize: 12)),
+                  const SizedBox(height: 4),
+                  Text(agent['Region'] ?? '-', style: const TextStyle(fontSize: 12)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appB(context),
-        drawer: darweF(context),
-        body: Container(
-            child: ListView(
-          children: [
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                      color: Colors.white,
-                      child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Row(
-                            children: [
-                              Container(
-                                color: Colors.orange[900],
-                                width: 70,
-                                height: 70,
-                                child: const Icon(Icons.call,
-                                    color: Colors.white, size: 30),
-                              ),
-                              const SizedBox(width: 20),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Center National de débouanement postal",
-                                    style: TextStyle(color: Colors.orange[900]),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  const Text(
-                                    "Tel: 0522 33 91 35",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 12),
-                                    textAlign: TextAlign.start,
-                                  )
-                                ],
-                              ),
-                            ],
-                          ))),
+      appBar: appB(context),
+      drawer: darweF(context),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _buildHeader(),
+          const SizedBox(height: 16),
+          _buildContactCard(
+            title: 'Centre national de debouanement postal',
+            phone: 'Tel: 0522 33 91 35',
+          ),
+          _buildContactCard(
+            title: "Centre d'appel",
+            phone: 'Tel: 080 200 60 60',
+          ),
+          _buildContactCard(
+            title: 'Numero collecte',
+            phone: 'Tel: 0522 34 44 93',
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Contacter un commercial',
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+          ),
+          const SizedBox(height: 8),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              child: DropdownButton2<String>(
+                isExpanded: true,
+                value: _selectedRegion,
+                hint: const Text('Region'),
+                items: _regions
+                    .map((item) => DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(item),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedRegion = value ?? 'Tout';
+                  });
+                  _loadAgents();
+                },
+                buttonStyleData: const ButtonStyleData(
+                  height: 48,
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  elevation: 0,
                 ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(3),
-              child: Card(
-                  color: Colors.white,
-                  child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Row(
-                        children: [
-                          Container(
-                            color: Colors.orange[900],
-                            width: 70,
-                            height: 70,
-                            child: const Icon(Icons.call,
-                                color: Colors.white, size: 30),
-                          ),
-                          const SizedBox(width: 20),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Center d'appel",
-                                style: TextStyle(color: Colors.orange[900]),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 10),
-                              const Text(
-                                "Tel: 080 200 60 60",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 12),
-                                textAlign: TextAlign.start,
-                              )
-                            ],
-                          ),
-                        ],
-                      ))),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(3),
-              child: Card(
-                  color: Colors.white,
-                  child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Row(
-                        children: [
-                          Container(
-                              color: Colors.orange[900],
-                              width: 70,
-                              height: 70,
-                              child: const Icon(Icons.call,
-                                  color: Colors.white, size: 30)),
-                          const SizedBox(width: 20),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Numéro dédié à la gestion de la collecte",
-                                style: TextStyle(color: Colors.orange[900]),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 10),
-                              const Text(
-                                "Tel: 0522 34 44 93",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 12),
-                                textAlign: TextAlign.start,
-                              )
-                            ],
-                          ),
-                        ],
-                      ))),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    "Contacter un commercial",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                dropdownStyleData: DropdownStyleData(
+                  maxHeight: 240,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: DropdownButton2(
-                  
-                    isExpanded: true,
-                    hint: Container(
-                      child:const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Région',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 103, 103, 103),
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                    items: items
-                        .map((item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 0, 0, 0),
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ))
-                        .toList(),
-                        value: selectedRegion,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedRegion = value as String;
-                        fetchAgent();
-                      });
-                     
-                    },
-                    buttonStyleData: const ButtonStyleData(
-                      height: 40,
-                      width: 450,
-                      padding: EdgeInsets.only(left: 14, right: 14),
-                      decoration: BoxDecoration(color: Colors.white),
-                      elevation: 2,
-                    ),
-                    dropdownStyleData: DropdownStyleData(
-                        maxHeight: 200,
-                        width: 800,
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        elevation: 8,
-                        offset: const Offset(-20, 0),
-                        scrollbarTheme: ScrollbarThemeData(
-                          radius: const Radius.circular(40),
-                          thickness: WidgetStateProperty.all(6),
-                          thumbVisibility: WidgetStateProperty.all(true),
-                        )),
-                    menuItemStyleData: const MenuItemStyleData(
-                      height: 40,
-                      padding: EdgeInsets.only(left: 14, right: 14),
-                    ),
-                  ),
+                menuItemStyleData: const MenuItemStyleData(
+                  height: 40,
+                  padding: EdgeInsets.symmetric(horizontal: 12),
                 ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: agents.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            children: [
-                              Container(
-                                color: Colors.orange[900],
-                                width: 70,
-                                height: 70,
-                                child: const Icon(
-                                  Icons.call,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    agents[index]['Agent'],
-                                    style: TextStyle(
-                                      color: Colors.orange[900],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    agents[index]['Tel'],
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12,
-                                    ),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    agents[index]['Email'],
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12,
-                                    ),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    agents[index]['Region'],
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12,
-                                    ),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
+              ),
             ),
-          ],
-        ),
-        ),
-        bottomNavigationBar:const NavBottom(),
-        );
+          ),
+          const SizedBox(height: 8),
+          if (_agents.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(12),
+              child: Text(
+                'Aucun contact disponible pour cette region.',
+                style: TextStyle(color: AppColors.mutedText, fontSize: 12),
+              ),
+            )
+          else
+            for (final agent in _agents) _buildAgentCard(agent),
+        ],
+      ),
+      bottomNavigationBar: const NavBottom(),
+    );
   }
 }

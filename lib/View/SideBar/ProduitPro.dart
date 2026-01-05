@@ -1,137 +1,143 @@
-import "package:flutter/material.dart";
-
-import "../Menu/MenuSide.dart";
-
-
+import 'package:flutter/material.dart';
+import 'package:my_amana_app/View/Menu/MenuSide.dart';
+import 'package:my_amana_app/core/theme/app_theme.dart';
 
 class Guide extends StatelessWidget {
   const Guide({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar: appB(context),
-      drawer: darweF(context),
-      body:  ListView(children: const [
-         Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+  static const List<String> _interdits = [
+    'Animaux vivants',
+    'Plantes vivantes',
+    'Armes et projectiles',
+    'Couteaux et sabres',
+    'Produits chimiques',
+    'Liquides inflammables',
+    'Substances radioactives',
+    'Matieres toxiques et infectieuses',
+    'Stupefiants et drogues',
+    'Articles portant atteinte a la moralite',
+    'Objets dangereux pour les agents',
+    'Pornographie',
+    'Antiquites',
+    'Alcool (sauf boissons autorisees)',
+    'Metaux et pierres precieuses',
+    'Argents et billets de banque',
+    'Fourrures animales',
+    'Depouilles ou cendres humaines',
+    'Sorcellerie et talismans',
+    'Prelevement de sang',
+    'Marchandises contrefaites',
+    'Parfums',
+    'Derives de porc vers pays musulmans',
+    'Batteries et piles au lithium',
+  ];
+
+  static const List<String> _conditionnels = [
+    'Produits dangereux avec fiche MSDS',
+    'Produits chimiques et liquides industriels',
+    'Produits pharmaceutiques avec ordonnance',
+    'Antiquites avec autorisation ministerielle',
+    'Plantes cosmetiques avec autorisation phytosanitaire',
+    'Fossiles avec autorisation',
+    'Produits cosmetiques soumis a controle',
+    "Passeports avec autorisation du Ministere de l'interieur",
+    'Cassettes video avec controle de contenu',
+    'Produits perissables avec emballage specifique',
+  ];
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: AppGradients.hero,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Produits prohibes',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 6),
+          Text(
+            'Liste des envois interdits ou conditionnels.',
+            style: TextStyle(color: Colors.white70, fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildListCard(String title, List<String> items) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             SizedBox(height: 20),
-             Padding(
-               padding: EdgeInsets.only(left:10.0),
-               child: Text("Interdits à l'export",textAlign: TextAlign.left,textDirection: TextDirection.ltr,style: TextStyle(
-                fontStyle: FontStyle.normal,fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-                
-        
+            Text(
+              title,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                color: AppColors.text,
+              ),
+            ),
+            const SizedBox(height: 12),
+            for (final item in items)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.block, color: AppColors.primary, size: 16),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        item,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ],
                 ),
-
-                ),
-
-             ),
-             Padding(padding: EdgeInsets.only( top : 10,left: 30),
-             child: Text("1. Animaux vivants.")
-             ),
-             Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("2. Plantes vivantes.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("3. Armes.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("4. Projectiles et sarbes.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("5. Couteaux et sabres.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("6. Produits chimiques.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("7. Liquides inflammables.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("8. Substances et matiéres radiocatives.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("9. Matiéres toxiques et substances infectieuses.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("10. Stupéfiant et drogue.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("11. Livres et tout manuscrit, film et autres articles portant atteinte à la morailité et aux bonnes.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("12. Objets qui, par leur nature ou leur emballage,peuvent présenter un danger pour les agents, salir ou détériorer les correspondances .")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("13. Pornogarphie.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("14. Antiquité.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("15. Alcool sauf boissons alcoolisées.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("16. Méteaux et pierres précieuses.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("17. Argents, billets de banques nationales ou en devises étrangéres.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("18. Fourrures animales.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("19. Dépouilles ou cendres d'un corps humain.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("20. Talisman, Sorcellerie.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("21. Prélèvement de sang.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("22. Marchandises contrefaites et piratées.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("23. Parafums.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("24. Dérivés de proc vers les pays musulmans.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("25. Batteries et piles au lithium.")
-             ),
-
-
-             //sapce 
-
-             SizedBox(height: 20),
-             Padding(
-               padding: EdgeInsets.only(left:10.0),
-               child: Text("Objects admis conditionnellement",textAlign: TextAlign.left,textDirection: TextDirection.ltr,style: TextStyle(
-                fontStyle: FontStyle.normal,fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-                
-        
-                ),
-
-                ),
-
-             ),
-              Padding(padding: EdgeInsets.only( top : 10,left: 30),
-             child: Text("1. Produit dangereux : explosifs , inflammables,toxiques, radioactive et tous les produits qui représentent un danger pour l'avion et les passagers.")
-             ),
-             Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("2. Produit chimiques et liquides industriels par présentation d'une fiche technique du produit MSDS.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("3. Produit pharmaceutique pour particulier : par une ordinnance médicale.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("4. Antiquité et patrimoine national : une autorisation du Ministére concerné.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("5. Plantes à usage cosmétique ou médical: sous réserve de présenter une autorisation phytosanitaire.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("6. Fossiles : par une autorisation  d'exploitation du Ministére concerné.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("7. Produits cosmétiques contrôle sanitaire.")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("8. Passeports, sauf en cas d'autorisation d'exploitation du Ministére de l'intérieur et des Affaires étragéres .")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("9. Cassette-vidéo contrôle de contenu")
-             ),Padding(padding: EdgeInsets.only(left: 30),
-             child: Text("10. Produits et aliments périssables :par un emballage spécifique.")
-             ),
-             Padding(padding: EdgeInsets.only(top:15 ,left: 30),
-             child: Text("Les envois Amana à l'étranger sont soumis à un contrôle douanier pour s'assurer de la conformité du contenu et se garantir des documents d'accompagnement")
-             ),
-                SizedBox(height:30)
+              ),
           ],
-
-        )
-      ],
-      
+        ),
       ),
-      bottomNavigationBar:const NavBottom(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: appB(context),
+      drawer: darweF(context),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _buildHeader(),
+          const SizedBox(height: 16),
+          _buildListCard('Interdits a l\'export', _interdits),
+          _buildListCard(
+            'Admis conditionnellement',
+            _conditionnels,
+          ),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                "Les envois Amana a l'etranger sont soumis a un controle douanier.",
+                style: const TextStyle(fontSize: 12),
+              ),
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: const NavBottom(),
     );
   }
 }

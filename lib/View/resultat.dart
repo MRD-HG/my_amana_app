@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'Menu/MenuSide.dart';
+import 'package:my_amana_app/core/bootstrap/app_repositories.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
-import 'package:my_amana_app/features/tracking/tracking_models.dart';
+import 'package:my_amana_app/features/tracking/models/tracking_models.dart';
 import 'package:my_amana_app/features/tracking/tracking_repository.dart';
 
 class Resultat extends StatefulWidget {
@@ -15,12 +16,13 @@ class Resultat extends StatefulWidget {
 }
 
 class _ResultatState extends State<Resultat> {
-  final TrackingRepository _repository = const TrackingRepository();
+  late final TrackingRepository _repository;
   late Future<TrackingInfo?> _trackingFuture;
 
   @override
   void initState() {
     super.initState();
+    _repository = AppRepositories.tracking;
     _trackingFuture = _repository.fetchTracking(widget.trackingId);
   }
 

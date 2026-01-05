@@ -18,13 +18,10 @@ class ActionButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,
         backgroundColor: AppColors.primary,
-        textStyle: const TextStyle(fontSize: 18),
-        padding: const EdgeInsets.only(
-          left: 150,
-          right: 150,
-          top: 15,
-          bottom: 15,
-        ),
+        textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+        padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 12),
+        minimumSize: const Size(120, 44),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: Text(label),
     );

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_amana_app/View/Menu/MenuSide.dart';
+import 'package:my_amana_app/core/bootstrap/app_repositories.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
+import 'package:my_amana_app/features/feedback/feedback_models.dart';
+import 'package:my_amana_app/features/feedback/feedback_repository.dart';
 
 class FeedB extends StatelessWidget {
   const FeedB({super.key});
@@ -11,6 +14,18 @@ class FeedB extends StatelessWidget {
   }
 }
 
+class FeedbackOption {
+  const FeedbackOption({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+  });
+
+  final String title;
+  final String subtitle;
+  final IconData icon;
+}
+
 class CheckboxPage extends StatefulWidget {
   const CheckboxPage({super.key});
 
@@ -19,29 +34,52 @@ class CheckboxPage extends StatefulWidget {
 }
 
 class _CheckboxPageState extends State<CheckboxPage> {
-  final List<bool> checkboxes = [false, false, false, false];
+  final List<FeedbackOption> _options = const [
+    FeedbackOption(
+      title: "Feedback agence",
+      subtitle: "Partagez votre passage en agence.",
+      icon: Icons.storefront,
+    ),
+    FeedbackOption(
+      title: "Feedback application",
+      subtitle: "Votre avis sur My Amana.",
+      icon: Icons.phone_android,
+    ),
+    FeedbackOption(
+      title: "Feedback call center",
+      subtitle: "Votre experience avec le support.",
+      icon: Icons.support_agent,
+    ),
+    FeedbackOption(
+      title: "Feedback livraison",
+      subtitle: "Comment etait la livraison ?",
+      icon: Icons.local_shipping,
+    ),
+  ];
 
-  void navigateToCheckedPages() {
-    final List<String> checkedPages = [];
+  late final List<bool> _selected = List<bool>.filled(_options.length, false);
 
-    for (int i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i]) {
-        checkedPages.add('/page${i + 1}');
+  void _navigateToCheckedPages() {
+    final selectedOptions = <FeedbackOption>[];
+    for (int i = 0; i < _selected.length; i++) {
+      if (_selected[i]) {
+        selectedOptions.add(_options[i]);
       }
     }
 
-    if (checkedPages.isNotEmpty) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MultiPageViewer(pages: checkedPages),
-        ),
-      );
-    } else {
+    if (selectedOptions.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Selectionnez au moins un formulaire.')),
       );
+      return;
     }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MultiPageViewer(options: selectedOptions),
+      ),
+    );
   }
 
   Widget _buildHeader() {
@@ -72,17 +110,31 @@ class _CheckboxPageState extends State<CheckboxPage> {
     );
   }
 
-  Widget _buildCheckboxTile(String label, int index) {
-    return CheckboxListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(label, style: const TextStyle(fontSize: 12)),
-      value: checkboxes[index],
-      activeColor: AppColors.primary,
-      onChanged: (value) {
-        setState(() {
-          checkboxes[index] = value ?? false;
-        });
-      },
+  Widget _buildOptionTile(int index) {
+    final option = _options[index];
+    return Card(
+      child: CheckboxListTile(
+        value: _selected[index],
+        onChanged: (value) {
+          setState(() {
+            _selected[index] = value ?? false;
+          });
+        },
+        title: Text(option.title),
+        subtitle: Text(
+          option.subtitle,
+          style: const TextStyle(fontSize: 12, color: AppColors.mutedText),
+        ),
+        secondary: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withOpacity(0.12),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(option.icon, color: AppColors.primary, size: 18),
+        ),
+        controlAffinity: ListTileControlAffinity.leading,
+      ),
     );
   }
 
@@ -96,46 +148,21 @@ class _CheckboxPageState extends State<CheckboxPage> {
         children: [
           _buildHeader(),
           const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Formulaires disponibles',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.text,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  _buildCheckboxTile(
-                    "Formulaire du Feedback sur l'Agence",
-                    0,
-                  ),
-                  _buildCheckboxTile(
-                    "Feedback sur l'exp«∏rience de l'application mobile My Amana ",
-                    1,
-                  ),
-                  _buildCheckboxTile(
-                    "Feedback sur l'exp«∏rience de l'application le call centre ",
-                    2,
-                  ),
-                  _buildCheckboxTile(
-                    "Feedback sur l'exp«∏rience de livraison «ˇ domicile",
-                    3,
-                  ),
-                ],
-              ),
+          const Text(
+            'Formulaires disponibles',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.text,
             ),
           ),
+          const SizedBox(height: 12),
+          for (int i = 0; i < _options.length; i++) _buildOptionTile(i),
           const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: navigateToCheckedPages,
+              onPressed: _navigateToCheckedPages,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
@@ -149,9 +176,9 @@ class _CheckboxPageState extends State<CheckboxPage> {
 }
 
 class MultiPageViewer extends StatefulWidget {
-  final List<String> pages;
+  const MultiPageViewer({super.key, required this.options});
 
-  const MultiPageViewer({super.key, required this.pages});
+  final List<FeedbackOption> options;
 
   @override
   State<MultiPageViewer> createState() => _MultiPageViewerState();
@@ -162,23 +189,13 @@ class _MultiPageViewerState extends State<MultiPageViewer> {
   int _currentPage = 0;
 
   @override
-  void initState() {
-    super.initState();
-    _pageController.addListener(() {
-      setState(() {
-        _currentPage = _pageController.page!.round();
-      });
-    });
-  }
-
-  @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
   }
 
-  void nextPage() {
-    if (_currentPage < widget.pages.length - 1) {
+  void _nextPage() {
+    if (_currentPage < widget.options.length - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -186,7 +203,7 @@ class _MultiPageViewerState extends State<MultiPageViewer> {
     }
   }
 
-  void previousPage() {
+  void _previousPage() {
     if (_currentPage > 0) {
       _pageController.previousPage(
         duration: const Duration(milliseconds: 300),
@@ -198,46 +215,39 @@ class _MultiPageViewerState extends State<MultiPageViewer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Formulaires'),
-      ),
+      appBar: AppBar(title: const Text('Formulaires')),
       body: Column(
         children: [
           Expanded(
-            child: PageView(
+            child: PageView.builder(
               controller: _pageController,
-              children: widget.pages
-                  .map((page) => Navigator(
-                        onGenerateRoute: (settings) => MaterialPageRoute(
-                          builder: (context) => PageRouter(page: page),
-                        ),
-                      ))
-                  .toList(),
+              itemCount: widget.options.length,
+              onPageChanged: (index) => setState(() => _currentPage = index),
+              itemBuilder: (context, index) {
+                return FeedbackFormPage(option: widget.options[index]);
+              },
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: previousPage,
+                  onPressed: _previousPage,
                   icon: const Icon(Icons.arrow_back),
                 ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    '${_currentPage + 1}/${widget.pages.length}',
-                    style: const TextStyle(fontWeight: FontWeight.w600),
+                Expanded(
+                  child: LinearProgressIndicator(
+                    value: (widget.options.length <= 1)
+                        ? 1
+                        : (_currentPage + 1) / widget.options.length,
+                    backgroundColor: AppColors.primary.withOpacity(0.12),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(AppColors.primary),
                   ),
                 ),
                 IconButton(
-                  onPressed: nextPage,
+                  onPressed: _nextPage,
                   icon: const Icon(Icons.arrow_forward),
                 ),
               ],
@@ -249,60 +259,100 @@ class _MultiPageViewerState extends State<MultiPageViewer> {
   }
 }
 
-class PageRouter extends StatelessWidget {
-  final String page;
+class FeedbackFormPage extends StatefulWidget {
+  const FeedbackFormPage({super.key, required this.option});
 
-  const PageRouter({super.key, required this.page});
+  final FeedbackOption option;
 
   @override
-  Widget build(BuildContext context) {
-    return Navigator(
-      initialRoute: page,
-      onGenerateRoute: (settings) {
-        WidgetBuilder builder;
-        switch (settings.name) {
-          case '/page1':
-            builder = (BuildContext context) => const FeedbackPage(
-                  title: 'Feedback Agence',
-                  subtitle: 'Parlez-nous de votre passage en agence.',
-                );
-            break;
-          case '/page2':
-            builder = (BuildContext context) => const FeedbackPage(
-                  title: 'Feedback Application',
-                  subtitle: 'Votre avis sur l experience My Amana.',
-                );
-            break;
-          case '/page3':
-            builder = (BuildContext context) => const FeedbackPage(
-                  title: 'Feedback Call Center',
-                  subtitle: 'Comment evalueriez-vous notre support ?',
-                );
-            break;
-          case '/page4':
-            builder = (BuildContext context) => const FeedbackPage(
-                  title: 'Feedback Livraison',
-                  subtitle: 'Partagez votre experience de livraison.',
-                );
-            break;
-          default:
-            throw Exception('Invalid route: ${settings.name}');
-        }
-        return MaterialPageRoute(builder: builder, settings: settings);
-      },
-    );
-  }
+  State<FeedbackFormPage> createState() => _FeedbackFormPageState();
 }
 
-class FeedbackPage extends StatelessWidget {
-  const FeedbackPage({
-    super.key,
-    required this.title,
-    required this.subtitle,
-  });
+class _FeedbackFormPageState extends State<FeedbackFormPage> {
+  final FeedbackRepository _repository = AppRepositories.feedback;
 
-  final String title;
-  final String subtitle;
+  int? _rating;
+  bool _isSubmitting = false;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submitFeedback() async {
+    final message = _messageController.text.trim();
+    if (message.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Veuillez saisir un message.')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      await _repository.submitFeedback(
+        FeedbackEntry(
+          category: widget.option.title,
+          message: message,
+          rating: _rating,
+          tags: const [],
+        ),
+      );
+      if (!mounted) {
+        return;
+      }
+      _messageController.clear();
+      _nameController.clear();
+      _emailController.clear();
+      setState(() {
+        _rating = null;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Merci pour votre retour.')),
+      );
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Une erreur est survenue.')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
+  }
+
+  Widget _buildRatingChip(int value) {
+    final bool selected = _rating == value;
+    return ChoiceChip(
+      label: Text(value.toString()),
+      selected: selected,
+      onSelected: (_) {
+        setState(() {
+          _rating = value;
+        });
+      },
+      selectedColor: AppColors.primary.withOpacity(0.2),
+      backgroundColor: AppColors.surface,
+      labelStyle: TextStyle(
+        color: selected ? AppColors.primary : AppColors.text,
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -315,21 +365,39 @@ class FeedbackPage extends StatelessWidget {
             gradient: AppGradients.hero,
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
                 ),
+                child: Icon(widget.option.icon, color: Colors.white),
               ),
-              const SizedBox(height: 6),
-              Text(
-                subtitle,
-                style: const TextStyle(color: Colors.white70, fontSize: 12),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.option.title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.option.subtitle,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -349,23 +417,38 @@ class FeedbackPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
                     hintText: 'Nom et prenom',
                     prefixIcon: Icon(Icons.person_outline),
                   ),
                 ),
                 const SizedBox(height: 12),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
                     hintText: 'Email',
                     prefixIcon: Icon(Icons.mail_outline),
                   ),
                 ),
                 const SizedBox(height: 12),
-                const TextField(
+                const Text(
+                  'Note globale',
+                  style: TextStyle(fontSize: 12, color: AppColors.mutedText),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  children: [
+                    for (int i = 1; i <= 5; i++) _buildRatingChip(i),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _messageController,
                   maxLines: 4,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Votre message',
                     alignLabelWithHint: true,
                     prefixIcon: Icon(Icons.message_outlined),
@@ -375,8 +458,19 @@ class FeedbackPage extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text('Envoyer'),
+                    onPressed: _isSubmitting ? null : _submitFeedback,
+                    child: _isSubmitting
+                        ? const SizedBox(
+                            height: 18,
+                            width: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
+                            ),
+                          )
+                        : const Text('Envoyer'),
                   ),
                 ),
               ],
