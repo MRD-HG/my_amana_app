@@ -5,6 +5,7 @@ import 'package:my_amana_app/core/bootstrap/app_repositories.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 import 'package:my_amana_app/features/tracking/models/tracking_models.dart';
 import 'package:my_amana_app/features/tracking/tracking_repository.dart';
+import 'package:my_amana_app/features/my_trackings/my_trackings_store.dart';
 
 class Resultat extends StatefulWidget {
   const Resultat({super.key, required this.trackingId});
@@ -24,6 +25,8 @@ class _ResultatState extends State<Resultat> {
     super.initState();
     _repository = AppRepositories.tracking;
     _trackingFuture = _repository.fetchTracking(widget.trackingId);
+    // Save to local history (My Trackings)
+    MyTrackingsStore.create().then((store) => store.saveViewed(widget.trackingId));
   }
 
   bool _hasStage(TrackingInfo info, TrackingStage stage) {
@@ -84,6 +87,8 @@ class _ResultatState extends State<Resultat> {
 
   Widget _buildSuccess(TrackingInfo info) {
     final latest = info.latestEvent;
+    final eta = _estimateDeliveryDate(info);
+    final etaText = eta == null ? '—' : _formatEta(eta);
     final activeColor = AppColors.primary;
     final inactiveColor = Colors.grey.shade300;
 
@@ -135,6 +140,20 @@ class _ResultatState extends State<Resultat> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Icon(Icons.schedule, size: 16, color: Colors.white70),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Estimated delivery: ' + etaText,
+                            style: const TextStyle(fontSize: 12, color: Colors.white70),
+                          ),
+                        ),
+                      ],
+                    ),
+
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -264,4 +283,36 @@ class _ResultatState extends State<Resultat> {
       ),
     );
   }
+DateTime? _estimateDeliveryDate(TrackingInfo info) {
+  // If delivered -> actual delivery date
+  final delivered = info.events.firstWhere(
+    (e) => e.stage == TrackingStage.delivered,
+    orElse: () => info.latestEvent,
+  );
+  if (info.events.any((e) => e.stage == TrackingStage.delivered)) {
+    return delivered.timestamp;
+  }
+
+  // Use earliest event as start date
+  final start = info.events.isEmpty ? DateTime.now() : info.events.last.timestamp;
+  final service = info.service.toLowerCase();
+
+  int days;
+  if (service.contains('ems') || service.contains('express')) {
+    days = 2;
+  } else if (service.contains('international')) {
+    days = 7;
+  } else {
+    days = 4;
+  }
+  return start.add(Duration(days: days));
+}
+
+String _formatEta(DateTime dt) {
+  final day = dt.day.toString().padLeft(2, '0');
+  final month = dt.month.toString().padLeft(2, '0');
+  final year = dt.year.toString();
+  return '$day/$month/$year';
+}
+
 }

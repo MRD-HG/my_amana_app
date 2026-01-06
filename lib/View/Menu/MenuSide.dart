@@ -8,6 +8,11 @@ import 'package:my_amana_app/View/NavigationBar/Agences.dart';
 import 'package:my_amana_app/View/NavigationBar/Contact.dart';
 import 'package:my_amana_app/View/NavigationBar/Tarif.dart';
 import 'package:my_amana_app/View/SideBar/AmnMaNatio.dart';
+import 'package:my_amana_app/View/SideBar/OffersNews.dart';
+import 'package:my_amana_app/View/SideBar/MyTrackings.dart';
+import 'package:my_amana_app/View/SideBar/SupportTickets.dart';
+import 'package:my_amana_app/View/SideBar/PreShipment.dart';
+import 'package:my_amana_app/View/SideBar/DeliveryTimes.dart';
 
 
 import 'package:flutter_boxicons/flutter_boxicons.dart';
@@ -199,7 +204,63 @@ Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
                     // Handle Settings menu item tap
                   },
                 ),
-                 ListTile(
+                 const Divider(height: 1),
+ListTile(
+  leading: const Icon(Icons.bookmark),
+  title: const Text('Mes trackings'),
+  onTap: () {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const MyTrackingsPage()),
+    );
+  },
+),
+ListTile(
+  leading: const Icon(Icons.schedule),
+  title: const Text('Délais de livraison'),
+  onTap: () {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const DeliveryTimesPage()),
+    );
+  },
+),
+ListTile(
+  leading: const Icon(Icons.local_offer),
+  title: const Text('Promotions & actualités'),
+  onTap: () {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const OffersNewsPage()),
+    );
+  },
+),
+ListTile(
+  leading: const Icon(Icons.qr_code_2),
+  title: const Text('Pré-expédition (QR)'),
+  onTap: () {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const PreShipmentPage()),
+    );
+  },
+),
+ListTile(
+  leading: const Icon(Icons.support_agent),
+  title: const Text('Support / Réclamation'),
+  onTap: () {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const SupportTicketsPage()),
+    );
+  },
+),
+ListTile(
                   leading:const Icon(Icons.call),
 
                   title: const Text('Numeros utiles'),

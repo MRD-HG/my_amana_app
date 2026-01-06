@@ -13,6 +13,15 @@ import '../../features/facteur/facteur_repository_firestore.dart';
 import '../../features/tracking/tracking_repository.dart';
 import '../../features/tracking/tracking_repository_demo.dart';
 import '../../features/tracking/tracking_repository_firestore.dart';
+import '../../features/offers/offers_repository.dart';
+import '../../features/offers/offers_repository_demo.dart';
+import '../../features/offers/offers_repository_firestore.dart';
+import '../../features/support/support_repository.dart';
+import '../../features/support/support_repository_demo.dart';
+import '../../features/support/support_repository_firestore.dart';
+import '../../features/pre_shipment/pre_shipment_repository.dart';
+import '../../features/pre_shipment/pre_shipment_repository_demo.dart';
+import '../../features/pre_shipment/pre_shipment_repository_firestore.dart';
 import '../firebase/firebase_bootstrap.dart';
 
 class AppRepositories {
@@ -21,6 +30,9 @@ class AppRepositories {
   static late final ContactRepository contact;
   static late final FeedbackRepository feedback;
   static late final FacteurRepository facteur;
+  static late final OffersRepository offers;
+  static late final SupportRepository support;
+  static late final PreShipmentRepository preShipment;
 
   static void configure() {
     if (FirebaseBootstrap.enabled) {
@@ -29,12 +41,18 @@ class AppRepositories {
       contact = ContactRepositoryFirestore();
       feedback = FeedbackRepositoryFirestore();
       facteur = FacteurRepositoryFirestore();
+      offers = OffersRepositoryFirestore();
+      support = SupportRepositoryFirestore();
+      preShipment = PreShipmentRepositoryFirestore();
     } else {
       tracking = TrackingRepositoryDemo();
       agencies = AgenciesRepositoryDemo();
       contact = ContactRepositoryDemo();
       feedback = FeedbackRepositoryDemo();
       facteur = FacteurRepositoryDemo();
+      offers = OffersRepositoryDemo();
+      support = SupportRepositoryDemo();
+      preShipment = PreShipmentRepositoryDemo();
     }
   }
 }
