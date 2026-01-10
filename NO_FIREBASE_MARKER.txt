@@ -1,0 +1,1 @@
+This project has NO Firebase. Using local JSON + SharedPreferences. (v2)

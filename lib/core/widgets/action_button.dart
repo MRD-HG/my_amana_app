@@ -5,11 +5,16 @@ class ActionButton extends StatelessWidget {
   const ActionButton({
     super.key,
     required this.label,
-    required this.onPressed,
+    this.onPressed,
+    this.leading,
+    this.icon,
   });
 
   final String label;
-  final VoidCallback onPressed;
+  /// When null, the button is disabled.
+  final VoidCallback? onPressed;
+  final Widget? leading;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +28,19 @@ class ActionButton extends StatelessWidget {
         minimumSize: const Size(120, 44),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      child: Text(label),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (leading != null) ...[
+            leading!,
+            const SizedBox(width: 10),
+          ] else if (icon != null) ...[
+            Icon(icon, size: 20, color: Colors.white),
+            const SizedBox(width: 10),
+          ],
+          Text(label),
+        ],
+      ),
     );
   }
 }

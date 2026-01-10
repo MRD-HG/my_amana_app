@@ -1,7 +1,11 @@
-import 'pre_shipment_repository.dart';
+import 'package:my_amana_app/core/local/prefs_store.dart';
+
 import 'models/pre_shipment.dart';
+import 'pre_shipment_repository.dart';
 
 class PreShipmentRepositoryDemo implements PreShipmentRepository {
+  static const String _key = 'pre_shipments_v1';
+
   @override
   Future<PreShipment> createPreShipment({
     required String senderName,
@@ -11,8 +15,10 @@ class PreShipmentRepositoryDemo implements PreShipmentRepository {
     required String serviceType,
     required double weightKg,
   }) async {
-    final id = 'PRE-${DateTime.now().millisecondsSinceEpoch}';
-    return PreShipment(
+    final now = DateTime.now().toUtc();
+    final id = 'PS-${now.millisecondsSinceEpoch}';
+
+    final pre = PreShipment(
       id: id,
       senderName: senderName,
       senderCity: senderCity,
@@ -20,7 +26,24 @@ class PreShipmentRepositoryDemo implements PreShipmentRepository {
       receiverCity: receiverCity,
       serviceType: serviceType,
       weightKg: weightKg,
-      createdAt: DateTime.now(),
+      createdAt: now,
     );
+
+    final record = <String, dynamic>{
+      'id': pre.id,
+      'senderName': pre.senderName,
+      'senderCity': pre.senderCity,
+      'receiverName': pre.receiverName,
+      'receiverCity': pre.receiverCity,
+      'serviceType': pre.serviceType,
+      'weightKg': pre.weightKg,
+      'createdAt': pre.createdAt.toIso8601String(),
+    };
+
+    final existing = await PrefsStore.readList(_key);
+    existing.insert(0, record);
+    await PrefsStore.writeList(_key, existing);
+
+    return pre;
   }
 }

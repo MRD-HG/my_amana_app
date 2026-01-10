@@ -16,6 +16,30 @@ class FacteurUser {
   final String? agencyId;
 
   bool get isAuthorized => role == 'facteur';
+
+  Map<String, dynamic> toMap() {
+    return {
+      'uid': uid,
+      'email': email,
+      'role': role,
+      'displayName': displayName,
+      'agencyId': agencyId,
+    };
+  }
+
+  static FacteurUser fromMap(Map<String, dynamic> data) {
+    return FacteurUser(
+      uid: (data['uid'] ?? '').toString(),
+      email: (data['email'] ?? '').toString(),
+      role: (data['role'] ?? 'facteur').toString(),
+      displayName: (data['displayName'] ?? '').toString().trim().isEmpty
+          ? null
+          : (data['displayName'] ?? '').toString(),
+      agencyId: (data['agencyId'] ?? '').toString().trim().isEmpty
+          ? null
+          : (data['agencyId'] ?? '').toString(),
+    );
+  }
 }
 
 class ShipmentSummary {

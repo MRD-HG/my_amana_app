@@ -1,217 +1,448 @@
 import 'package:flutter/material.dart';
 import 'package:my_amana_app/View/Menu/MenuSide.dart';
-import 'package:my_amana_app/core/bootstrap/app_repositories.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
-import 'package:my_amana_app/features/pre_shipment/models/pre_shipment.dart';
-import 'package:my_amana_app/features/pre_shipment/pre_shipment_repository.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:my_amana_app/core/widgets/action_button.dart';
 
-class PreShipmentPage extends StatefulWidget {
-  const PreShipmentPage({super.key});
+class PreShipment extends StatefulWidget {
+  const PreShipment({super.key});
 
   @override
-  State<PreShipmentPage> createState() => _PreShipmentPageState();
+  State<PreShipment> createState() => _PreShipmentState();
 }
 
-class _PreShipmentPageState extends State<PreShipmentPage> {
-  final PreShipmentRepository _repository = AppRepositories.preShipment;
+class _PreShipmentState extends State<PreShipment> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _senderName = TextEditingController();
-  final TextEditingController _senderCity = TextEditingController();
+  final List<String> _shippingMethods = const [
+    'En agence',
+    'À domicile',
+  ];
+
+  String _selectedShippingMethod = 'En agence';
+  DateTime? _pickupDate;
+
+  // Simple demo form fields
   final TextEditingController _receiverName = TextEditingController();
+  final TextEditingController _receiverPhone = TextEditingController();
   final TextEditingController _receiverCity = TextEditingController();
-  final TextEditingController _weight = TextEditingController();
-  String _serviceType = 'Standard';
-  bool _isSubmitting = false;
+  final TextEditingController _receiverAddress = TextEditingController();
+  final TextEditingController _weightKg = TextEditingController();
 
   @override
   void dispose() {
-    _senderName.dispose();
-    _senderCity.dispose();
     _receiverName.dispose();
+    _receiverPhone.dispose();
     _receiverCity.dispose();
-    _weight.dispose();
+    _receiverAddress.dispose();
+    _weightKg.dispose();
     super.dispose();
   }
 
-  Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) return;
+  Future<void> _selectPickupDate() async {
+    final now = DateTime.now();
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: now,
+      lastDate: now.add(const Duration(days: 30)),
+    );
+    if (pickedDate == null) return;
 
-    final weight = double.tryParse(_weight.text.trim().replaceAll(',', '.')) ?? 0;
-    setState(() => _isSubmitting = true);
+    if (!mounted) return;
 
-    try {
-      final pre = await _repository.createPreShipment(
-        senderName: _senderName.text.trim(),
-        senderCity: _senderCity.text.trim(),
-        receiverName: _receiverName.text.trim(),
-        receiverCity: _receiverCity.text.trim(),
-        serviceType: _serviceType,
-        weightKg: weight,
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(now.add(const Duration(hours: 2))),
+    );
+    if (pickedTime == null) return;
+
+    setState(() {
+      _pickupDate = DateTime(
+        pickedDate.year,
+        pickedDate.month,
+        pickedDate.day,
+        pickedTime.hour,
+        pickedTime.minute,
       );
+    });
+  }
 
-      if (!mounted) return;
-      await showDialog<void>(
-        context: context,
-        builder: (_) => _QrDialog(preShipment: pre),
-      );
+  double _parseWeight() {
+    final raw = _weightKg.text.trim().replaceAll(',', '.');
+    return double.tryParse(raw) ?? 0;
+  }
 
-      _senderName.clear();
-      _senderCity.clear();
-      _receiverName.clear();
-      _receiverCity.clear();
-      _weight.clear();
+  double _estimatePrice() {
+    final w = _parseWeight();
+    final base = 25.0;
+    final perKg = 7.5;
+    final pickupFee = _selectedShippingMethod == 'À domicile' ? 10.0 : 0.0;
+    return (base + (w * perKg) + pickupFee).clamp(25.0, 9999.0);
+  }
 
+  bool get _isFormValid {
+    if (_receiverName.text.trim().isEmpty) return false;
+    if (_receiverPhone.text.trim().isEmpty) return false;
+    if (_receiverCity.text.trim().isEmpty) return false;
+    if (_selectedShippingMethod == 'À domicile' && _pickupDate == null) return false;
+    return true;
+  }
+
+  String _formatPickup(DateTime dt) {
+    final d = dt;
+    final dd = d.day.toString().padLeft(2, '0');
+    final mm = d.month.toString().padLeft(2, '0');
+    final yyyy = d.year.toString();
+    final hh = d.hour.toString().padLeft(2, '0');
+    final min = d.minute.toString().padLeft(2, '0');
+    return '$dd/$mm/$yyyy • $hh:$min';
+  }
+
+  void _submit() {
+    if (!_isFormValid) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pre-shipment created.')),
+        const SnackBar(content: Text('Veuillez compléter les informations requises.')),
       );
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Unable to create pre-shipment.')),
-      );
-    } finally {
-      if (mounted) setState(() => _isSubmitting = false);
+      return;
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Pré-expédition enregistrée (démo).')),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final estimate = _estimatePrice();
+
     return Scaffold(
-      appBar: appB(context),
-      drawer: darweF(context),
+      key: _scaffoldKey,
+      backgroundColor: const Color(0xFFF7F8FB),
+      appBar: AppBar(
+        backgroundColor: AppTheme.primary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () => Navigator.of(context).pop(),
+          tooltip: 'Retour',
+        ),
+        title: const Text('Pré-expédition'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.menu_rounded),
+            onPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
+            tooltip: 'Menu',
+          ),
+        ],
+      ),
+      endDrawer: darweF(context),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
         children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(14),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Pre-shipment (Generate QR)',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                    ),
-                    const SizedBox(height: 12),
-                    _twoFields(
-                      left: TextFormField(
-                        controller: _senderName,
-                        decoration: const InputDecoration(labelText: 'Sender name'),
-                        validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
-                      ),
-                      right: TextFormField(
-                        controller: _senderCity,
-                        decoration: const InputDecoration(labelText: 'Sender city'),
-                        validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    _twoFields(
-                      left: TextFormField(
-                        controller: _receiverName,
-                        decoration: const InputDecoration(labelText: 'Receiver name'),
-                        validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
-                      ),
-                      right: TextFormField(
-                        controller: _receiverCity,
-                        decoration: const InputDecoration(labelText: 'Receiver city'),
-                        validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    DropdownButtonFormField<String>(
-                      value: _serviceType,
-                      items: const [
-                        DropdownMenuItem(value: 'Standard', child: Text('Standard')),
-                        DropdownMenuItem(value: 'Express', child: Text('Express')),
-                        DropdownMenuItem(value: 'EMS', child: Text('EMS')),
-                        DropdownMenuItem(value: 'International', child: Text('International')),
-                      ],
-                      onChanged: _isSubmitting ? null : (v) => setState(() => _serviceType = v ?? 'Standard'),
-                      decoration: const InputDecoration(labelText: 'Service type'),
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _weight,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'Weight (kg)'),
-                      validator: (v) {
-                        final value = double.tryParse((v ?? '').trim().replaceAll(',', '.')) ?? 0;
-                        if (value <= 0) return 'Enter a valid weight.';
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 14),
-                    SizedBox(
+          _HeroCard(
+            title: 'Créez votre bordereau',
+            subtitle: 'Préparez un envoi en quelques secondes et suivez-le facilement.',
+            trailing: const Icon(Icons.local_shipping_rounded, size: 28, color: Colors.white),
+          ),
+          const SizedBox(height: 14),
+
+          _Section(
+            title: 'Mode de dépôt',
+            child: Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: _shippingMethods.map((m) {
+                final selected = _selectedShippingMethod == m;
+                return ChoiceChip(
+                  label: Text(m),
+                  selected: selected,
+                  onSelected: (_) {
+                    setState(() {
+                      _selectedShippingMethod = m;
+                      if (_selectedShippingMethod != 'À domicile') {
+                        _pickupDate = null;
+                      }
+                    });
+                  },
+                  selectedColor: AppTheme.primary.withOpacity(0.15),
+                  labelStyle: TextStyle(
+                    color: selected ? AppTheme.primary : Colors.black87,
+                    fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(999),
+                    side: BorderSide(color: selected ? AppTheme.primary : const Color(0xFFE6E8EF)),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+
+          if (_selectedShippingMethod == 'À domicile') ...[
+            const SizedBox(height: 14),
+            _Section(
+              title: 'Rendez-vous de ramassage',
+              child: Column(
+                children: [
+                  InkWell(
+                    onTap: _selectPickupDate,
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
                       width: double.infinity,
-                      child: ElevatedButton.icon(
-                        onPressed: _isSubmitting ? null : _submit,
-                        icon: const Icon(Icons.qr_code_2),
-                        label: Text(_isSubmitting ? 'Generating...' : 'Generate QR'),
+                      padding: const EdgeInsets.all(14),
+                      decoration: AppTheme.cardDecoration,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.event_available_rounded, color: AppTheme.primary),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              _pickupDate == null ? 'Choisir une date et une heure' : _formatPickup(_pickupDate!),
+                              style: const TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          const Icon(Icons.chevron_right_rounded, color: Colors.black45),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Astuce : choisissez un créneau où quelqu\'un peut remettre le colis au livreur.',
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                ],
               ),
             ),
+          ],
+
+          const SizedBox(height: 14),
+          _Section(
+            title: 'Destinataire',
+            child: Column(
+              children: [
+                _Field(
+                  controller: _receiverName,
+                  label: 'Nom complet *',
+                  icon: Icons.person_rounded,
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(height: 10),
+                _Field(
+                  controller: _receiverPhone,
+                  label: 'Téléphone *',
+                  icon: Icons.phone_rounded,
+                  keyboardType: TextInputType.phone,
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(height: 10),
+                _Field(
+                  controller: _receiverCity,
+                  label: 'Ville *',
+                  icon: Icons.location_city_rounded,
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(height: 10),
+                _Field(
+                  controller: _receiverAddress,
+                  label: 'Adresse (optionnel)',
+                  icon: Icons.home_rounded,
+                  maxLines: 2,
+                  keyboardType: TextInputType.streetAddress,
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 14),
+          _Section(
+            title: 'Colis',
+            child: Column(
+              children: [
+                _Field(
+                  controller: _weightKg,
+                  label: 'Poids estimé (kg)',
+                  icon: Icons.scale_rounded,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  onChanged: (_) => setState(() {}),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(14),
+                  decoration: AppTheme.cardDecoration,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.price_change_rounded, color: AppTheme.primary),
+                      const SizedBox(width: 10),
+                      const Expanded(
+                        child: Text(
+                          'Estimation',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      Text(
+                        '${estimate.toStringAsFixed(0)} MAD',
+                        style: const TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 18),
+          ActionButton(
+            label: 'Générer le bordereau',
+            leading: const Icon(Icons.qr_code_rounded),
+            onPressed: _isFormValid ? _submit : null,
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'En mode démo, aucune donnée n\'est envoyée en ligne.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.black54),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _twoFields({required Widget left, required Widget right}) {
-    return Row(
+class _HeroCard extends StatelessWidget {
+  const _HeroCard({
+    required this.title,
+    required this.subtitle,
+    required this.trailing,
+  });
+
+  final String title;
+  final String subtitle;
+  final Widget trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppTheme.primary, AppTheme.primaryDark],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.primary.withOpacity(0.25),
+            blurRadius: 18,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.9),
+                    height: 1.25,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: trailing,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Section extends StatelessWidget {
+  const _Section({required this.title, required this.child});
+
+  final String title;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: left),
-        const SizedBox(width: 10),
-        Expanded(child: right),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w800,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+        child,
       ],
     );
   }
 }
 
-class _QrDialog extends StatelessWidget {
-  const _QrDialog({required this.preShipment});
+class _Field extends StatelessWidget {
+  const _Field({
+    required this.controller,
+    required this.label,
+    required this.icon,
+    this.keyboardType,
+    this.textInputAction,
+    this.maxLines = 1,
+    this.onChanged,
+  });
 
-  final PreShipment preShipment;
+  final TextEditingController controller;
+  final String label;
+  final IconData icon;
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final int maxLines;
+  final ValueChanged<String>? onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final qrPayload = preShipment.id;
-    return AlertDialog(
-      title: const Text('Your QR code'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          QrImageView(
-            data: qrPayload,
-            size: 220,
-            errorCorrectionLevel: QrErrorCorrectLevel.M,
-          ),
-          const SizedBox(height: 10),
-          Text(
-            'Reference: ${preShipment.id}',
-            style: TextStyle(color: AppColors.mutedText),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            '${preShipment.senderCity} → ${preShipment.receiverCity} • ${preShipment.serviceType} • ${preShipment.weightKg.toStringAsFixed(1)}kg',
-            style: TextStyle(color: AppColors.mutedText, fontSize: 12),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Close'),
+    return Container(
+      decoration: AppTheme.cardDecoration,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        textInputAction: textInputAction,
+        maxLines: maxLines,
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          prefixIcon: Icon(icon, color: AppTheme.primary),
+          hintText: label,
         ),
-      ],
+      ),
     );
   }
 }

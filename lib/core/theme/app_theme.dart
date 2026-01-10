@@ -87,4 +87,49 @@ class AppTheme {
       ),
     );
   }
+
+  // Convenience aliases used across legacy UI code.
+  // They map to the new design system (AppColors/AppShadows/AppRadii).
+  // NOTE: These are *fields* (not getters) so they can be used inside const
+  // widgets (e.g., const Icon(color: AppTheme.primary)).
+  static const Color primary = AppColors.primary;
+  static const Color primaryDark = AppColors.primaryDark;
+  static const Color secondary = AppColors.accent;
+  static const Color muted = AppColors.mutedText;
+
+  static const Color border = Color(0xFFE6E8EF);
+
+  static TextTheme get textTheme => light().textTheme;
+
+  static List<BoxShadow> get shadow => AppShadows.soft;
+
+  static BoxDecoration get cardDecoration => BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadii.lg),
+        border: Border.all(color: border),
+        boxShadow: shadow,
+      );
+}
+
+/// Shadow presets used by [AppTheme].
+class AppShadows {
+  AppShadows._();
+
+  static const List<BoxShadow> soft = [
+    BoxShadow(
+      color: Color(0x14000000), // ~8% black
+      blurRadius: 18,
+      offset: Offset(0, 10),
+    ),
+  ];
+}
+
+/// Radius presets used by [AppTheme].
+class AppRadii {
+  AppRadii._();
+
+  static const double sm = 10;
+  static const double md = 14;
+  static const double lg = 18;
+  static const double xl = 24;
 }

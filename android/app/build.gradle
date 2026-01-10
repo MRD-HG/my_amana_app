@@ -9,7 +9,9 @@ def mapsApiKey = project.findProperty("MAPS_API_KEY") ?: ""
 
 android {
     namespace = "com.example.my_amana_app"
-    compileSdk = 34
+    // Some plugins (e.g. shared_preferences_android, url_launcher_android) now
+    // require compiling against Android SDK 35.
+    compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -25,10 +27,15 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.my_amana_app"
         minSdkVersion 23
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode flutter.versionCode
         versionName flutter.versionName
-        manifestPlaceholders = [MAPS_API_KEY: mapsApiKey]
+        // Required because AndroidManifest.xml uses android:name="${applicationName}".
+        // If you don't need a custom Application class, Flutter's default works.
+        manifestPlaceholders = [
+                MAPS_API_KEY: mapsApiKey,
+                applicationName: "io.flutter.app.FlutterApplication"
+        ]
     }
 
     buildTypes {

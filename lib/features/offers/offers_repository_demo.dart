@@ -1,28 +1,29 @@
-import 'offers_repository.dart';
+import 'package:my_amana_app/core/local/json_asset_loader.dart';
+
 import 'models/offer.dart';
+import 'offers_repository.dart';
 
 class OffersRepositoryDemo implements OffersRepository {
+  static const String _assetPath = 'assets/data/offers_ma.json';
+
+  List<Offer>? _cache;
+
   @override
   Future<List<Offer>> fetchOffers() async {
-    return [
-      Offer(
-        id: 'demo_1',
-        title: 'Offre e-commerce',
-        summary: 'Solutions de livraison pour vos clients partout au Maroc.',
-        imageUrl: '',
-        linkUrl: '',
-        startsAt: DateTime.now().subtract(const Duration(days: 2)),
-        endsAt: DateTime.now().add(const Duration(days: 20)),
-      ),
-      Offer(
-        id: 'demo_2',
-        title: 'Livraison Express',
-        summary: 'Délais optimisés avec suivi amélioré.',
-        imageUrl: '',
-        linkUrl: '',
-        startsAt: DateTime.now().subtract(const Duration(days: 10)),
-        endsAt: null,
-      ),
-    ];
+    if (_cache != null) return _cache!;
+    final rawList = await JsonAssetLoader.loadList(_assetPath);
+    final offers = <Offer>[];
+    for (final item in rawList) {
+      if (item is Map) {
+        final map = Map<String, dynamic>.from(item as Map);
+        final offer = Offer.fromMap(map);
+        if (offer != null) offers.add(offer);
+      }
+    }
+    // Sort by startsAt desc (recent first)
+    final epoch = DateTime.fromMillisecondsSinceEpoch(0);
+    offers.sort((a, b) => (b.startsAt ?? epoch).compareTo(a.startsAt ?? epoch));
+    _cache = offers;
+    return offers;
   }
 }

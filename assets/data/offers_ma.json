@@ -1,0 +1,38 @@
+[
+  {
+    "id": "offer-ramadan",
+    "title": "Ramadan Shipping Promo",
+    "summary": "Discounts on selected national shipments during Ramadan (limited time).",
+    "imageUrl": "",
+    "linkUrl": "https://www.poste.ma",
+    "startsAt": "2026-02-15T00:00:00Z",
+    "endsAt": "2026-04-15T23:59:59Z"
+  },
+  {
+    "id": "offer-ecommerce",
+    "title": "E-commerce Pack",
+    "summary": "Tools and advice to help Moroccan sellers ship faster and safer (packaging + COD tips).",
+    "imageUrl": "",
+    "linkUrl": "https://www.poste.ma",
+    "startsAt": "2026-01-01T00:00:00Z",
+    "endsAt": "2026-12-31T23:59:59Z"
+  },
+  {
+    "id": "offer-international",
+    "title": "International Express",
+    "summary": "Send documents and parcels abroad with reliable tracking.",
+    "imageUrl": "",
+    "linkUrl": "https://www.poste.ma",
+    "startsAt": "2026-01-01T00:00:00Z",
+    "endsAt": "2026-12-31T23:59:59Z"
+  },
+  {
+    "id": "offer-students",
+    "title": "Students Offer",
+    "summary": "Special rates for students sending documents (ID required).",
+    "imageUrl": "",
+    "linkUrl": "https://www.poste.ma",
+    "startsAt": "2026-01-10T00:00:00Z",
+    "endsAt": "2026-06-30T23:59:59Z"
+  }
+]

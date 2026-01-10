@@ -1,0 +1,163 @@
+[
+  {
+    "id": "AMNMA240001",
+    "weightKg": 1.2,
+    "codAmount": 0,
+    "service": "Express / EMS",
+    "status": "In Transit",
+    "senderCity": "Rabat",
+    "receiverCity": "Casablanca",
+    "serviceType": "Express",
+    "assignedToUid": "facteur-rabat-1",
+    "events": [
+      {
+        "stage": "accepted",
+        "description": "Shipment accepted at agency",
+        "location": "Rabat - Agence Centre",
+        "timestamp": "2026-01-05T09:10:00Z"
+      },
+      {
+        "stage": "inTransit",
+        "description": "Dispatched to sorting center",
+        "location": "Rabat - Centre de tri",
+        "timestamp": "2026-01-05T13:40:00Z"
+      },
+      {
+        "stage": "inTransit",
+        "description": "Arrived at Casablanca hub",
+        "location": "Casablanca - Hub",
+        "timestamp": "2026-01-06T08:20:00Z"
+      }
+    ]
+  },
+  {
+    "id": "AMNMA240002",
+    "weightKg": 3.5,
+    "codAmount": 250,
+    "service": "Livraison à domicile (COD)",
+    "status": "Out For Delivery",
+    "senderCity": "Casablanca",
+    "receiverCity": "Marrakech",
+    "serviceType": "Standard",
+    "assignedToUid": "facteur-marrakech-1",
+    "events": [
+      {
+        "stage": "accepted",
+        "description": "Shipment accepted at agency",
+        "location": "Casablanca - Maârif",
+        "timestamp": "2026-01-03T16:05:00Z"
+      },
+      {
+        "stage": "inTransit",
+        "description": "Departed Casablanca hub",
+        "location": "Casablanca - Hub",
+        "timestamp": "2026-01-04T07:30:00Z"
+      },
+      {
+        "stage": "outForDelivery",
+        "description": "Out for delivery",
+        "location": "Marrakech - Guéliz",
+        "timestamp": "2026-01-06T09:15:00Z"
+      }
+    ]
+  },
+  {
+    "id": "AMNMA240003",
+    "weightKg": 0.7,
+    "codAmount": 0,
+    "service": "Standard",
+    "status": "Delivered",
+    "senderCity": "Fès",
+    "receiverCity": "Tanger",
+    "serviceType": "Standard",
+    "assignedToUid": "facteur-tanger-1",
+    "events": [
+      {
+        "stage": "accepted",
+        "description": "Shipment accepted at agency",
+        "location": "Fès - Ville Nouvelle",
+        "timestamp": "2026-01-01T10:10:00Z"
+      },
+      {
+        "stage": "inTransit",
+        "description": "Transit via Rabat hub",
+        "location": "Rabat - Hub",
+        "timestamp": "2026-01-02T06:45:00Z"
+      },
+      {
+        "stage": "outForDelivery",
+        "description": "Out for delivery",
+        "location": "Tanger - Centre",
+        "timestamp": "2026-01-03T11:00:00Z"
+      },
+      {
+        "stage": "delivered",
+        "description": "Delivered to recipient",
+        "location": "Tanger - Centre",
+        "timestamp": "2026-01-03T15:25:00Z"
+      }
+    ]
+  },
+  {
+    "id": "AMNMA240004",
+    "weightKg": 5.0,
+    "codAmount": 0,
+    "service": "Standard",
+    "status": "In Transit",
+    "senderCity": "Agadir",
+    "receiverCity": "Rabat",
+    "serviceType": "Standard",
+    "assignedToUid": "facteur-rabat-1",
+    "events": [
+      {
+        "stage": "accepted",
+        "description": "Shipment accepted at agency",
+        "location": "Agadir - Talborjt",
+        "timestamp": "2026-01-04T12:30:00Z"
+      },
+      {
+        "stage": "inTransit",
+        "description": "Dispatched to Rabat hub",
+        "location": "Agadir - Hub",
+        "timestamp": "2026-01-04T20:10:00Z"
+      },
+      {
+        "stage": "inTransit",
+        "description": "Arrived at Rabat hub",
+        "location": "Rabat - Hub",
+        "timestamp": "2026-01-06T07:55:00Z"
+      }
+    ]
+  },
+  {
+    "id": "AMNINT240005",
+    "weightKg": 0.9,
+    "codAmount": 0,
+    "service": "International (Colissimo / EMS)",
+    "status": "In Transit",
+    "senderCity": "Rabat",
+    "receiverCity": "Paris",
+    "serviceType": "International",
+    "assignedToUid": null,
+    "events": [
+      {
+        "stage": "accepted",
+        "description": "Shipment accepted at international desk",
+        "location": "Rabat - Agence Centre",
+        "timestamp": "2026-01-02T09:00:00Z"
+      },
+      {
+        "stage": "inTransit",
+        "description": "Departed Morocco export hub",
+        "location": "Casablanca - Export",
+        "timestamp": "2026-01-03T22:20:00Z"
+      },
+      {
+        "stage": "inTransit",
+        "description": "Arrived in destination country",
+        "location": "Paris - Hub",
+        "timestamp": "2026-01-05T08:10:00Z"
+      }
+    ]
+  }
+]

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_amana_app/View/Menu/MenuSide.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class VideoMed extends StatefulWidget {
   const VideoMed({super.key});
@@ -14,127 +14,58 @@ class _VideoMedState extends State<VideoMed> {
   final List<Map<String, String>> _videos = const [
     {
       'title': 'Campagne My Amana',
-      'url':
-          'https://www.youtube.com/watch?v=dmHveh1KT5c&list=PL1oM0oQ26NeADddj-6taI3T4N_aaGCKTJ&ab_channel=GroupeBaridAl-Maghrib',
+      'url': 'https://www.youtube.com/watch?v=dmHveh1KT5c',
     },
     {
-      'title': 'Livraison express',
-      'url': 'https://youtu.be/Q7sRH_zH_HA',
+      'title': 'Amana – Services & Solutions',
+      'url': 'https://www.youtube.com/watch?v=0oQ26NeADdd',
     },
     {
-      'title': 'Solutions e-commerce',
-      'url': 'https://youtu.be/Y3h3L-Jfrbo',
-    },
-    {
-      'title': 'Service client',
-      'url': 'https://youtu.be/HZZhw6YIukg',
+      'title': 'Barid Al-Maghrib – Official Channel',
+      'url': 'https://www.youtube.com/@GroupeBaridAlMaghrib',
     },
   ];
 
-  late final List<YoutubePlayerController> _controllers;
-
-  @override
-  void initState() {
-    super.initState();
-    _controllers = _videos
-        .map(
-          (video) => YoutubePlayerController(
-            initialVideoId: YoutubePlayer.convertUrlToId(video['url']!)!,
-            flags: const YoutubePlayerFlags(autoPlay: false),
-          ),
-        )
-        .toList();
-  }
-
-  @override
-  void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
+  Future<void> _open(String url) async {
+    final uri = Uri.tryParse(url);
+    if (uri == null) return;
+    final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!ok && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to open the link on this device.')),
+      );
     }
-    super.dispose();
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: AppGradients.hero,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Mediatheque',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: 6),
-          Text(
-            'Videos et actualites Barid Al Maghrib.',
-            style: TextStyle(color: Colors.white70, fontSize: 12),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appB(context),
+      // Reuse the existing app drawer from MenuSide.dart
       drawer: darweF(context),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _buildHeader(),
-          const SizedBox(height: 16),
-          for (int i = 0; i < _videos.length; i++)
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _videos[i]['title']!,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.text,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: AspectRatio(
-                        aspectRatio: 16 / 9,
-                        child: YoutubePlayer(
-                          controller: _controllers[i],
-                          showVideoProgressIndicator: true,
-                          bottomActions: [
-                            CurrentPosition(),
-                            ProgressBar(
-                              isExpanded: true,
-                              colors: const ProgressBarColors(
-                                playedColor: AppColors.primary,
-                                handleColor: AppColors.primaryDark,
-                              ),
-                            ),
-                            const PlaybackSpeedButton(),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-        ],
+      appBar: AppBar(
+        title: const Text('Media'),
+        centerTitle: true,
+        backgroundColor: AppColors.primary,
       ),
-      bottomNavigationBar: const NavBottom(),
+      body: ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemCount: _videos.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 10),
+        itemBuilder: (context, i) {
+          final v = _videos[i];
+          final title = v['title'] ?? 'Video';
+          final url = v['url'] ?? '';
+          return Card(
+            child: ListTile(
+              leading: const Icon(Icons.play_circle_outline),
+              title: Text(title),
+              subtitle: Text(url, maxLines: 1, overflow: TextOverflow.ellipsis),
+              trailing: const Icon(Icons.open_in_new),
+              onTap: () => _open(url),
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -1,0 +1,34 @@
+[
+  {
+    "uid": "facteur-rabat-1",
+    "email": "facteur.rabat@amana.ma",
+    "password": "123456",
+    "role": "facteur",
+    "displayName": "Facteur Rabat",
+    "agencyId": "rabat-centre"
+  },
+  {
+    "uid": "facteur-marrakech-1",
+    "email": "facteur.marrakech@amana.ma",
+    "password": "123456",
+    "role": "facteur",
+    "displayName": "Facteur Marrakech",
+    "agencyId": "marrakech-gueliz"
+  },
+  {
+    "uid": "facteur-tanger-1",
+    "email": "facteur.tanger@amana.ma",
+    "password": "123456",
+    "role": "facteur",
+    "displayName": "Facteur Tanger",
+    "agencyId": "tanger-centre"
+  },
+  {
+    "uid": "client-demo",
+    "email": "client@amana.ma",
+    "password": "123456",
+    "role": "client",
+    "displayName": "Client Demo",
+    "agencyId": null
+  }
+]

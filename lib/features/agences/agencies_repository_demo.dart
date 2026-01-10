@@ -1,66 +1,39 @@
+import 'package:my_amana_app/core/local/json_asset_loader.dart';
+
 import 'agencies_repository.dart';
 import 'models/agency.dart';
 
 class AgenciesRepositoryDemo implements AgenciesRepository {
-  static const List<Agency> _agencies = [
-    Agency(
-      id: 'rabat-centre',
-      name: 'Agence Rabat Centre',
-      address: 'Avenue Mohammed V',
-      city: 'Rabat',
-      phone: '0537 00 00 00',
-      lat: 34.0209,
-      lng: -6.8416,
-    ),
-    Agency(
-      id: 'casablanca-maarif',
-      name: 'Agence Casablanca Maarif',
-      address: 'Boulevard Bir Anzarane',
-      city: 'Casablanca',
-      phone: '0522 00 00 00',
-      lat: 33.5899,
-      lng: -7.6164,
-    ),
-    Agency(
-      id: 'marrakech-gueliz',
-      name: 'Agence Marrakech Gueliz',
-      address: 'Rue Abdelkrim Khattabi',
-      city: 'Marrakech',
-      phone: '0524 00 00 00',
-      lat: 31.6387,
-      lng: -8.0105,
-    ),
-    Agency(
-      id: 'tanger-port',
-      name: 'Agence Tanger Port',
-      address: 'Avenue Hassan II',
-      city: 'Tanger',
-      phone: '0539 00 00 00',
-      lat: 35.7765,
-      lng: -5.8063,
-    ),
-    Agency(
-      id: 'fes-centre',
-      name: 'Agence Fes Centre',
-      address: 'Boulevard Allal Ben Abdellah',
-      city: 'Fes',
-      phone: '0535 00 00 00',
-      lat: 34.0356,
-      lng: -5.0026,
-    ),
-  ];
+  static const String _assetPath = 'assets/data/agencies_ma.json';
+
+  List<Agency>? _cache;
+
+  Future<List<Agency>> _loadAll() async {
+    if (_cache != null) return _cache!;
+    final rawList = await JsonAssetLoader.loadList(_assetPath);
+    final agencies = <Agency>[];
+    for (final item in rawList) {
+      if (item is Map) {
+        final map = Map<String, dynamic>.from(item as Map);
+        final id = (map['id'] ?? '').toString().trim();
+        if (id.isEmpty) continue;
+        agencies.add(Agency.fromMap(id, map));
+      }
+    }
+    _cache = agencies;
+    return agencies;
+  }
 
   @override
   Future<List<Agency>> fetchAgencies({String? query}) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    final normalized = query?.trim().toLowerCase();
-    if (normalized == null || normalized.isEmpty) {
-      return _agencies;
-    }
-    return _agencies.where((agency) {
-      return agency.name.toLowerCase().contains(normalized) ||
-          agency.city.toLowerCase().contains(normalized) ||
-          agency.address.toLowerCase().contains(normalized);
+    final all = await _loadAll();
+    final q = (query ?? '').trim().toLowerCase();
+    if (q.isEmpty) return all;
+
+    return all.where((a) {
+      return a.name.toLowerCase().contains(q) ||
+          a.city.toLowerCase().contains(q) ||
+          a.address.toLowerCase().contains(q);
     }).toList();
   }
 }

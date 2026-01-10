@@ -107,14 +107,6 @@ Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Text(
-                          'My Amana',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
                         const SizedBox(height: 2),
                         const Text(
                           'Barid Al Maghrib',
@@ -245,7 +237,7 @@ ListTile(
     Navigator.pop(context);
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const PreShipmentPage()),
+      MaterialPageRoute(builder: (_) => const PreShipment()),
     );
   },
 ),
@@ -569,11 +561,6 @@ PreferredSizeWidget appB(BuildContext context, {VoidCallback? onHomeTap}) {
               height: 40,
               width: 40,
               alignment: FractionalOffset.center,
-            ),
-            const SizedBox(width: 8),
-            const Text(
-              'My Amana',
-              style: TextStyle(color: AppColors.text),
             ),
           ],
         ),

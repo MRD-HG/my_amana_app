@@ -26,7 +26,37 @@ class Offer {
         'endsAt': endsAt?.toIso8601String(),
       };
 
-  static Offer fromFirestore(String id, Map<String, dynamic> data) {
+  
+  static Offer? fromMap(Map<String, dynamic> data) {
+    final rawId = data['id'] ?? data['offerId'] ?? data['code'];
+    final id = (rawId ?? '').toString().trim();
+    if (id.isEmpty) return null;
+
+    DateTime? parse(dynamic v) {
+      if (v == null) return null;
+      if (v is DateTime) return v;
+      if (v is int) {
+        // epoch ms
+        try { return DateTime.fromMillisecondsSinceEpoch(v); } catch (_) { return null; }
+      }
+      if (v is String) {
+        try { return DateTime.parse(v); } catch (_) { return null; }
+      }
+      return null;
+    }
+
+    return Offer(
+      id: id,
+      title: (data['title'] ?? '').toString(),
+      summary: (data['summary'] ?? data['description'] ?? '').toString(),
+      imageUrl: (data['imageUrl'] ?? data['image'] ?? '').toString(),
+      linkUrl: (data['linkUrl'] ?? data['link'] ?? '').toString(),
+      startsAt: parse(data['startsAt']),
+      endsAt: parse(data['endsAt']),
+    );
+  }
+
+static Offer fromFirestore(String id, Map<String, dynamic> data) {
     DateTime? parse(dynamic v) {
       if (v == null) return null;
       if (v is DateTime) return v;

@@ -1,43 +1,38 @@
-# my_amana_app
+# My Amana (Poste Maroc) — PFE Flutter App
 
-My Amana / Poste Maroc (PFE) Flutter application.
+This version runs **without Firebase**.
 
-## Features
-- Tracking (Suivi) with timeline and barcode/QR scan
-- Agencies map with Morocco markers and search
-- Tarif calculator with validation
-- Contact and Feedback forms (Firestore or Demo Mode)
-- Facteur mode: login, assigned shipments, update status timeline
+✅ Data source:
+- **Static Moroccan demo data** in `assets/data/*.json` (agencies, shipments, offers, demo users).
+- **User-generated data** (support tickets, feedback, contact messages, pre-shipments, facteur status updates) stored locally via **SharedPreferences**.
 
-## Demo Mode
-The app starts in Demo Mode if Firebase initialization fails. Demo Mode uses
-in-memory sample data for tracking, agencies, feedback, contact, and facteur.
-No configuration is required.
+## Quick start
 
-## Firebase setup
-1) Create a Firebase project.
-2) Add an Android app with package name `com.example.my_amana_app`.
-3) Download `google-services.json` and place it in `android/app/`.
-4) Install FlutterFire CLI:
-   `dart pub global activate flutterfire_cli`
-5) Run:
-   `flutterfire configure`
-   This generates/updates `lib/firebase_options.dart`.
-6) Run the app:
-   `flutter clean && flutter pub get && flutter run`
+```bash
+flutter pub get
+flutter run
+```
 
-## Maps setup (Android)
-Google Maps requires an API key.
+## Demo credentials (Facteur space)
 
-1) Create a key in Google Cloud Console with Maps SDK for Android enabled.
-2) Add the key to `android/gradle.properties`:
-   `MAPS_API_KEY=YOUR_KEY`
-3) Run with the Dart define so the UI enables the map:
-   `flutter run --dart-define=MAPS_API_KEY=YOUR_KEY`
+- Email: `facteur.rabat@amana.ma`  Password: `123456`
+- Email: `facteur.marrakech@amana.ma`  Password: `123456`
+- Email: `facteur.tanger@amana.ma`  Password: `123456`
 
-If the key is missing, the app shows a safe fallback instead of crashing.
+## Tracking demo codes
 
-## Run
-- `flutter clean`
-- `flutter pub get`
-- `flutter run`
+Try in the tracking screen:
+- `AMNMA240001`
+- `AMNMA240002`
+- `AMNMA240003`
+- `AMNMA240004`
+- `AMNINT240005`
+
+## Where to edit the local data
+
+- Agencies: `assets/data/agencies_ma.json`
+- Shipments + tracking timeline: `assets/data/shipments_ma.json`
+- Offers/news: `assets/data/offers_ma.json`
+- Demo users (facteur login): `assets/data/users_ma.json`
+
+> Tip: if you change any JSON in `assets/data/`, do a full restart so Flutter reloads assets.

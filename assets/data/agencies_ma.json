@@ -1,0 +1,110 @@
+[
+  {
+    "id": "rabat-centre",
+    "name": "Agence Amana Rabat Centre",
+    "address": "Avenue Mohammed V, Hassan",
+    "city": "Rabat",
+    "phone": "0537 27 11 11",
+    "lat": 34.0209,
+    "lng": -6.8416
+  },
+  {
+    "id": "sale-tabriquet",
+    "name": "Agence Amana Salé Tabriquet",
+    "address": "Boulevard Tabriquet",
+    "city": "Salé",
+    "phone": "0537 88 22 22",
+    "lat": 34.035,
+    "lng": -6.804
+  },
+  {
+    "id": "casablanca-maarif",
+    "name": "Agence Amana Casablanca Maârif",
+    "address": "Boulevard Bir Anzarane, Maârif",
+    "city": "Casablanca",
+    "phone": "0522 98 33 33",
+    "lat": 33.5889,
+    "lng": -7.6286
+  },
+  {
+    "id": "casablanca-sidi-maarouf",
+    "name": "Agence Amana Casablanca Sidi Maarouf",
+    "address": "Sidi Maarouf, Near Technopark",
+    "city": "Casablanca",
+    "phone": "0522 60 44 44",
+    "lat": 33.5368,
+    "lng": -7.6228
+  },
+  {
+    "id": "tanger-centre",
+    "name": "Agence Amana Tanger Centre",
+    "address": "Avenue Mohammed VI",
+    "city": "Tanger",
+    "phone": "0539 33 55 55",
+    "lat": 35.7595,
+    "lng": -5.834
+  },
+  {
+    "id": "fes-ville-nouvelle",
+    "name": "Agence Amana Fès Ville Nouvelle",
+    "address": "Avenue Hassan II",
+    "city": "Fès",
+    "phone": "0535 66 77 77",
+    "lat": 34.0372,
+    "lng": -4.9998
+  },
+  {
+    "id": "marrakech-gueliz",
+    "name": "Agence Amana Marrakech Guéliz",
+    "address": "Boulevard Mohamed Zerktouni, Guéliz",
+    "city": "Marrakech",
+    "phone": "0524 44 88 88",
+    "lat": 31.6342,
+    "lng": -7.9999
+  },
+  {
+    "id": "agadir-talborjt",
+    "name": "Agence Amana Agadir Talborjt",
+    "address": "Avenue du Prince Moulay Abdellah, Talborjt",
+    "city": "Agadir",
+    "phone": "0528 84 99 99",
+    "lat": 30.4213,
+    "lng": -9.5981
+  },
+  {
+    "id": "kenitra-centre",
+    "name": "Agence Amana Kénitra Centre",
+    "address": "Boulevard Mohammed V",
+    "city": "Kénitra",
+    "phone": "0537 37 12 12",
+    "lat": 34.261,
+    "lng": -6.5802
+  },
+  {
+    "id": "oujda-centre",
+    "name": "Agence Amana Oujda Centre",
+    "address": "Avenue Mohammed V",
+    "city": "Oujda",
+    "phone": "0536 70 13 13",
+    "lat": 34.6814,
+    "lng": -1.9086
+  },
+  {
+    "id": "meknes-hamria",
+    "name": "Agence Amana Meknès Hamria",
+    "address": "Quartier Hamria",
+    "city": "Meknès",
+    "phone": "0535 52 14 14",
+    "lat": 33.8935,
+    "lng": -5.5473
+  },
+  {
+    "id": "tetouan-centre",
+    "name": "Agence Amana Tétouan Centre",
+    "address": "Avenue Mohammed V",
+    "city": "Tétouan",
+    "phone": "0539 97 15 15",
+    "lat": 35.5785,
+    "lng": -5.3684
+  }
+]
