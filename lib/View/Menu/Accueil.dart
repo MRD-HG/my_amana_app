@@ -1,15 +1,11 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:my_amana_app/View/SideBar/MyTrackings.dart';
 import 'package:my_amana_app/View/resultat.dart';
 import 'package:my_amana_app/core/local/prefs_store.dart';
-import 'package:my_amana_app/core/storage/local_store.dart';
-import 'package:my_amana_app/core/theme/app_theme.dart';
-import 'package:my_amana_app/core/widgets/tracking_search_card.dart';
 import 'package:my_amana_app/features/my_trackings/models/saved_tracking.dart';
 import 'package:my_amana_app/features/my_trackings/my_trackings_store.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Accueila extends StatefulWidget {
   const Accueila({super.key});
@@ -19,16 +15,24 @@ class Accueila extends StatefulWidget {
 }
 
 class _AccueilaState extends State<Accueila> {
-  final TextEditingController _trackingController = TextEditingController();
+  // ===== New UI colors =====
+  static const Color kOrange = Color(0xFFF36A1D);
+  static const Color kTextBlue = Color(0xFF0A6D8C);
 
-  int _activeSlide = 0;
+  // ===== Controllers / State =====
+  final TextEditingController _trackingController = TextEditingController();
+  final PageController _bannerController = PageController(viewportFraction: 0.92);
+
+  int _bannerIndex = 0;
+
   int _trackingsCount = 0;
   int _shipmentsCount = 0;
   int _ticketsCount = 0;
 
   List<SavedTracking> _recentTrackings = const [];
 
-  final List<String> _carouselImages = const [
+  // Keep same assets you already use
+  final List<String> _banners = const [
     'assets/images/scroller1.jpg',
     'assets/images/scroller2.jpg',
     'assets/images/scroller3.jpg',
@@ -44,17 +48,17 @@ class _AccueilaState extends State<Accueila> {
   @override
   void dispose() {
     _trackingController.dispose();
+    _bannerController.dispose();
     super.dispose();
   }
 
+  // ===== Logic stays the same =====
   Future<void> _loadDashboard() async {
     try {
-      // 1) Saved trackings
       final store = await MyTrackingsStore.create();
       final trackings = await store.loadAll();
       trackings.sort((a, b) => b.lastViewedAt.compareTo(a.lastViewedAt));
 
-      // 2) Other local demo data
       final preShipments = await PrefsStore.readList('pre_shipments_v1');
       final tickets = await PrefsStore.readList('support_tickets_v1');
 
@@ -89,12 +93,7 @@ class _AccueilaState extends State<Accueila> {
       MaterialPageRoute(builder: (_) => Resultat(trackingId: trimmed)),
     );
 
-    // Refresh dashboard after returning (history may have changed)
     await _loadDashboard();
-  }
-
-  void _onScan() {
-    _scanAndNavigate();
   }
 
   Future<void> _scanAndNavigate() async {
@@ -103,7 +102,6 @@ class _AccueilaState extends State<Accueila> {
 
     final trimmed = (result ?? '').trim();
     if (trimmed.isEmpty || trimmed == '-1') return;
-
 
     _trackingController.text = trimmed;
     await _navigateToResult(trimmed);
@@ -117,69 +115,22 @@ class _AccueilaState extends State<Accueila> {
     return '$dd/$mm/$yyyy';
   }
 
-  Widget _buildCarousel(BuildContext context) {
-    return Column(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: CarouselSlider.builder(
-            itemCount: _carouselImages.length,
-            itemBuilder: (context, index, realIndex) {
-              final asset = _carouselImages[index];
-              return Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.asset(asset, fit: BoxFit.fill),
-                  // Soft overlay for readability
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          Colors.black.withValues(alpha: 0.45),
-                          Colors.transparent,
-                        ],
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 14,
-                    right: 14,
-                    bottom: 12,
-                    child: Text(
-                      'Suivez vos colis, préparez vos envois, et gardez tout sous contrôle.',
-                      style: AppTheme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-            options: CarouselOptions(
-              height: 200,
-              viewportFraction: 1.0,
-              autoPlay: true,
-              autoPlayInterval: const Duration(seconds: 5),
-              autoPlayCurve: Curves.easeInOut,
-              onPageChanged: (index, reason) => setState(() => _activeSlide = index),
-            ),
+  // ===== Small UI helpers =====
+  Widget _shadowCard({required Widget child, EdgeInsets? padding}) {
+    return Container(
+      padding: padding ?? const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: const [
+          BoxShadow(
+            blurRadius: 18,
+            offset: Offset(0, 8),
+            color: Color(0x22000000),
           ),
-        ),
-        const SizedBox(height: 10),
-        AnimatedSmoothIndicator(
-          activeIndex: _activeSlide,
-          count: _carouselImages.length,
-          effect: const ExpandingDotsEffect(
-            dotHeight: 8,
-            dotWidth: 8,
-            expansionFactor: 3,
-            spacing: 6,
-          ),
-        ),
-      ],
+        ],
+      ),
+      child: child,
     );
   }
 
@@ -190,35 +141,40 @@ class _AccueilaState extends State<Accueila> {
     VoidCallback? onTap,
   }) {
     return InkWell(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(18),
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppTheme.border),
-          boxShadow: AppTheme.shadow,
-        ),
+      child: _shadowCard(
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: 34,
-              width: 34,
+              height: 36,
+              width: 36,
               decoration: BoxDecoration(
-                color: AppTheme.primary.withValues(alpha: 0.10),
-                borderRadius: BorderRadius.circular(10),
+                color: kOrange.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: AppTheme.primary, size: 20),
+              child: Icon(icon, color: kOrange, size: 20),
             ),
             const SizedBox(height: 10),
             Text(
               value.toString(),
-              style: AppTheme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                color: Colors.black87,
+              ),
             ),
             const SizedBox(height: 2),
-            Text(label, style: AppTheme.textTheme.bodySmall?.copyWith(color: AppTheme.muted)),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: Colors.grey.shade600,
+              ),
+            ),
           ],
         ),
       ),
@@ -238,7 +194,7 @@ class _AccueilaState extends State<Accueila> {
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 10),
         Expanded(
           child: _statCard(
             icon: Icons.local_shipping_outlined,
@@ -246,7 +202,7 @@ class _AccueilaState extends State<Accueila> {
             value: _shipmentsCount,
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 10),
         Expanded(
           child: _statCard(
             icon: Icons.support_agent_outlined,
@@ -260,21 +216,14 @@ class _AccueilaState extends State<Accueila> {
 
   Widget _buildRecentHistory() {
     if (_recentTrackings.isEmpty) {
-      return Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppTheme.border),
-          boxShadow: AppTheme.shadow,
-        ),
+      return _shadowCard(
         child: Row(
           children: [
             Container(
               height: 40,
               width: 40,
               decoration: BoxDecoration(
-                color: AppTheme.secondary.withValues(alpha: 0.15),
+                color: Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(Icons.history_rounded),
@@ -282,8 +231,11 @@ class _AccueilaState extends State<Accueila> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Aucun suivi enregistré pour le moment. Faites une recherche et vous le retrouverez ici.',
-                style: AppTheme.textTheme.bodyMedium?.copyWith(color: AppTheme.muted),
+                'Aucun suivi enregistré. Faites une recherche et vous le retrouverez ici.',
+                style: TextStyle(
+                  color: Colors.grey.shade700,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],
@@ -291,75 +243,347 @@ class _AccueilaState extends State<Accueila> {
       );
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.border),
-        boxShadow: AppTheme.shadow,
-      ),
-      child: ListView.separated(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: _recentTrackings.length,
-        separatorBuilder: (_, __) => Divider(height: 1, color: AppTheme.border),
-        itemBuilder: (context, i) {
+    return _shadowCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: List.generate(_recentTrackings.length, (i) {
           final t = _recentTrackings[i];
           final last = _formatShortDate(t.lastViewedAt);
-          return ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            title: Text(
-              t.label.trim().isEmpty ? t.id : t.label,
-              style: AppTheme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-            ),
-            subtitle: Text(
-              'Numéro: ${t.id}\nDernière consultation: $last',
-              style: AppTheme.textTheme.bodySmall?.copyWith(color: AppTheme.muted, height: 1.3),
-            ),
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => _navigateToResult(t.id),
+
+          return Column(
+            children: [
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                title: Text(
+                  t.label.trim().isEmpty ? t.id : t.label,
+                  style: const TextStyle(fontWeight: FontWeight.w800),
+                ),
+                subtitle: Text(
+                  'Numéro: ${t.id}\nDernière consultation: $last',
+                  style: TextStyle(color: Colors.grey.shade600, height: 1.3),
+                ),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => _navigateToResult(t.id),
+              ),
+              if (i != _recentTrackings.length - 1)
+                Divider(height: 1, color: Colors.grey.shade200),
+            ],
           );
-        },
+        }),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: _loadDashboard,
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+    return SafeArea(
+      child: Stack(
         children: [
-          _buildCarousel(context),
-          const SizedBox(height: 14),
-          _buildStatsRow(),
-          const SizedBox(height: 16),
-          TrackingSearchCard(
-            controller: _trackingController,
-            onSearch: () => _navigateToResult(_trackingController.text),
-            onScan: _onScan,
-          ),
-          const SizedBox(height: 18),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'Historique récent',
-                  style: AppTheme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
-                ),
+          // Top orange curved header
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: ClipPath(
+              clipper: _HeaderClipper(),
+              child: Container(
+                height: 190,
+                color: kOrange,
               ),
-              TextButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const MyTrackingsPage()),
-                ),
-                child: const Text('Voir tout'),
-              ),
-            ],
+            ),
           ),
-          _buildRecentHistory(),
+
+          // Bottom-right orange blob
+          Positioned(
+            right: -55,
+            top: 470,
+            child: Container(
+              width: 150,
+              height: 150,
+              decoration: BoxDecoration(
+                color: kOrange,
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+          ),
+
+          RefreshIndicator(
+            onRefresh: _loadDashboard,
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(18, 14, 18, 24),
+              children: [
+                // Top row: menu | logo | avatar
+                Row(
+                  children: [
+                    Builder(
+                      builder: (ctx) => IconButton(
+                        onPressed: () => Scaffold.maybeOf(ctx)?.openDrawer(),
+                        icon: const Icon(Icons.menu_rounded, color: Colors.white),
+                      ),
+                    ),
+                    const Spacer(),
+                    // Logo only
+                    SizedBox(
+                      height: 34,
+                      child: Image.asset(
+                        'assets/images/amana_logo.png',
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.local_shipping_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                      width: 34,
+                      height: 34,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                        image: const DecorationImage(
+                          image: NetworkImage('https://i.pravatar.cc/150?img=3'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 22),
+
+                const Text(
+                  'Welcome to AMANA',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                    color: kTextBlue,
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                // Search + QR
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14),
+                          boxShadow: const [
+                            BoxShadow(
+                              blurRadius: 18,
+                              offset: Offset(0, 8),
+                              color: Color(0x22000000),
+                            ),
+                          ],
+                        ),
+                        child: TextField(
+                          controller: _trackingController,
+                          textInputAction: TextInputAction.search,
+                          onSubmitted: _navigateToResult,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Scanner ou saisissez',
+                            hintStyle: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            prefixIcon: Icon(
+                              Icons.search_rounded,
+                              color: Colors.grey.shade600,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: const [
+                          BoxShadow(
+                            blurRadius: 18,
+                            offset: Offset(0, 8),
+                            color: Color(0x22000000),
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        onPressed: _scanAndNavigate,
+                        icon: const Icon(Icons.qr_code_2_rounded),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 18),
+
+                // Banner carousel
+                SizedBox(
+                  height: 170,
+                  width: double.infinity,
+                  child: PageView.builder(
+                    controller: _bannerController,
+                    itemCount: _banners.length,
+                    onPageChanged: (i) => setState(() => _bannerIndex = i),
+                    itemBuilder: (context, i) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(18),
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: Image.asset(
+                                  _banners[i],
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => Container(
+                                    color: const Color(0xFFF2F2F2),
+                                    child: const Center(child: Text('Banner')),
+                                  ),
+                                ),
+                              ),
+                              Positioned.fill(
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      colors: [
+                                        Colors.black.withOpacity(0.45),
+                                        Colors.transparent,
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 0,
+                                top: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0x33FFFFFF),
+                                    borderRadius: BorderRadius.only(
+                                      bottomRight: Radius.circular(14),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: const [
+                                      Icon(Icons.local_shipping_rounded, size: 16, color: Colors.white),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Livraison à domicile dans\n60 villes',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const Positioned(
+                                left: 14,
+                                right: 14,
+                                bottom: 12,
+                                child: Text(
+                                  'Suivez vos colis, préparez vos envois, et gardez tout sous contrôle.',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                Center(
+                  child: SmoothPageIndicator(
+                    controller: _bannerController,
+                    count: _banners.length,
+                    effect: ExpandingDotsEffect(
+                      expansionFactor: 3.2,
+                      dotHeight: 8,
+                      dotWidth: 8,
+                      spacing: 8,
+                      activeDotColor: kOrange,
+                      dotColor: kOrange.withOpacity(0.25),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                _buildStatsRow(),
+
+                const SizedBox(height: 18),
+
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'Historique récent',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const MyTrackingsPage()),
+                      ),
+                      child: const Text('Voir tout'),
+                    ),
+                  ],
+                ),
+
+                _buildRecentHistory(),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
+}
+
+class _HeaderClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.lineTo(0, size.height);
+    path.quadraticBezierTo(size.width * 0.20, size.height * 0.65, size.width * 0.55, size.height * 0.70);
+    path.quadraticBezierTo(size.width * 0.95, size.height * 0.78, size.width, size.height * 0.25);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }
