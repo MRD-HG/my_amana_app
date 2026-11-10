@@ -12,7 +12,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with: {channel: stable, cache: true}
       - run: flutter --version
-      - run: flutter pub upgrade --major-versions
+      - run: flutter pub upgrade
       - run: git diff pubspec.yaml
       - run: echo "=====LOCK_BEGIN=====" && cat pubspec.lock && echo "=====LOCK_END====="
       - run: flutter analyze --no-fatal-infos
