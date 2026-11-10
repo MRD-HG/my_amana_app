@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_amana_app/View/Menu/MenuSide.dart';
+import 'package:my_amana_app/View/Menu/app_shell.dart';
 import 'package:my_amana_app/core/bootstrap/app_repositories.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 import 'package:my_amana_app/features/facteur/facteur_repository.dart';
@@ -156,7 +156,7 @@ class _FacteurState extends State<Facteur> {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.12),
+            color: AppColors.primary.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(10),
           ),
           child: const Icon(Icons.local_shipping, color: AppColors.primary),
@@ -177,8 +177,8 @@ class _FacteurState extends State<Facteur> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appB(context),
-      drawer: darweF(context),
+      appBar: buildAppBar(context),
+      drawer: buildAppDrawer(context),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'Menu/MenuSide.dart';
+import 'Menu/app_shell.dart';
 import 'package:my_amana_app/core/bootstrap/app_repositories.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 import 'package:my_amana_app/features/tracking/models/tracking_models.dart';
@@ -238,7 +238,7 @@ class _ResultatState extends State<Resultat> {
                   leading: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: AppColors.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(Icons.local_shipping, color: AppColors.primary),
@@ -261,8 +261,8 @@ class _ResultatState extends State<Resultat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appB(context),
-      drawer: darweF(context),
+      appBar: buildAppBar(context),
+      drawer: buildAppDrawer(context),
       body: FutureBuilder<TrackingInfo?>(
         future: _trackingFuture,
         builder: (context, snapshot) {

@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:my_amana_app/View/Menu/Accueil.dart';
-import 'package:my_amana_app/View/SideBar/Mediathique.dart';
+import 'package:my_amana_app/View/Menu/home_dashboard.dart';
+import 'package:my_amana_app/View/SideBar/mediatheque.dart';
 import 'package:my_amana_app/View/SideBar/produit.dart';
-import 'package:my_amana_app/View/SideBar/ProduitPro.dart';
-import 'package:my_amana_app/View/NavigationBar/Agences.dart';
-import 'package:my_amana_app/View/NavigationBar/Contact.dart';
-import 'package:my_amana_app/View/NavigationBar/Tarif.dart';
-import 'package:my_amana_app/View/SideBar/AmnMaNatio.dart';
-import 'package:my_amana_app/View/SideBar/OffersNews.dart';
-import 'package:my_amana_app/View/SideBar/MyTrackings.dart';
-import 'package:my_amana_app/View/SideBar/SupportTickets.dart';
-import 'package:my_amana_app/View/SideBar/PreShipment.dart';
-import 'package:my_amana_app/View/SideBar/DeliveryTimes.dart';
+import 'package:my_amana_app/View/SideBar/prohibited_products.dart';
+import 'package:my_amana_app/View/NavigationBar/agences_page.dart';
+import 'package:my_amana_app/View/NavigationBar/contact_page.dart';
+import 'package:my_amana_app/View/NavigationBar/tarif_page.dart';
+import 'package:my_amana_app/View/SideBar/amana_services.dart';
+import 'package:my_amana_app/View/SideBar/offers_news.dart';
+import 'package:my_amana_app/View/SideBar/my_trackings.dart';
+import 'package:my_amana_app/View/SideBar/support_tickets.dart';
+import 'package:my_amana_app/View/SideBar/pre_shipment_page.dart';
+import 'package:my_amana_app/View/SideBar/delivery_times.dart';
+import 'package:my_amana_app/View/Facteure/facteur_login.dart';
 
 
 import 'package:flutter_boxicons/flutter_boxicons.dart';
@@ -21,8 +22,8 @@ import 'package:my_amana_app/core/widgets/tracking_search_card.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'feedback_page.dart';
 
-import '../SideBar/FAQ.dart';
-import '../SideBar/NumeUtil.dart';
+import '../SideBar/faq.dart';
+import '../SideBar/useful_numbers.dart';
 import '../SideBar/guide.dart';
 import '../resultat.dart';
 
@@ -63,8 +64,8 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appB(context, onHomeTap: () => _onTabSelected(0)),
-      drawer: darweF(context, onSelectTab: _onTabSelected),
+      appBar: buildAppBar(context, onHomeTap: () => _onTabSelected(0)),
+      drawer: buildAppDrawer(context, onSelectTab: _onTabSelected),
       body: IndexedStack(
         index: _selectedIndex,
         children: _tabs,
@@ -77,7 +78,7 @@ class _AppShellState extends State<AppShell> {
   }
 }
 
-Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
+Widget buildAppDrawer(BuildContext context, {ValueChanged<int>? onSelectTab}) {
   return Drawer(
             child: Container(
               color: AppColors.primaryDark,
@@ -97,7 +98,7 @@ Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
+                            color: Colors.white.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: const Image(
@@ -309,6 +310,18 @@ ListTile(
                     );
                   },
                 ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.local_shipping_outlined),
+                  title: const Text('Espace facteur'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const FacteurHome()),
+                    );
+                  },
+                ),
                   ],
                 ),
               ),
@@ -447,7 +460,7 @@ class NavBottom extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, -6),
           ),
@@ -507,8 +520,8 @@ Widget buildImage(String scroll , int index )=>ClipRRect(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.black.withOpacity(0.0),
-                Colors.black.withOpacity(0.6),
+                Colors.black.withValues(alpha: 0.0),
+                Colors.black.withValues(alpha: 0.6),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -523,7 +536,7 @@ Widget buildImage(String scroll , int index )=>ClipRRect(
     ],
   ),
 );
-PreferredSizeWidget appB(BuildContext context, {VoidCallback? onHomeTap}) {
+PreferredSizeWidget buildAppBar(BuildContext context, {VoidCallback? onHomeTap}) {
   return AppBar(
     iconTheme: const IconThemeData(color: AppColors.primary),
     backgroundColor: Colors.transparent,
@@ -531,7 +544,7 @@ PreferredSizeWidget appB(BuildContext context, {VoidCallback? onHomeTap}) {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.background.withOpacity(0.95),
+            AppColors.background.withValues(alpha: 0.95),
             Colors.transparent,
           ],
           begin: Alignment.topCenter,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_amana_app/View/Menu/MenuSide.dart';
+import 'package:my_amana_app/View/Menu/app_shell.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 
 class Guide extends StatelessWidget {
@@ -114,8 +114,8 @@ class Guide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appB(context),
-      drawer: darweF(context),
+      appBar: buildAppBar(context),
+      drawer: buildAppDrawer(context),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

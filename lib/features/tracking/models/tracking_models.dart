@@ -56,11 +56,26 @@ class TrackingInfo {
   final String service;
   final List<TrackingEvent> events;
 
-  TrackingEvent get latestEvent => events.first;
+  /// Latest event (events are sorted newest first).
+  /// Falls back to a placeholder so the UI never crashes on an empty timeline.
+  TrackingEvent get latestEvent => events.isNotEmpty
+      ? events.first
+      : TrackingEvent(
+          stage: TrackingStage.accepted,
+          description: 'En traitement',
+          location: '---',
+          timestamp: DateTime.now(),
+        );
 }
 
 TrackingStage trackingStageFromString(String? value) {
-  final normalized = value?.toLowerCase().replaceAll(' ', '') ?? '';
+  // Accept camelCase ("inTransit"), snake_case ("in_transit"), spaced and
+  // accented French labels ("Colis accepté", "Livré").
+  final normalized = (value ?? '')
+      .toLowerCase()
+      .replaceAll(RegExp(r'[\s_\-]'), '')
+      .replaceAll('é', 'e')
+      .replaceAll('è', 'e');
   switch (normalized) {
     case 'accepted':
     case 'accept':

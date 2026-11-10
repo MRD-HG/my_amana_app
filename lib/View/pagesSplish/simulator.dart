@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:my_amana_app/View/Menu/MenuSide.dart';
-import 'package:my_amana_app/View/Facteure/LogFact.dart';
-import 'package:my_amana_app/View/PageMenu.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:my_amana_app/core/config/app_config.dart';
+import 'package:my_amana_app/View/Menu/app_shell.dart';
+import 'package:my_amana_app/View/Facteure/facteur_login.dart';
+import 'package:my_amana_app/View/tracking_intro_page.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 
 class Simulateur extends StatelessWidget {
@@ -54,7 +56,11 @@ class Simulateur extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                // Remember that onboarding is done so it is not shown again.
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setBool(kOnboardingDoneKey, true);
+                if (!context.mounted) return;
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const AppShell()),
@@ -82,7 +88,7 @@ class Choisir extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.12),
+            color: AppColors.primary.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: AppColors.primary),
@@ -121,7 +127,7 @@ class Choisir extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const pageMenu()),
+                MaterialPageRoute(builder: (context) => const TrackingIntroPage()),
               );
             },
           ),
@@ -131,7 +137,7 @@ class Choisir extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const Home()),
+                MaterialPageRoute(builder: (context) => const FacteurHome()),
               );
             },
           ),

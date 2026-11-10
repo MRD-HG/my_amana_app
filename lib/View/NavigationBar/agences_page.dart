@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -32,6 +34,10 @@ class _MapPageState extends State<MapPage> {
   bool _isLoading = true;
   String? _errorMessage;
 
+  Timer? _debounce;
+  String _lastQuery = '';
+  int _requestId = 0;
+
   final LatLng initialPosition = const LatLng(34.0209, -6.8416);
 
   @override
@@ -43,6 +49,7 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _searchController.removeListener(_handleSearch);
     _searchController.dispose();
     _mapController?.dispose();
@@ -54,13 +61,15 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<void> _loadAgencies({String? query}) async {
+    // Ignore responses from older requests (fast typing => out-of-order results).
+    final requestId = ++_requestId;
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
     try {
       final agencies = await _repository.fetchAgencies(query: query);
-      if (!mounted) {
+      if (!mounted || requestId != _requestId) {
         return;
       }
       setState(() {
@@ -68,7 +77,7 @@ class _MapPageState extends State<MapPage> {
         _isLoading = false;
       });
     } catch (error) {
-      if (!mounted) {
+      if (!mounted || requestId != _requestId) {
         return;
       }
       setState(() {
@@ -79,7 +88,15 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _handleSearch() {
-    _loadAgencies(query: _searchController.text);
+    // The listener also fires on cursor/selection changes: only reload when
+    // the text really changed, and debounce while the user is typing.
+    final query = _searchController.text.trim();
+    if (query == _lastQuery) return;
+    _lastQuery = query;
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      if (mounted) _loadAgencies(query: query);
+    });
   }
 
   Set<Marker> _buildMarkers() {
@@ -101,7 +118,7 @@ class _MapPageState extends State<MapPage> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.primary.withOpacity(0.08),
+            AppColors.primary.withValues(alpha: 0.08),
             AppColors.background,
           ],
           begin: Alignment.topLeft,
@@ -139,7 +156,7 @@ class _MapPageState extends State<MapPage> {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.12),
+            color: AppColors.primary.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(10),
           ),
           child: const Icon(Icons.store, color: AppColors.primary, size: 18),
@@ -242,7 +259,7 @@ class _MapPageState extends State<MapPage> {
                     borderRadius: BorderRadius.circular(18),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 16,
                         offset: const Offset(0, 6),
                       ),

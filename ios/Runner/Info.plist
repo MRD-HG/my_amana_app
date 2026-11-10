@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>La camera est utilisee pour scanner le code-barres de vos colis.</string>
 </dict>
 </plist>

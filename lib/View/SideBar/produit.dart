@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_amana_app/View/Menu/MenuSide.dart';
-import 'package:my_amana_app/View/SideBar/AmnMaNatio.dart';
+import 'package:my_amana_app/View/Menu/app_shell.dart';
+import 'package:my_amana_app/View/SideBar/amana_services.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
-import 'Entreprise.dart';
+import 'entreprise.dart';
 
 class Produit extends StatelessWidget {
   const Produit({super.key});
@@ -18,7 +18,7 @@ class Produit extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.12),
+            color: AppColors.primary.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: AppColors.primary),
@@ -34,8 +34,8 @@ class Produit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appB(context),
-      drawer: darweF(context),
+      appBar: buildAppBar(context),
+      drawer: buildAppDrawer(context),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -100,8 +100,8 @@ class PartiProf extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appB(context),
-      drawer: darweF(context),
+      appBar: buildAppBar(context),
+      drawer: buildAppDrawer(context),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -168,8 +168,8 @@ class EntrepBut extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appB(context),
-      drawer: darweF(context),
+      appBar: buildAppBar(context),
+      drawer: buildAppDrawer(context),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -229,7 +229,7 @@ Widget _buildServiceCard(
       leading: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(0.12),
+          color: AppColors.primary.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Icon(icon, color: AppColors.primary),

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:my_amana_app/View/Menu/MenuSide.dart';
+import 'package:my_amana_app/View/Menu/app_shell.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 
 class NumeroTlf extends StatefulWidget {
@@ -89,7 +89,7 @@ class _NumeroTlfState extends State<NumeroTlf> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.12),
+                color: AppColors.primary.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(Icons.call, color: AppColors.primary),
@@ -129,7 +129,7 @@ class _NumeroTlfState extends State<NumeroTlf> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.12),
+                color: AppColors.primary.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(Icons.headset_mic, color: AppColors.primary),
@@ -161,8 +161,8 @@ class _NumeroTlfState extends State<NumeroTlf> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appB(context),
-      drawer: darweF(context),
+      appBar: buildAppBar(context),
+      drawer: buildAppDrawer(context),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

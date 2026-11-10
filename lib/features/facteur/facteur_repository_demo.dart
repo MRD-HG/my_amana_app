@@ -9,8 +9,10 @@ import 'models/facteur_models.dart';
 
 class FacteurRepositoryDemo implements FacteurRepository {
   FacteurRepositoryDemo() {
-    _restoreSession();
+    _restored = _restoreSession();
   }
+
+  late final Future<void> _restored;
 
   static const String _usersAsset = 'assets/data/users_ma.json';
   static const String _shipmentsAsset = 'assets/data/shipments_ma.json';
@@ -25,23 +27,29 @@ class FacteurRepositoryDemo implements FacteurRepository {
 
   Future<void> _restoreSession() async {
     final raw = await PrefsStore.readMap(_sessionKey);
-    if (raw == null) {
-      _controller.add(null);
-      return;
-    }
-    final user = FacteurUser.fromMap(raw);
-    _currentUser = user;
-    _controller.add(user);
+    _currentUser = raw == null ? null : FacteurUser.fromMap(raw);
   }
 
+  /// Emits the current session first, then every later change.
+  ///
+  /// The previous version only exposed a broadcast stream: the restored
+  /// session was emitted at app start-up (during the splash screen), before
+  /// any listener existed, so the Facteur screen stayed on its spinner forever.
   @override
-  Stream<FacteurUser?> authStateChanges() => _controller.stream;
+  Stream<FacteurUser?> authStateChanges() async* {
+    await _restored;
+    yield _currentUser;
+    yield* _controller.stream;
+  }
 
   @override
   Future<FacteurUser?> signIn({
     required String email,
     required String password,
   }) async {
+    // Wait for the stored session to be restored first, otherwise the restore
+    // could finish later and overwrite the user who just signed in.
+    await _restored;
     final e = email.trim().toLowerCase();
     final p = password.trim();
 
@@ -50,7 +58,7 @@ class FacteurRepositoryDemo implements FacteurRepository {
     final rawList = await JsonAssetLoader.loadList(_usersAsset);
     for (final item in rawList) {
       if (item is Map) {
-        final map = Map<String, dynamic>.from(item as Map);
+        final map = Map<String, dynamic>.from(item);
         final itemEmail = (map['email'] ?? '').toString().trim().toLowerCase();
         final itemPass = (map['password'] ?? '').toString();
         if (itemEmail == e && itemPass == p) {
@@ -67,6 +75,7 @@ class FacteurRepositoryDemo implements FacteurRepository {
 
   @override
   Future<void> signOut() async {
+    await _restored;
     _currentUser = null;
     await PrefsStore.remove(_sessionKey);
     _controller.add(null);
@@ -76,7 +85,7 @@ class FacteurRepositoryDemo implements FacteurRepository {
     final rawList = await JsonAssetLoader.loadList(_shipmentsAsset);
     final list = <Map<String, dynamic>>[];
     for (final item in rawList) {
-      if (item is Map) list.add(Map<String, dynamic>.from(item as Map));
+      if (item is Map) list.add(Map<String, dynamic>.from(item));
     }
     return list;
   }
@@ -155,7 +164,7 @@ class FacteurRepositoryDemo implements FacteurRepository {
     required ShipmentEvent event,
     required String status,
   }) async {
-    final id = trackingId.trim();
+    final id = trackingId.trim().toUpperCase();
     if (id.isEmpty) return;
 
     final updates = await _readUpdates();
@@ -166,7 +175,7 @@ class FacteurRepositoryDemo implements FacteurRepository {
     final oldEvents = record['events'];
     if (oldEvents is List) {
       for (final e in oldEvents) {
-        if (e is Map) events.add(Map<String, dynamic>.from(e as Map));
+        if (e is Map) events.add(Map<String, dynamic>.from(e));
       }
     }
 

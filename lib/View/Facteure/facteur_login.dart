@@ -5,14 +5,15 @@ import 'package:my_amana_app/core/theme/app_theme.dart';
 import 'package:my_amana_app/features/facteur/facteur_repository.dart';
 import 'package:my_amana_app/features/facteur/models/facteur_models.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class FacteurHome extends StatelessWidget {
+  const FacteurHome({super.key});
 
   @override
   Widget build(BuildContext context) {
     final FacteurRepository repository = AppRepositories.facteur;
 
     return Scaffold(
+      appBar: AppBar(title: const Text('Espace facteur')),
       body: StreamBuilder<FacteurUser?>(
         stream: repository.authStateChanges(),
         builder: (context, snapshot) {
@@ -153,7 +154,7 @@ class _LoginFactState extends State<LoginFact> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Image.asset('assets/images/iconAmana.jpg', height: 40),

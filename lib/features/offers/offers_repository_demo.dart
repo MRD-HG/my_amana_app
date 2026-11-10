@@ -15,7 +15,7 @@ class OffersRepositoryDemo implements OffersRepository {
     final offers = <Offer>[];
     for (final item in rawList) {
       if (item is Map) {
-        final map = Map<String, dynamic>.from(item as Map);
+        final map = Map<String, dynamic>.from(item);
         final offer = Offer.fromMap(map);
         if (offer != null) offers.add(offer);
       }
