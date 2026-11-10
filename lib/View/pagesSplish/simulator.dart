@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_amana_app/core/config/app_config.dart';
-import 'package:my_amana_app/View/Menu/MenuSide.dart';
-import 'package:my_amana_app/View/Facteure/LogFact.dart';
-import 'package:my_amana_app/View/PageMenu.dart';
+import 'package:my_amana_app/View/Menu/app_shell.dart';
+import 'package:my_amana_app/View/Facteure/facteur_login.dart';
+import 'package:my_amana_app/View/tracking_intro_page.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 
 class Simulateur extends StatelessWidget {
@@ -127,7 +127,7 @@ class Choisir extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const pageMenu()),
+                MaterialPageRoute(builder: (context) => const TrackingIntroPage()),
               );
             },
           ),
@@ -137,7 +137,7 @@ class Choisir extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const Home()),
+                MaterialPageRoute(builder: (context) => const FacteurHome()),
               );
             },
           ),

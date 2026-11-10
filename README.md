@@ -62,3 +62,14 @@ Try in the tracking screen:
 - Demo credentials are stored in plain text in `assets/data/users_ma.json` and
   checked on the device — fine for a PFE demo, **not** real authentication.
 - Tariffs from `TarifService` are illustrative estimates, not official prices.
+
+## Project structure
+
+```
+lib/
+  core/        theme, config, local storage helpers, shared widgets
+  features/    one folder per domain: models + repository interface + demo implementation
+  View/        screens (Menu/app_shell.dart = main shell with drawer + bottom bar)
+assets/data/   demo JSON (agencies, shipments, offers, users)
+test/          unit tests
+```

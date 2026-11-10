@@ -5,8 +5,8 @@ import 'package:my_amana_app/core/theme/app_theme.dart';
 import 'package:my_amana_app/features/facteur/facteur_repository.dart';
 import 'package:my_amana_app/features/facteur/models/facteur_models.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class FacteurHome extends StatelessWidget {
+  const FacteurHome({super.key});
 
   @override
   Widget build(BuildContext context) {

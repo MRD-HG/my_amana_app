@@ -9,6 +9,7 @@ class AppColors {
   static const Color background = Color(0xFFF8F5F1);
   static const Color text = Color(0xFF2C2C2C);
   static const Color mutedText = Color(0xFF6D6D6D);
+  static const Color info = Color(0xFF0A6D8C);
 }
 
 class AppGradients {

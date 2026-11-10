@@ -36,8 +36,9 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.my_amana_app"
+        // Unique store ID (Play Store rejects com.example.*). The Kotlin namespace
+        // can stay com.example.my_amana_app; only applicationId is published.
+        applicationId "com.mrdhg.myamana"
         minSdkVersion 23
         targetSdkVersion 35
         versionCode flutter.versionCode

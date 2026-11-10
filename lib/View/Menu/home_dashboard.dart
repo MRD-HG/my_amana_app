@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_amana_app/View/SideBar/MyTrackings.dart';
+import 'package:my_amana_app/core/theme/app_theme.dart';
+import 'package:my_amana_app/View/SideBar/my_trackings.dart';
 import 'package:my_amana_app/View/resultat.dart';
 import 'package:my_amana_app/core/local/prefs_store.dart';
 import 'package:my_amana_app/features/my_trackings/models/saved_tracking.dart';
@@ -15,15 +16,14 @@ class Accueila extends StatefulWidget {
 }
 
 class _AccueilaState extends State<Accueila> {
-  // ===== New UI colors =====
-  static const Color kOrange = Color(0xFFF36A1D);
-  static const Color kTextBlue = Color(0xFF0A6D8C);
+  // Colors come from the app theme so every screen stays consistent.
+  static const Color kOrange = AppColors.primary;
+  static const Color kTextBlue = AppColors.info;
 
   // ===== Controllers / State =====
   final TextEditingController _trackingController = TextEditingController();
   final PageController _bannerController = PageController(viewportFraction: 0.92);
 
-  int _bannerIndex = 0;
 
   int _trackingsCount = 0;
   int _shipmentsCount = 0;
@@ -437,7 +437,6 @@ class _AccueilaState extends State<Accueila> {
                   child: PageView.builder(
                     controller: _bannerController,
                     itemCount: _banners.length,
-                    onPageChanged: (i) => setState(() => _bannerIndex = i),
                     itemBuilder: (context, i) {
                       return Padding(
                         padding: const EdgeInsets.only(right: 10),

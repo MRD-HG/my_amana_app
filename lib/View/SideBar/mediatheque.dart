@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_amana_app/View/Menu/MenuSide.dart';
+import 'package:my_amana_app/View/Menu/app_shell.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -41,7 +41,7 @@ class _VideoMedState extends State<VideoMed> {
   Widget build(BuildContext context) {
     return Scaffold(
       // Reuse the existing app drawer from MenuSide.dart
-      drawer: darweF(context),
+      drawer: buildAppDrawer(context),
       appBar: AppBar(
         title: const Text('Media'),
         centerTitle: true,

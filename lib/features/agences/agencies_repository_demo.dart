@@ -14,7 +14,7 @@ class AgenciesRepositoryDemo implements AgenciesRepository {
     final agencies = <Agency>[];
     for (final item in rawList) {
       if (item is Map) {
-        final map = Map<String, dynamic>.from(item as Map);
+        final map = Map<String, dynamic>.from(item);
         final id = (map['id'] ?? '').toString().trim();
         if (id.isEmpty) continue;
         agencies.add(Agency.fromMap(id, map));

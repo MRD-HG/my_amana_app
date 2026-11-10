@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_amana_app/View/Menu/MenuSide.dart';
+import 'package:my_amana_app/View/Menu/app_shell.dart';
 import 'package:my_amana_app/core/bootstrap/app_repositories.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 import 'package:my_amana_app/features/offers/models/offer.dart';
@@ -42,8 +42,8 @@ class _OffersNewsPageState extends State<OffersNewsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appB(context),
-      drawer: darweF(context),
+      appBar: buildAppBar(context),
+      drawer: buildAppDrawer(context),
       body: RefreshIndicator(
         onRefresh: _refresh,
         child: FutureBuilder<List<Offer>>(

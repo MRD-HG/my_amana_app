@@ -6,7 +6,7 @@ import 'package:my_amana_app/core/bootstrap/app_repositories.dart';
 import 'package:my_amana_app/core/config/app_config.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 
-import 'View/Menu/MenuSide.dart';
+import 'View/Menu/app_shell.dart';
 import 'View/pagesSplish/simulator.dart';
 
 void main() {
@@ -67,17 +67,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFFFF7A3D),
-              Color(0xFFF26430),
-              Color(0xFFE05225),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+        decoration: const BoxDecoration(gradient: AppGradients.hero),
         child: const SafeArea(
           child: Center(
             child: Column(

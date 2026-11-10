@@ -47,6 +47,9 @@ class FacteurRepositoryDemo implements FacteurRepository {
     required String email,
     required String password,
   }) async {
+    // Wait for the stored session to be restored first, otherwise the restore
+    // could finish later and overwrite the user who just signed in.
+    await _restored;
     final e = email.trim().toLowerCase();
     final p = password.trim();
 
@@ -55,7 +58,7 @@ class FacteurRepositoryDemo implements FacteurRepository {
     final rawList = await JsonAssetLoader.loadList(_usersAsset);
     for (final item in rawList) {
       if (item is Map) {
-        final map = Map<String, dynamic>.from(item as Map);
+        final map = Map<String, dynamic>.from(item);
         final itemEmail = (map['email'] ?? '').toString().trim().toLowerCase();
         final itemPass = (map['password'] ?? '').toString();
         if (itemEmail == e && itemPass == p) {
@@ -72,6 +75,7 @@ class FacteurRepositoryDemo implements FacteurRepository {
 
   @override
   Future<void> signOut() async {
+    await _restored;
     _currentUser = null;
     await PrefsStore.remove(_sessionKey);
     _controller.add(null);
@@ -81,7 +85,7 @@ class FacteurRepositoryDemo implements FacteurRepository {
     final rawList = await JsonAssetLoader.loadList(_shipmentsAsset);
     final list = <Map<String, dynamic>>[];
     for (final item in rawList) {
-      if (item is Map) list.add(Map<String, dynamic>.from(item as Map));
+      if (item is Map) list.add(Map<String, dynamic>.from(item));
     }
     return list;
   }
@@ -171,7 +175,7 @@ class FacteurRepositoryDemo implements FacteurRepository {
     final oldEvents = record['events'];
     if (oldEvents is List) {
       for (final e in oldEvents) {
-        if (e is Map) events.add(Map<String, dynamic>.from(e as Map));
+        if (e is Map) events.add(Map<String, dynamic>.from(e));
       }
     }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_amana_app/View/Menu/MenuSide.dart';
+import 'package:my_amana_app/View/Menu/app_shell.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 import 'package:my_amana_app/core/widgets/action_button.dart';
 
@@ -136,7 +136,7 @@ class _PreShipmentState extends State<PreShipment> {
           ),
         ],
       ),
-      endDrawer: darweF(context),
+      endDrawer: buildAppDrawer(context),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
         children: [

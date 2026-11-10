@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:my_amana_app/View/pagesSplish/geolocal.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 
-class pageMenu extends StatelessWidget {
-  const pageMenu({super.key});
+class TrackingIntroPage extends StatelessWidget {
+  const TrackingIntroPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class AppCode extends StatelessWidget {
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const Geolocalistion()),
+                  MaterialPageRoute(builder: (context) => const GeolocationIntroPage()),
                 );
               },
               child: const Text('Continuer'),
@@ -74,7 +74,7 @@ class AppCode extends StatelessWidget {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const Geolocalistion()),
+                MaterialPageRoute(builder: (context) => const GeolocationIntroPage()),
               );
             },
             child: const Text('Passer cette etape'),

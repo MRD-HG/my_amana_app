@@ -18,7 +18,7 @@ class TrackingRepositoryDemo implements TrackingRepository {
     final list = <Map<String, dynamic>>[];
     for (final item in rawList) {
       if (item is Map) {
-        list.add(Map<String, dynamic>.from(item as Map));
+        list.add(Map<String, dynamic>.from(item));
       }
     }
     _baseCache = list;
@@ -37,7 +37,7 @@ class TrackingRepositoryDemo implements TrackingRepository {
     if (eventsRaw is List) {
       for (final e in eventsRaw) {
         if (e is Map) {
-          events.add(TrackingEvent.fromMap(Map<String, dynamic>.from(e as Map)));
+          events.add(TrackingEvent.fromMap(Map<String, dynamic>.from(e)));
         }
       }
     }
@@ -72,7 +72,7 @@ class TrackingRepositoryDemo implements TrackingRepository {
     if (raw is List) {
       for (final e in raw) {
         if (e is Map) {
-          out.add(TrackingEvent.fromMap(Map<String, dynamic>.from(e as Map)));
+          out.add(TrackingEvent.fromMap(Map<String, dynamic>.from(e)));
         }
       }
     }

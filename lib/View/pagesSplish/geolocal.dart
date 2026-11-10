@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:my_amana_app/View/pagesSplish/simulator.dart';
 import 'package:my_amana_app/core/theme/app_theme.dart';
 
-class Geolocalistion extends StatelessWidget {
-  const Geolocalistion({super.key});
+class GeolocationIntroPage extends StatelessWidget {
+  const GeolocationIntroPage({super.key});
 
   @override
   Widget build(BuildContext context) {
