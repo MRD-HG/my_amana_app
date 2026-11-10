@@ -80,7 +80,7 @@ class _OffersNewsPageState extends State<OffersNewsPage> {
             return ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: offers.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 10),
+              separatorBuilder: (_, _) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
                 final offer = offers[index];
                 return Card(

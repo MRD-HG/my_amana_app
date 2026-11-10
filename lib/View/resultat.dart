@@ -147,7 +147,7 @@ class _ResultatState extends State<Resultat> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'Estimated delivery: ' + etaText,
+                            'Estimated delivery: $etaText',
                             style: const TextStyle(fontSize: 12, color: Colors.white70),
                           ),
                         ),

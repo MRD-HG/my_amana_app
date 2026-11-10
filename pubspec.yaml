@@ -2,7 +2,7 @@ name: my_amana_app
 description: "My Amana (Barid Al-Maghrib) - shipment tracking, agencies, tariffs. Offline demo data (JSON + SharedPreferences)."
 publish_to: 'none'
 
-version: 1.1.0+2
+version: 1.2.0+3
 
 environment:
   sdk: ^3.9.0
