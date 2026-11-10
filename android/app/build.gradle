@@ -21,18 +21,17 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.example.my_amana_app"
-    // Some plugins (e.g. shared_preferences_android, url_launcher_android) now
-    // require compiling against Android SDK 35.
-    compileSdk = 35
+    // Follow the SDK levels required by the installed Flutter version/plugins.
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     defaultConfig {
@@ -40,7 +39,7 @@ android {
         // can stay com.example.my_amana_app; only applicationId is published.
         applicationId "com.mrdhg.myamana"
         minSdkVersion 23
-        targetSdkVersion 35
+        targetSdkVersion flutter.targetSdkVersion
         versionCode flutter.versionCode
         versionName flutter.versionName
         // Mutating the map keeps the placeholders injected by the Flutter Gradle plugin
