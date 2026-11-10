@@ -1,0 +1,20 @@
+name: tmp-upgrade
+on:
+  push:
+    branches: [v1.1-fixes]
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with: {distribution: temurin, java-version: '17'}
+      - uses: subosito/flutter-action@v2
+        with: {channel: stable, cache: true}
+      - run: flutter --version
+      - run: flutter pub upgrade --major-versions
+      - run: git diff pubspec.yaml
+      - run: echo "=====LOCK_BEGIN=====" && cat pubspec.lock && echo "=====LOCK_END====="
+      - run: flutter analyze --no-fatal-infos
+      - run: flutter test
+      - run: flutter build apk --debug
