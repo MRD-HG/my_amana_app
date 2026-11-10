@@ -128,7 +128,7 @@ class _CheckboxPageState extends State<CheckboxPage> {
         secondary: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.12),
+            color: AppColors.primary.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(option.icon, color: AppColors.primary, size: 18),
@@ -241,7 +241,7 @@ class _MultiPageViewerState extends State<MultiPageViewer> {
                     value: (widget.options.length <= 1)
                         ? 1
                         : (_currentPage + 1) / widget.options.length,
-                    backgroundColor: AppColors.primary.withOpacity(0.12),
+                    backgroundColor: AppColors.primary.withValues(alpha: 0.12),
                     valueColor:
                         const AlwaysStoppedAnimation<Color>(AppColors.primary),
                   ),
@@ -345,7 +345,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
           _rating = value;
         });
       },
-      selectedColor: AppColors.primary.withOpacity(0.2),
+      selectedColor: AppColors.primary.withValues(alpha: 0.2),
       backgroundColor: AppColors.surface,
       labelStyle: TextStyle(
         color: selected ? AppColors.primary : AppColors.text,
@@ -370,7 +370,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(widget.option.icon, color: Colors.white),

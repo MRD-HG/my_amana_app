@@ -183,7 +183,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.12),
+            color: AppColors.primary.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(12),
           ),
           child: const Icon(Icons.support_agent, color: AppColors.primary),

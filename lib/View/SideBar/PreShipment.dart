@@ -165,7 +165,7 @@ class _PreShipmentState extends State<PreShipment> {
                       }
                     });
                   },
-                  selectedColor: AppTheme.primary.withOpacity(0.15),
+                  selectedColor: AppTheme.primary.withValues(alpha: 0.15),
                   labelStyle: TextStyle(
                     color: selected ? AppTheme.primary : Colors.black87,
                     fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
@@ -335,7 +335,7 @@ class _HeroCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primary.withOpacity(0.25),
+            color: AppTheme.primary.withValues(alpha: 0.25),
             blurRadius: 18,
             offset: const Offset(0, 10),
           ),
@@ -359,7 +359,7 @@ class _HeroCard extends StatelessWidget {
                 Text(
                   subtitle,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     height: 1.25,
                   ),
                 ),
@@ -370,7 +370,7 @@ class _HeroCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(14),
             ),
             child: trailing,

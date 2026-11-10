@@ -81,7 +81,7 @@ class TrackingRepositoryDemo implements TrackingRepository {
 
   @override
   Future<TrackingInfo?> fetchTracking(String trackingId) async {
-    final id = trackingId.trim();
+    final id = trackingId.trim().toUpperCase();
     if (id.isEmpty) return null;
 
     final base = await _loadBase();

@@ -9,8 +9,10 @@ import 'models/facteur_models.dart';
 
 class FacteurRepositoryDemo implements FacteurRepository {
   FacteurRepositoryDemo() {
-    _restoreSession();
+    _restored = _restoreSession();
   }
+
+  late final Future<void> _restored;
 
   static const String _usersAsset = 'assets/data/users_ma.json';
   static const String _shipmentsAsset = 'assets/data/shipments_ma.json';
@@ -25,17 +27,20 @@ class FacteurRepositoryDemo implements FacteurRepository {
 
   Future<void> _restoreSession() async {
     final raw = await PrefsStore.readMap(_sessionKey);
-    if (raw == null) {
-      _controller.add(null);
-      return;
-    }
-    final user = FacteurUser.fromMap(raw);
-    _currentUser = user;
-    _controller.add(user);
+    _currentUser = raw == null ? null : FacteurUser.fromMap(raw);
   }
 
+  /// Emits the current session first, then every later change.
+  ///
+  /// The previous version only exposed a broadcast stream: the restored
+  /// session was emitted at app start-up (during the splash screen), before
+  /// any listener existed, so the Facteur screen stayed on its spinner forever.
   @override
-  Stream<FacteurUser?> authStateChanges() => _controller.stream;
+  Stream<FacteurUser?> authStateChanges() async* {
+    await _restored;
+    yield _currentUser;
+    yield* _controller.stream;
+  }
 
   @override
   Future<FacteurUser?> signIn({
@@ -155,7 +160,7 @@ class FacteurRepositoryDemo implements FacteurRepository {
     required ShipmentEvent event,
     required String status,
   }) async {
-    final id = trackingId.trim();
+    final id = trackingId.trim().toUpperCase();
     if (id.isEmpty) return;
 
     final updates = await _readUpdates();

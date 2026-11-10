@@ -13,6 +13,7 @@ import 'package:my_amana_app/View/SideBar/MyTrackings.dart';
 import 'package:my_amana_app/View/SideBar/SupportTickets.dart';
 import 'package:my_amana_app/View/SideBar/PreShipment.dart';
 import 'package:my_amana_app/View/SideBar/DeliveryTimes.dart';
+import 'package:my_amana_app/View/Facteure/LogFact.dart';
 
 
 import 'package:flutter_boxicons/flutter_boxicons.dart';
@@ -97,7 +98,7 @@ Widget darweF(BuildContext context, {ValueChanged<int>? onSelectTab}) {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
+                            color: Colors.white.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: const Image(
@@ -309,6 +310,18 @@ ListTile(
                     );
                   },
                 ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.local_shipping_outlined),
+                  title: const Text('Espace facteur'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Home()),
+                    );
+                  },
+                ),
                   ],
                 ),
               ),
@@ -447,7 +460,7 @@ class NavBottom extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, -6),
           ),
@@ -507,8 +520,8 @@ Widget buildImage(String scroll , int index )=>ClipRRect(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.black.withOpacity(0.0),
-                Colors.black.withOpacity(0.6),
+                Colors.black.withValues(alpha: 0.0),
+                Colors.black.withValues(alpha: 0.6),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -531,7 +544,7 @@ PreferredSizeWidget appB(BuildContext context, {VoidCallback? onHomeTap}) {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.background.withOpacity(0.95),
+            AppColors.background.withValues(alpha: 0.95),
             Colors.transparent,
           ],
           begin: Alignment.topCenter,

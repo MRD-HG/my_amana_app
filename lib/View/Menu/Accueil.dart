@@ -152,7 +152,7 @@ class _AccueilaState extends State<Accueila> {
               height: 36,
               width: 36,
               decoration: BoxDecoration(
-                color: kOrange.withOpacity(0.12),
+                color: kOrange.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: kOrange, size: 20),
@@ -462,7 +462,7 @@ class _AccueilaState extends State<Accueila> {
                                       begin: Alignment.bottomCenter,
                                       end: Alignment.topCenter,
                                       colors: [
-                                        Colors.black.withOpacity(0.45),
+                                        Colors.black.withValues(alpha: 0.45),
                                         Colors.transparent,
                                       ],
                                     ),
@@ -530,7 +530,7 @@ class _AccueilaState extends State<Accueila> {
                       dotWidth: 8,
                       spacing: 8,
                       activeDotColor: kOrange,
-                      dotColor: kOrange.withOpacity(0.25),
+                      dotColor: kOrange.withValues(alpha: 0.25),
                     ),
                   ),
                 ),

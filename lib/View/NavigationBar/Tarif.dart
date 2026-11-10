@@ -156,12 +156,12 @@ class _MapAppState extends State<MapAppt> {
           decoration: BoxDecoration(
             color: selected
                 ? AppColors.primary
-                : AppColors.primary.withOpacity(0.12),
+                : AppColors.primary.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(16),
             boxShadow: selected
                 ? [
                     BoxShadow(
-                      color: AppColors.primary.withOpacity(0.28),
+                      color: AppColors.primary.withValues(alpha: 0.28),
                       blurRadius: 14,
                       offset: const Offset(0, 6),
                     ),
@@ -235,10 +235,10 @@ class _MapAppState extends State<MapAppt> {
       margin: const EdgeInsets.only(top: 12),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.12),
+        color: AppColors.primary.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.2),
+          color: AppColors.primary.withValues(alpha: 0.2),
         ),
       ),
       child: Row(
@@ -264,7 +264,7 @@ class _MapAppState extends State<MapAppt> {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.mutedText.withOpacity(0.3)),
+        border: Border.all(color: AppColors.mutedText.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -412,7 +412,7 @@ class _MapAppState extends State<MapAppt> {
           selectedOption = value;
         });
       },
-      selectedColor: AppColors.primary.withOpacity(0.2),
+      selectedColor: AppColors.primary.withValues(alpha: 0.2),
       backgroundColor: AppColors.surface,
       labelStyle: TextStyle(
         color: selected ? AppColors.primary : AppColors.text,
