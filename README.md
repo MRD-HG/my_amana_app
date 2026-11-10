@@ -10,7 +10,7 @@ This version runs **without Firebase** (fully offline demo).
 
 ## Quick start
 
-Tested with **Flutter 3.47 (stable)**, Gradle 8.14, AGP 8.11, Kotlin 2.2, JDK 17.
+Tested with **Flutter 3.47 (stable)** (minimum Flutter 3.35), Gradle 8.14, AGP 8.11, Kotlin 2.2, JDK 17.
 On an older Flutter, run `flutter upgrade` first (or `flutter pub upgrade`).
 
 ```bash

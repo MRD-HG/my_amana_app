@@ -329,7 +329,7 @@ class _AccueilaState extends State<Accueila> {
                       child: Image.asset(
                         'assets/images/amana_logo.png',
                         fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) => const Icon(
+                        errorBuilder: (_, _, _) => const Icon(
                           Icons.local_shipping_rounded,
                           color: Colors.white,
                         ),
@@ -448,7 +448,7 @@ class _AccueilaState extends State<Accueila> {
                                 child: Image.asset(
                                   _banners[i],
                                   fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => Container(
+                                  errorBuilder: (_, _, _) => Container(
                                     color: const Color(0xFFF2F2F2),
                                     child: const Center(child: Text('Banner')),
                                   ),

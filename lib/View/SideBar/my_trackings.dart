@@ -87,7 +87,7 @@ class _MyTrackingsPageState extends State<MyTrackingsPage> {
                 return ListView.separated(
                   padding: const EdgeInsets.all(16),
                   itemCount: items.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 10),
+                  separatorBuilder: (_, _) => const SizedBox(height: 10),
                   itemBuilder: (context, index) {
                     final item = items[index];
                     return Card(
@@ -120,7 +120,7 @@ class _MyTrackingsPageState extends State<MyTrackingsPage> {
                         ),
                         onTap: () async {
                           await store.saveViewed(item.id);
-                          if (!mounted) return;
+                          if (!context.mounted) return;
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (_) => Resultat(trackingId: item.id)),

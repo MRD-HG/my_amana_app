@@ -50,7 +50,7 @@ class _VideoMedState extends State<VideoMed> {
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: _videos.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 10),
+        separatorBuilder: (_, _) => const SizedBox(height: 10),
         itemBuilder: (context, i) {
           final v = _videos[i];
           final title = v['title'] ?? 'Video';

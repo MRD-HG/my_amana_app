@@ -58,7 +58,15 @@ class _FacteurState extends State<Facteur> {
       }
       setState(() {
         _shipments = shipments;
-        _selectedShipment ??= shipments.isNotEmpty ? shipments.first : null;
+        // Reloading creates new objects: re-select by tracking id, otherwise
+        // the dropdown holds a value that is no longer in its items (assert).
+        final previousId = _selectedShipment?.trackingId;
+        _selectedShipment = shipments.isEmpty
+            ? null
+            : shipments.firstWhere(
+                (s) => s.trackingId == previousId,
+                orElse: () => shipments.first,
+              );
         _isLoading = false;
       });
     } catch (error) {
@@ -235,7 +243,10 @@ class _FacteurState extends State<Facteur> {
                 child: Column(
                   children: [
                     DropdownButtonFormField<ShipmentSummary>(
-                      value: _selectedShipment,
+                      // Key forces a rebuild when the selection changes from
+                      // outside the field (barcode scan, reload).
+                      key: ValueKey(_selectedShipment?.trackingId),
+                      initialValue: _selectedShipment,
                       items: _shipments
                           .map((shipment) => DropdownMenuItem<ShipmentSummary>(
                                 value: shipment,
@@ -254,7 +265,7 @@ class _FacteurState extends State<Facteur> {
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String>(
-                      value: _selectedStatus,
+                      initialValue: _selectedStatus,
                       items: _statusOptions
                           .map((status) => DropdownMenuItem<String>(
                                 value: status,
@@ -330,7 +341,7 @@ class _FacteurState extends State<Facteur> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: _shipments.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              separatorBuilder: (_, _) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 return _buildShipmentTile(_shipments[index]);
               },
