@@ -127,7 +127,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
-                value: _category,
+                initialValue: _category,
                 items: const [
                   DropdownMenuItem(value: 'Delivery issue', child: Text('Delivery issue')),
                   DropdownMenuItem(value: 'Tracking problem', child: Text('Tracking problem')),

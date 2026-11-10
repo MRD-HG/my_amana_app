@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_amana_app/View/Menu/app_shell.dart';
@@ -38,6 +37,7 @@ class _NumeroTlfState extends State<NumeroTlf> {
     final jsonData = await rootBundle.loadString('assets/phone.json');
     final data = json.decode(jsonData) as Map<String, dynamic>;
     final list = data['List'] as List<dynamic>;
+    if (!mounted) return;
     setState(() {
       if (_selectedRegion == 'Tout') {
         _agents = list;
@@ -189,10 +189,17 @@ class _NumeroTlfState extends State<NumeroTlf> {
           Card(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              child: DropdownButton2<String>(
+              // Flutter's built-in dropdown (replaces the dropdown_button2 package).
+              child: DropdownButtonFormField<String>(
                 isExpanded: true,
-                value: _selectedRegion,
+                initialValue: _selectedRegion,
                 hint: const Text('Region'),
+                menuMaxHeight: 240,
+                borderRadius: BorderRadius.circular(12),
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                ),
                 items: _regions
                     .map((item) => DropdownMenuItem<String>(
                           value: item,
@@ -205,21 +212,6 @@ class _NumeroTlfState extends State<NumeroTlf> {
                   });
                   _loadAgents();
                 },
-                buttonStyleData: const ButtonStyleData(
-                  height: 48,
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  elevation: 0,
-                ),
-                dropdownStyleData: DropdownStyleData(
-                  maxHeight: 240,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                menuItemStyleData: const MenuItemStyleData(
-                  height: 40,
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                ),
               ),
             ),
           ),

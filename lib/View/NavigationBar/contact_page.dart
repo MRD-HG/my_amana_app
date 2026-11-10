@@ -295,7 +295,7 @@ class _ContactState extends State<Contact> {
                             });
                           },
                           activeTrackColor: AppColors.primary,
-                          activeColor: Colors.white,
+                          activeThumbColor: Colors.white,
                           inactiveTrackColor: Colors.grey,
                           inactiveThumbColor: Colors.grey,
                           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
