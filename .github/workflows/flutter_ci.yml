@@ -60,11 +60,7 @@ jobs:
           ram-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          # The test types text directly, so the on-screen keyboard is turned
-          # off: its open/close animations crashed the headless emulator.
-          script: |
-            adb shell 'for i in $(ime list -s); do ime disable $i; done'
-            flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_flow_test.dart -d emulator-5554
+          script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_flow_test.dart -d emulator-5554
       - uses: actions/upload-artifact@v4
         if: always()
         with:

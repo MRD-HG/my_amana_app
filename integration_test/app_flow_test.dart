@@ -88,6 +88,17 @@ void main() {
     }
   }
 
+  // Fill a field through its controller: avoids opening the on-screen
+  // keyboard, whose animations crash headless CI emulators.
+  Future<void> setText(WidgetTester tester, Finder field, String text) async {
+    final controller = tester.widget<TextField>(field).controller;
+    if (controller == null) {
+      throw TestFailure('TextField has no controller: $field');
+    }
+    controller.text = text;
+    await tester.pump();
+  }
+
   Future<void> popRoute(WidgetTester tester) async {
     tester.state<NavigatorState>(find.byType(Navigator).first).pop();
     await pumpFor(tester, const Duration(milliseconds: 800));
@@ -125,7 +136,7 @@ void main() {
   Future<void> trackParcel(WidgetTester tester, String code) async {
     final field = find.widgetWithText(TextField, 'Scanner ou saisissez');
     await pumpUntil(tester, field);
-    await tester.enterText(field, code);
+    await setText(tester, field, code);
     // Same callback the keyboard "search" key triggers. Called directly so
     // the test doesn't depend on the emulator's keyboard connection state.
     tester.widget<TextField>(field).onSubmitted!(code);
@@ -177,19 +188,17 @@ void main() {
     final agencySearch =
         find.widgetWithText(TextField, 'Rechercher une agence').hitTestable();
     await pumpUntil(tester, agencySearch);
-    await tester.enterText(agencySearch, 'Rabat');
+    await setText(tester, agencySearch, 'Rabat');
     await pumpFor(tester, const Duration(seconds: 2));
     await screenshot(tester, '05_agencies');
 
     await tapTab(tester, 'Tarif');
     final weight = find.widgetWithText(TextField, 'Poids (kg)').hitTestable();
     await pumpUntil(tester, weight);
-    await tester.enterText(weight.first, '2');
+    await setText(tester, weight.first, '2');
     await tester.tap(find.text('Calculer').hitTestable().first);
     // national: 15 + 8 * 2 kg = 31 DH
     await pumpUntil(tester, find.text('Tarif estime: 31.00 DH'));
-    FocusManager.instance.primaryFocus?.unfocus();
-    await pumpFor(tester, const Duration(milliseconds: 500));
     await screenshot(tester, '06_tariff');
 
     await tapTab(tester, 'Contact');
@@ -223,10 +232,10 @@ void main() {
     await pumpUntil(tester, find.text('Se connecter'));
     await screenshot(tester, '10_facteur_login');
 
-    await tester.enterText(
-        find.widgetWithText(TextField, 'Votre email'), _facteurEmail);
-    await tester.enterText(
-        find.widgetWithText(TextField, 'Votre mot de passe'), _facteurPassword);
+    await setText(
+        tester, find.widgetWithText(TextField, 'Votre email'), _facteurEmail);
+    await setText(tester, find.widgetWithText(TextField, 'Votre mot de passe'),
+        _facteurPassword);
     await tester.tap(find.text('Se connecter'));
     await pumpUntil(tester, find.text('Gerez rapidement vos livraisons du jour.'));
     await pumpUntil(tester, find.text('Mettre a jour'));
