@@ -117,10 +117,10 @@ class _AccueilaState extends State<Accueila> {
 
   // ===== Small UI helpers =====
   Widget _shadowCard({required Widget child, EdgeInsets? padding}) {
-    return Container(
-      padding: padding ?? const EdgeInsets.all(14),
+    // The white background is a Material (not a colored box) so ListTiles
+    // inside it show their ink splash / tap feedback.
+    return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(18),
         boxShadow: const [
           BoxShadow(
@@ -130,7 +130,15 @@ class _AccueilaState extends State<Accueila> {
           ),
         ],
       ),
-      child: child,
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        clipBehavior: Clip.antiAlias,
+        child: Padding(
+          padding: padding ?? const EdgeInsets.all(14),
+          child: child,
+        ),
+      ),
     );
   }
 
