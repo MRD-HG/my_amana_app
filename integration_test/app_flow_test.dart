@@ -149,6 +149,8 @@ void main() {
     await pumpFor(tester, const Duration(seconds: 1));
   }
 
+  void step(String name) => debugPrint('E2E STEP: $name');
+
   // ------------------------------------------------------------------ test
   testWidgets('full app journey: client + facteur', (tester) async {
     // Fresh state so onboarding is shown, as on a first install.
@@ -158,10 +160,14 @@ void main() {
     app.main();
 
     // 1. Splash -> space chooser
+
+    step('1. Splash -> space chooser');
     await pumpUntil(tester, find.text('Bienvenue sur My Amana'));
     await screenshot(tester, '01_choose_space');
 
     // 2. Client onboarding
+
+    step('2. Client onboarding');
     await tester.tap(find.text('Client'));
     await pumpUntil(tester, find.text('Suivez vos envois en temps reel.'));
     await screenshot(tester, '02_onboarding_tracking');
@@ -174,11 +180,15 @@ void main() {
     await tester.tap(find.text('Allons-y'));
 
     // 3. Home
+
+    step('3. Home');
     await pumpUntil(tester, find.byType(BottomNavigationBar));
     await pumpFor(tester, const Duration(seconds: 2));
     await screenshot(tester, '03_home');
 
     // 4. Tracking: known code shows its timeline, unknown code says so
+
+    step('4. Tracking: known code shows its timeline, unknown code says so');
     await trackParcel(tester, _demoTracking);
     await pumpUntil(tester, find.text(_demoTracking));
     await screenshot(tester, '04_tracking_result');
@@ -189,6 +199,8 @@ void main() {
     await popRoute(tester);
 
     // 5. Bottom tabs
+
+    step('5. Bottom tabs');
     await tapTab(tester, 'Agences');
     final agencySearch =
         find.widgetWithText(TextField, 'Rechercher une agence').hitTestable();
@@ -197,6 +209,7 @@ void main() {
     await pumpFor(tester, const Duration(seconds: 2));
     await screenshot(tester, '05_agencies');
 
+    step('tab Tarif');
     await tapTab(tester, 'Tarif');
     final weight = find.widgetWithText(TextField, 'Poids (kg)').hitTestable();
     await pumpUntil(tester, weight);
@@ -206,6 +219,7 @@ void main() {
     await pumpUntil(tester, find.text('Tarif estime: 31.00 DH'));
     await screenshot(tester, '06_tariff');
 
+    step('tab Contact');
     await tapTab(tester, 'Contact');
     await pumpUntil(
         tester, find.widgetWithText(TextField, 'Nom et prenom').hitTestable());
@@ -215,12 +229,15 @@ void main() {
     await pumpFor(tester, const Duration(seconds: 1));
 
     // 6. Every side-menu page opens without error
+
+    step('6. Every side-menu page opens without error');
     await openDrawer(tester);
     await screenshot(tester, '08_side_menu');
     tester.state<ScaffoldState>(find.byType(Scaffold).first).closeDrawer();
     await pumpFor(tester, const Duration(milliseconds: 800));
 
     for (final label in _drawerPages) {
+      step('drawer: $label');
       await openDrawer(tester);
       await tapDrawerItem(tester, label);
       expect(find.byType(Drawer).hitTestable(), findsNothing,
@@ -232,6 +249,8 @@ void main() {
     }
 
     // 7. Facteur: login, update a parcel status, logout
+
+    step('7. Facteur: login, update a parcel status, logout');
     await openDrawer(tester);
     await tapDrawerItem(tester, 'Espace facteur');
     await pumpUntil(tester, find.text('Se connecter'));
@@ -265,6 +284,8 @@ void main() {
     await popRoute(tester);
 
     // 8. The client now sees the facteur's update on the timeline
+
+    step('8. The client now sees the facteur's update on the timeline');
     await trackParcel(tester, updatedId);
     await pumpUntil(tester, find.textContaining('Livre -'));
     await screenshot(tester, '12_tracking_after_update');
