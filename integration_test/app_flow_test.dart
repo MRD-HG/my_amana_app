@@ -174,11 +174,10 @@ void main() {
 
     // 5. Bottom tabs
     await tapTab(tester, 'Agences');
-    await pumpUntil(tester, find.text('Rechercher une agence').hitTestable());
-    await tester.enterText(
-      find.widgetWithText(TextField, 'Rechercher une agence'),
-      'Rabat',
-    );
+    final agencySearch =
+        find.widgetWithText(TextField, 'Rechercher une agence').hitTestable();
+    await pumpUntil(tester, agencySearch);
+    await tester.enterText(agencySearch, 'Rabat');
     await pumpFor(tester, const Duration(seconds: 2));
     await screenshot(tester, '05_agencies');
 
@@ -194,7 +193,8 @@ void main() {
     await screenshot(tester, '06_tariff');
 
     await tapTab(tester, 'Contact');
-    await pumpUntil(tester, find.text('Nom et prenom').hitTestable());
+    await pumpUntil(
+        tester, find.widgetWithText(TextField, 'Nom et prenom').hitTestable());
     await screenshot(tester, '07_contact');
 
     await tapTab(tester, 'Suivi');
