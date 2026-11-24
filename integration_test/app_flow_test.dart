@@ -59,7 +59,17 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
       if (finder.evaluate().isNotEmpty) return;
     }
-    throw TestFailure('Timed out after $timeout waiting for: $finder');
+    // Help debugging: list what is actually on screen.
+    final visible = find
+        .byType(Text)
+        .hitTestable()
+        .evaluate()
+        .map((e) => (e.widget as Text).data ?? '')
+        .where((t) => t.trim().isNotEmpty)
+        .take(40)
+        .join(' | ');
+    throw TestFailure(
+        'Timed out after $timeout waiting for: $finder\nOn screen: $visible');
   }
 
   var surfaceConverted = false;
