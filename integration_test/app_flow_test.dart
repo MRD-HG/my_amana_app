@@ -4,7 +4,9 @@
 // Run locally (emulator or phone connected):
 //   flutter drive --driver=test_driver/integration_test.dart \
 //     --target=integration_test/app_flow_test.dart
-// Screenshots are written to ./screenshots/.
+// Screenshots are opt-in (they hang headless CI emulators):
+//   flutter drive ... --dart-define=E2E_SCREENSHOTS=true
+// They are written to ./screenshots/.
 
 import 'dart:io';
 
@@ -73,8 +75,11 @@ void main() {
         'Timed out after $timeout waiting for: $finder\nOn screen: $visible');
   }
 
+  const screenshotsEnabled =
+      bool.fromEnvironment('E2E_SCREENSHOTS', defaultValue: false);
   var surfaceConverted = false;
   Future<void> screenshot(WidgetTester tester, String name) async {
+    if (!screenshotsEnabled) return;
     // Best effort: a failed screenshot must not fail the functional test.
     try {
       if (Platform.isAndroid && !surfaceConverted) {
@@ -86,6 +91,17 @@ void main() {
     } catch (e) {
       debugPrint('Screenshot "$name" skipped: $e');
     }
+  }
+
+  // Fill a field through its controller: avoids opening the on-screen
+  // keyboard, whose animations crash headless CI emulators.
+  Future<void> setText(WidgetTester tester, Finder field, String text) async {
+    final controller = tester.widget<TextField>(field).controller;
+    if (controller == null) {
+      throw TestFailure('TextField has no controller: $field');
+    }
+    controller.text = text;
+    await tester.pump();
   }
 
   Future<void> popRoute(WidgetTester tester) async {
@@ -125,13 +141,15 @@ void main() {
   Future<void> trackParcel(WidgetTester tester, String code) async {
     final field = find.widgetWithText(TextField, 'Scanner ou saisissez');
     await pumpUntil(tester, field);
-    await tester.enterText(field, code);
+    await setText(tester, field, code);
     // Same callback the keyboard "search" key triggers. Called directly so
     // the test doesn't depend on the emulator's keyboard connection state.
     tester.widget<TextField>(field).onSubmitted!(code);
     await pumpUntil(tester, find.byType(Resultat));
     await pumpFor(tester, const Duration(seconds: 1));
   }
+
+  void step(String name) => debugPrint('E2E STEP: $name');
 
   // ------------------------------------------------------------------ test
   testWidgets('full app journey: client + facteur', (tester) async {
@@ -142,10 +160,14 @@ void main() {
     app.main();
 
     // 1. Splash -> space chooser
+
+    step('1. Splash -> space chooser');
     await pumpUntil(tester, find.text('Bienvenue sur My Amana'));
     await screenshot(tester, '01_choose_space');
 
     // 2. Client onboarding
+
+    step('2. Client onboarding');
     await tester.tap(find.text('Client'));
     await pumpUntil(tester, find.text('Suivez vos envois en temps reel.'));
     await screenshot(tester, '02_onboarding_tracking');
@@ -158,11 +180,15 @@ void main() {
     await tester.tap(find.text('Allons-y'));
 
     // 3. Home
+
+    step('3. Home');
     await pumpUntil(tester, find.byType(BottomNavigationBar));
     await pumpFor(tester, const Duration(seconds: 2));
     await screenshot(tester, '03_home');
 
     // 4. Tracking: known code shows its timeline, unknown code says so
+
+    step('4. Tracking: known code shows its timeline, unknown code says so');
     await trackParcel(tester, _demoTracking);
     await pumpUntil(tester, find.text(_demoTracking));
     await screenshot(tester, '04_tracking_result');
@@ -173,40 +199,45 @@ void main() {
     await popRoute(tester);
 
     // 5. Bottom tabs
+
+    step('5. Bottom tabs');
     await tapTab(tester, 'Agences');
-    await pumpUntil(tester, find.text('Rechercher une agence').hitTestable());
-    await tester.enterText(
-      find.widgetWithText(TextField, 'Rechercher une agence'),
-      'Rabat',
-    );
+    final agencySearch =
+        find.widgetWithText(TextField, 'Rechercher une agence').hitTestable();
+    await pumpUntil(tester, agencySearch);
+    await setText(tester, agencySearch, 'Rabat');
     await pumpFor(tester, const Duration(seconds: 2));
     await screenshot(tester, '05_agencies');
 
+    step('tab Tarif');
     await tapTab(tester, 'Tarif');
     final weight = find.widgetWithText(TextField, 'Poids (kg)').hitTestable();
     await pumpUntil(tester, weight);
-    await tester.enterText(weight.first, '2');
+    await setText(tester, weight.first, '2');
     await tester.tap(find.text('Calculer').hitTestable().first);
     // national: 15 + 8 * 2 kg = 31 DH
     await pumpUntil(tester, find.text('Tarif estime: 31.00 DH'));
-    FocusManager.instance.primaryFocus?.unfocus();
-    await pumpFor(tester, const Duration(milliseconds: 500));
     await screenshot(tester, '06_tariff');
 
+    step('tab Contact');
     await tapTab(tester, 'Contact');
-    await pumpUntil(tester, find.text('Nom et prenom').hitTestable());
+    await pumpUntil(
+        tester, find.widgetWithText(TextField, 'Nom et prenom').hitTestable());
     await screenshot(tester, '07_contact');
 
     await tapTab(tester, 'Suivi');
     await pumpFor(tester, const Duration(seconds: 1));
 
     // 6. Every side-menu page opens without error
+
+    step('6. Every side-menu page opens without error');
     await openDrawer(tester);
     await screenshot(tester, '08_side_menu');
     tester.state<ScaffoldState>(find.byType(Scaffold).first).closeDrawer();
     await pumpFor(tester, const Duration(milliseconds: 800));
 
     for (final label in _drawerPages) {
+      step('drawer: $label');
       await openDrawer(tester);
       await tapDrawerItem(tester, label);
       expect(find.byType(Drawer).hitTestable(), findsNothing,
@@ -218,15 +249,17 @@ void main() {
     }
 
     // 7. Facteur: login, update a parcel status, logout
+
+    step('7. Facteur: login, update a parcel status, logout');
     await openDrawer(tester);
     await tapDrawerItem(tester, 'Espace facteur');
     await pumpUntil(tester, find.text('Se connecter'));
     await screenshot(tester, '10_facteur_login');
 
-    await tester.enterText(
-        find.widgetWithText(TextField, 'Votre email'), _facteurEmail);
-    await tester.enterText(
-        find.widgetWithText(TextField, 'Votre mot de passe'), _facteurPassword);
+    await setText(
+        tester, find.widgetWithText(TextField, 'Votre email'), _facteurEmail);
+    await setText(tester, find.widgetWithText(TextField, 'Votre mot de passe'),
+        _facteurPassword);
     await tester.tap(find.text('Se connecter'));
     await pumpUntil(tester, find.text('Gerez rapidement vos livraisons du jour.'));
     await pumpUntil(tester, find.text('Mettre a jour'));
@@ -251,6 +284,8 @@ void main() {
     await popRoute(tester);
 
     // 8. The client now sees the facteur's update on the timeline
+
+    step('8. The client now sees the facteur's update on the timeline');
     await trackParcel(tester, updatedId);
     await pumpUntil(tester, find.textContaining('Livre -'));
     await screenshot(tester, '12_tracking_after_update');
