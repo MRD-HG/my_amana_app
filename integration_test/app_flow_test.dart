@@ -4,7 +4,9 @@
 // Run locally (emulator or phone connected):
 //   flutter drive --driver=test_driver/integration_test.dart \
 //     --target=integration_test/app_flow_test.dart
-// Screenshots are written to ./screenshots/.
+// Screenshots are opt-in (they hang headless CI emulators):
+//   flutter drive ... --dart-define=E2E_SCREENSHOTS=true
+// They are written to ./screenshots/.
 
 import 'dart:io';
 
@@ -73,8 +75,11 @@ void main() {
         'Timed out after $timeout waiting for: $finder\nOn screen: $visible');
   }
 
+  const screenshotsEnabled =
+      bool.fromEnvironment('E2E_SCREENSHOTS', defaultValue: false);
   var surfaceConverted = false;
   Future<void> screenshot(WidgetTester tester, String name) async {
+    if (!screenshotsEnabled) return;
     // Best effort: a failed screenshot must not fail the functional test.
     try {
       if (Platform.isAndroid && !surfaceConverted) {
