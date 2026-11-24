@@ -11,6 +11,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:my_amana_app/View/resultat.dart';
 import 'package:my_amana_app/features/facteur/models/facteur_models.dart';
 import 'package:my_amana_app/main.dart' as app;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -125,7 +126,10 @@ void main() {
     final field = find.widgetWithText(TextField, 'Scanner ou saisissez');
     await pumpUntil(tester, field);
     await tester.enterText(field, code);
-    await tester.testTextInput.receiveAction(TextInputAction.search);
+    // Same callback the keyboard "search" key triggers. Called directly so
+    // the test doesn't depend on the emulator's keyboard connection state.
+    tester.widget<TextField>(field).onSubmitted!(code);
+    await pumpUntil(tester, find.byType(Resultat));
     await pumpFor(tester, const Duration(seconds: 1));
   }
 
